@@ -1,0 +1,13 @@
+<div class="passive">
+    <ul>
+        <li [routerLink]="[{outlets: {aux: 'passive'}}]">passive</li>
+        <li [routerLink]="[{outlets: {content: 'active'}}]">active</li>
+    </ul>
+    <router-outlet name="aux"></router-outlet>
+</div>
+<div class="content">
+    <router-outlet name="content"></router-outlet>
+</div>
+<div class="active">
+
+</div>

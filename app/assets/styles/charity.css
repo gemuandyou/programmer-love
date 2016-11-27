@@ -1,0 +1,16 @@
+.passive {
+    width: 20%;
+    height: 100%;
+    float: left;
+    background-color: lightgray;
+}
+
+.passive > ul {
+    list-style: none;
+}
+
+.active {
+    width: 20%;
+    height: 100%;
+    display: inline-block;
+}
