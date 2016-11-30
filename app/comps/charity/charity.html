@@ -1,7 +1,6 @@
 <div class="passive">
     <ul>
         <li [routerLink]="[{outlets: {exhibition: 'passive'}}]">passive</li>
-        <li [routerLink]="[{outlets: {content: 'active'}}]">active</li>
     </ul>
     <router-outlet name="exhibition"></router-outlet>
 </div>
@@ -9,5 +8,7 @@
     <router-outlet name="content"></router-outlet>
 </div>
 <div class="active">
-
+    <ul>
+        <li [routerLink]="[{outlets: {content: 'active'}}]">active</li>
+    </ul>
 </div>

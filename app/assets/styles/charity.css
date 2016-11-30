@@ -3,9 +3,10 @@
     height: 100%;
     float: left;
     background-color: lightgray;
+    position: absolute;
 }
 
-.passive > ul {
+.passive > ul, .active > ul {
     list-style: none;
 }
 
@@ -13,4 +14,8 @@
     width: 20%;
     height: 100%;
     display: inline-block;
+    background-color: lightgray;
+    position: absolute;
+    top: 0;
+    right: 0;
 }

@@ -13,10 +13,12 @@ const routes: Routes = [
         component: CharityComponent,
         children: [
             {path: '', redirectTo: 'passive', pathMatch: 'full'},
-            {path: 'passive', component: PassiveComponent, outlet: 'exhibition', children: [
+            {
+                path: 'passive', component: PassiveComponent, outlet: 'exhibition', children: [
                 {path: '', redirectTo: 'list'},
                 {path: 'list', component: PassiveListComponent}
-            ]},
+            ]
+            },
             {path: 'active', component: ActiveComponent, outlet: 'content'}
         ]
     }
