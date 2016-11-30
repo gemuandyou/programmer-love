@@ -3,6 +3,6 @@
  */
 import {Component} from "@angular/core";
 @Component({
-    template: `passive`
+    templateUrl: `app/comps/charity/passive/passive.html`
 })
 export class PassiveComponent {}
