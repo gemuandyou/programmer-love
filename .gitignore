@@ -1,1 +1,8 @@
 node_modules/
+.idea/
+*.component.js
+*.component.js.map
+*.module.js
+*.module.js.map
+*.js.map
+*.iml
