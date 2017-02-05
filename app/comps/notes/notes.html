@@ -1,0 +1,37 @@
+<div class="form">
+    <button class="btn" (click)="newNote();">新建</button>
+    <ul>
+        <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note}}</li>{{a}}
+    </ul>
+</div>
+<div class="view" #notesView>
+</div>
+<div class="edit">
+    <div class="notes-tools">
+        <span *ngFor="let mark of marks">{{mark.key}}->{{mark.val}}</span>
+        <a class="btn" (click)="saveNote();">Save</a>
+        <a class="btn" (click)="helper = !helper">Help</a>
+    </div>
+    <!--<ol class="notes-editor-line">-->
+    <!--<li></li>-->
+    <!--<li></li>-->
+    <!--</ol>-->
+    <div class="notes-editor" contenteditable="plaintext-only" #notesEditor (keyup)="confirmEdit($event)"></div>
+    <div class="editor-helper" *ngIf="helper">
+        <p>
+            编写标签时，最好只编辑最后一个标签。
+            标签渲染的内容以空格为截止符，若紧连接标签后需要打印空格，则输入两个空格即可，如：@h1-abc  a。标签目前分为三种。
+        </p>
+        <ol>
+            <li>普通标签。如：@h1-、@i-、@b-等。</li>
+            <li>带有参数的标签。如：@url[]。参数值写在[]中，实例：@url[https://www.abc.com]ALink，会生成
+                "<a href='https://www.abc.com'>ALink</a>"
+            </li>
+            <li>带有包含内容的标签。如：@ol()、@ul()。不难看出这个标签会生成
+                "ol、ul"html标签，其中的"li"内容在@ol或@ul标签的括号
+                中以#号分割。实例：@ol(#a#b)，会生成"<ol><li>a</li><li>b</li></ol>"
+            </li>
+        </ol>
+    </div>
+    <p style="display: none;" #clipboard></p>
+</div>

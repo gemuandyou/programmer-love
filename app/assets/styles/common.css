@@ -1,0 +1,24 @@
+.btn {
+    background-color: white;
+    color: #222;
+    border: 1px solid #222;
+    outline: 0;
+    -webkit-transition: background-color,color 0.5s;
+    -moz-transition: background-color,color 0.5s;
+    -ms-transition: background-color,color 0.5s;
+    -o-transition: background-color,color 0.5s;
+    transition: background-color,color 0.5s;
+    user-select: none;
+}
+
+.btn:hover {
+    background-color: #222;
+    color: white;
+    border: 1px solid white;
+}
+
+.btn-active {
+    background-color: #222;
+    color: white;
+    border: 1px solid white;
+}

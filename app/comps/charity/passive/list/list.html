@@ -1,0 +1,23 @@
+<div>
+    <div *ngFor="let notice of notices; let i = index" class="notice-item">
+        <div class="notice-title">
+            <div class="caption">
+                <img src="/app/assets/images/default_avatar.jpg" (mouseover)="ifTips[i] = true;" (mouseleave)="ifTips[i] = false;"/>
+                <span title="{{notice.title}}">{{notice.title}}</span>
+                <div class="user-info-tips" *ngIf="ifTips[i]">
+                    <ul>
+                        <li>{{notice.name}}</li>
+                        <li>{{notice.gender}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="action" (click)="ifDetail[i] = !ifDetail[i]">
+                <i *ngIf="!ifDetail[i]">+</i>
+                <i *ngIf="ifDetail[i]">-</i>
+            </div>
+        </div>
+        <div class="notice-content" *ngIf="ifDetail[i]">
+            <div>{{notice.content}} <a href="javascript:;">[查看]</a></div>
+        </div>
+    </div>
+</div>

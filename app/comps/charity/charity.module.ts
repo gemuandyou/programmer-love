@@ -8,11 +8,12 @@ import {EssayComponent} from "../essay/essay.component";
 import {PassiveComponent} from "./passive/passive.component";
 import {ActiveComponent} from "./active/active.component";
 import {PassiveListComponent} from "./passive/list/list.component";
+import {CommonModule} from "@angular/common";
+import {NotesComponent} from "../notes/notes.component";
 @NgModule({
-    imports: [CharityRouterModule],
+    imports: [CharityRouterModule, CommonModule], // 如果使用ngFor等指令，需要引入CommonModule
     declarations: [
         CharityComponent,
-        EssayComponent,
         PassiveComponent,
         ActiveComponent,
         PassiveListComponent
