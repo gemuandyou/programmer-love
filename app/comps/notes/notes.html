@@ -1,5 +1,5 @@
 <div class="form" [ngClass]="{'formFlex':editorFlex}">
-    <button class="btn" (click)="newNote();">新建</button>
+    <button class="btn" (click)="newNote();">New</button>
     <ul>
         <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note}}</li>{{a}}
     </ul>
