@@ -181,7 +181,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
 
         if (this.editIsMark) {
             let originalHtml = this.notesEditorEle.innerHTML;
-            if (originalHtml.indexOf('<br>') !== -1) {
+            if (originalHtml.indexOf('<br>') !== -1 && originalHtml.indexOf('<br>') > originalHtml.lastIndexOf('@')) {
                 this.editMark = originalHtml.substring(originalHtml.lastIndexOf('@'), originalHtml.indexOf('<br>'));
             } else {
                 this.editMark = originalHtml.substring(originalHtml.lastIndexOf('@'));
@@ -189,7 +189,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
             this.editMark = this.editMark.replace(/<(\/[a-z]*|[a-z]*)>/g, '').replace(/\n/g, '').replace(/ /g, '');
             let isMark = this.checkMark(this.editMark);
             if (isMark) {
-                originalHtml = originalHtml.substring(0, originalHtml.lastIndexOf('@'));
+                originalHtml = originalHtml.substring(0, originalHtml.lastIndexOf(this.editMark));
                 let isSpecialMark = this.checkSpecialMark(this.editMark);
                 switch(isSpecialMark) {
                     case 1:
@@ -205,6 +205,10 @@ export class NotesComponent implements OnInit, AfterViewInit{
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + this.editMark + '</span>-@[]@';
                     default:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + this.editMark + '</span>-';
+                        if (this.editMark === '@tab') {
+                            this.editIsMark = false;
+                            originalHtml += '<br><br>';
+                        }
                         break;
                 }
                 this.notesEditorEle.innerHTML = originalHtml;
@@ -261,6 +265,8 @@ export class NotesComponent implements OnInit, AfterViewInit{
                 .replace(/<\/h4><br>/g, '</h1>')
                 .replace(/<\/h5><br>/g, '</h1>')
                 .replace(/<\/h6><br>/g, '</h1>');
+
+            // TODO 将@tab转为<blockquote>标签， 将双回车\n\n转为</blockquote>标签
 
             this.notesView.nativeElement.innerHTML = html;
         }

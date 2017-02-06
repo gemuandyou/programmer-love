@@ -18,7 +18,8 @@ export class Mark {
         {key: '@img', val: 'IMG'},
         {key: '@pre', val: 'PRE'},
         {key: '@fc', val: 'FontColor'},
-        {key: '@fbc', val: 'FontBackgroundColor'}
+        {key: '@fbc', val: 'FontBackgroundColor'},
+        {key: '@tab', val: 'TAB'}
     ];
 }
 
