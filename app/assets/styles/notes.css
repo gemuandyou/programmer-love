@@ -94,3 +94,17 @@
 .notes-tools span {
     margin-right: 0.3rem;
 }
+
+/*编辑器的收缩样式*/
+.editorFlex {
+    display: none;
+}
+.editFlex {
+    height: 1.5rem;
+}
+.formFlex {
+    height: calc(100% - 2rem - 1.5rem);
+}
+.viewFlex {
+    height: calc(100% - 1rem - 2rem - 1.5rem);
+}

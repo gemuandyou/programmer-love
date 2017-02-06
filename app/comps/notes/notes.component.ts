@@ -223,7 +223,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
             }
         }
 
-        if ((event.ctrlKey && event.key === 's') || event.key === 'Enter') { // ctrl + s
+        if ((event.ctrlKey && event.key === '`') || event.key === 'Enter') { // ctrl + s
             this.parseNote(currText);
         }
     }
@@ -285,12 +285,19 @@ export class NotesComponent implements OnInit, AfterViewInit{
                     handleText = afterText.substring(0, afterText.indexOf(' '));
                     afterText = afterText.substring(afterText.indexOf(' ') + 1);
                 } else if (this.checkSpecialMark(mark.key) === 1) {
-                    afterText = afterText.substring(afterText.indexOf(']') + 1);
+                    if (afterText.indexOf(' ') !== -1) {
+                        handleText = afterText.substring(0, afterText.indexOf(' '));
+                        afterText = afterText.substring(afterText.indexOf(' ') + 1);
+                    } else {
+                        handleText = afterText;
+                        afterText = '';
+                    }
                 } else if (this.checkSpecialMark(mark.key) === 2) {
+                    handleText = afterText.substring(0, afterText.indexOf(')') + 1);
                     afterText = afterText.substring(afterText.indexOf(')') + 1);
                 } else if (this.checkSpecialMark(mark.key) === 3) {
                     let colorStyleEo = afterText.indexOf('->');
-                    colorStyle = afterText.substring((mark.key + '-').length, colorStyleEo);
+                    colorStyle = afterText.substring(0, colorStyleEo);
                     if (afterText.indexOf(' ') !== -1) {
                         handleText = afterText.substring(colorStyleEo + 2, afterText.indexOf(' '));
                         afterText = afterText.substring(afterText.indexOf(' ') + 1);
@@ -477,4 +484,5 @@ export class NotesComponent implements OnInit, AfterViewInit{
         this.currentNote = currEle.textContent;
         this.getNote(this.currentNote);
     }
+
 }

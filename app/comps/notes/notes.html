@@ -1,22 +1,23 @@
-<div class="form">
+<div class="form" [ngClass]="{'formFlex':editorFlex}">
     <button class="btn" (click)="newNote();">新建</button>
     <ul>
         <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note}}</li>{{a}}
     </ul>
 </div>
-<div class="view" #notesView>
+<div class="view" [ngClass]="{'viewFlex':editorFlex}" #notesView>
 </div>
-<div class="edit">
+<div class="edit" [ngClass]="{'editFlex':editorFlex}">
     <div class="notes-tools">
         <span *ngFor="let mark of marks">{{mark.key}}->{{mark.val}}</span>
-        <a class="btn" (click)="saveNote();">Save</a>
-        <a class="btn" (click)="helper = !helper">Help</a>
+        <a class="btn" (click)="editorFlex = !editorFlex"><span *ngIf="editorFlex">+</span><span *ngIf="!editorFlex">-</span></a>
+        <a class="btn" (click)="saveNote();" *ngIf="!editorFlex">Save</a>
+        <a class="btn" (click)="helper = !helper" *ngIf="!editorFlex">Help</a>
     </div>
     <!--<ol class="notes-editor-line">-->
     <!--<li></li>-->
     <!--<li></li>-->
     <!--</ol>-->
-    <div class="notes-editor" contenteditable="plaintext-only" #notesEditor (keyup)="confirmEdit($event)"></div>
+    <div class="notes-editor" contenteditable="plaintext-only" #notesEditor (keyup)="confirmEdit($event)" [ngClass]="{'editorFlex':editorFlex}"></div>
     <div class="editor-helper" *ngIf="helper">
         <p>
             编写标签时，最好只编辑最后一个标签。
