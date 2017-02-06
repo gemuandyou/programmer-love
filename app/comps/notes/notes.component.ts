@@ -257,6 +257,12 @@ export class NotesComponent implements OnInit, AfterViewInit{
                 } else {
                     html += this.renderView(lineHtml);
                 }
+                if (lineHtml === '') {
+                    if (html.match(/<blockquote>/g) && html.match(/<blockquote>/g).length % 2 !== 0) {
+                        html += '</blockquote>';
+                    }
+                    continue;
+                }
             }
             // H1~H6样式修改
             html = html.replace(/<\/h1><br>/g, '</h1>')
@@ -277,6 +283,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
      * @param text
      */
     private renderView(text: String): String {
+        text = text.replace(/@tab-/g, '<blockquote>');
         for (let mark of this.marks) {
             while (text.indexOf(mark.key + '-') !== -1) {
                 let newText = '';
