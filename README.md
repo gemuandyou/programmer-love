@@ -9,5 +9,13 @@
 * 示例图片如下
 !['示例图片'](https://github.com/gemuandyou/programmer-love-original/blob/master/app/assets/other/notes-demo.png?raw=true)
 
+##### 使用说明
+```shell
+npm install
+```
+```shell
+npm start
+```
+
 ### So on
 >等待扩展
