@@ -38,5 +38,10 @@ module.exports = {
     writeNotes: function(path, content) {
         path = prePath + path;
         fs.writeFile(path, content);
+    },
+
+    writeImg: function(path, base64Data) {
+        var dataBuffer = new Buffer(base64Data, 'base64');
+        fs.writeFile("image.png", dataBuffer);
     }
 };

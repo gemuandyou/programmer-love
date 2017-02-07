@@ -27,4 +27,8 @@ export class NotesService {
     listNotes(): Observable<any> {
         return this.http.get(`lnote`);
     }
+
+    saveImg(params: any): Observable<any> {
+        return this.http.post(`wimg`, params);
+    }
 }

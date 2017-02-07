@@ -30,6 +30,19 @@ var api = function (req, res, next) {
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.write(data.toString());
         res.end();
+    } else if (/\/wimg/.test(req.url)) {
+        console.log('-----------------+++++++++++++++++++-')
+        var body = [];
+        req.on('data', function (chunk) {
+            body.push(chunk);
+        });
+        req.on('end', function () {
+            body = Buffer.concat(body);
+            console.log(body);
+            var base64Data = body.replace(/^data:image\/\w+;base64,/, "");
+            db.writeImg(new Date().getTime(), base64Data);
+        });
+        res.end();
     } else {
         next();
     }

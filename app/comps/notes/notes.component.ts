@@ -122,6 +122,9 @@ export class NotesComponent implements OnInit, AfterViewInit{
 
                         // 在编译器中 获取光标位置，生成图片标签
                         let imgSrc = eventTarget.result;
+                        // TODO 保存截图
+                        this.noteService.saveImg(imgSrc);
+
                         let sel = window.getSelection();
                         let rng = sel.getRangeAt(0);
                         rng.deleteContents();
