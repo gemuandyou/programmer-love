@@ -11,3 +11,12 @@
 
 ### So on
 >等待扩展
+
+
+##### 使用说明
+```shell
+npm install
+```
+```shell
+npm start
+```
