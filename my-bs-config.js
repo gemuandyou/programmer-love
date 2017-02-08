@@ -31,18 +31,21 @@ var api = function (req, res, next) {
         res.write(data.toString());
         res.end();
     } else if (/\/wimg/.test(req.url)) {
-        console.log('-----------------+++++++++++++++++++-')
         var body = [];
         req.on('data', function (chunk) {
             body.push(chunk);
         });
         req.on('end', function () {
             body = Buffer.concat(body);
-            console.log(body);
+            body = JSON.parse(body.toString());
+            body = body.data;
+            var suffix = body.substring(body.indexOf('/') + 1, body.indexOf(';'));
             var base64Data = body.replace(/^data:image\/\w+;base64,/, "");
-            db.writeImg(new Date().getTime(), base64Data);
+            var path = db.writeImg('/' + new Date().getTime() + '.' + suffix, base64Data);
+            console.log(path);
+            res.write(path);
+            res.end();
         });
-        res.end();
     } else {
         next();
     }

@@ -66,7 +66,15 @@ export class NotesComponent implements OnInit, AfterViewInit{
             for (let item of items) {
                 if (item.kind === 'string' && 'text/html' === item.type) {
                     item.getAsString((s) => {
-                        s = s.substring(s.indexOf('<pre '), s.toString().lastIndexOf('</pre>') + 6);
+                        s = s.replace(/<html>/g, '')
+                            .replace(/<\/html>/g, '')
+                            .replace(/<body>/g, '')
+                            .replace(/<\/body>/g, '');
+                        if (s.indexOf('<pre ') !== -1 && s.toString().lastIndexOf('</pre>') !== -1) {
+                            s = s.substring(s.indexOf('<pre '), s.toString().lastIndexOf('</pre>') + 6);
+                        } else {
+                            s = '<pre>' + s + '</pre>';
+                        }
 
                         // 在编译器中 获取光标位置，生成pre标签
                         let rng = sel.getRangeAt(0);
@@ -122,15 +130,20 @@ export class NotesComponent implements OnInit, AfterViewInit{
 
                         // 在编译器中 获取光标位置，生成图片标签
                         let imgSrc = eventTarget.result;
-                        // TODO 保存截图
-                        this.noteService.saveImg(imgSrc);
 
                         let sel = window.getSelection();
                         let rng = sel.getRangeAt(0);
                         rng.deleteContents();
 
                         let now = new Date().getTime();
-                        this.urlMap['um:' + now] = imgSrc;
+
+                        // 保存截图
+                        this.noteService.saveImg({data: imgSrc}).subscribe((resp) => {
+                            if (resp.status === 200) {
+                                this.urlMap['um:' + now] = resp._body;
+                            }
+                        });
+
                         let imgTagTextEle = document.createTextNode('-[um:' + now + '] ');
                         rng.insertNode(imgTagTextEle);
 
@@ -261,7 +274,8 @@ export class NotesComponent implements OnInit, AfterViewInit{
                     html += this.renderView(lineHtml);
                 }
                 if (lineHtml === '') {
-                    if (html.match(/<blockquote>/g) && html.match(/<blockquote>/g).length % 2 !== 0) {
+                    if (html.match(/<blockquote>/g) && html.match(/<blockquote>/g) &&
+                        (!html.match(/<\/blockquote>/g) || html.match(/<blockquote>/g).length !== html.match(/<\/blockquote>/g).length)) {
                         html += '</blockquote>';
                     }
                     continue;

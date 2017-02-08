@@ -22,7 +22,9 @@ module.exports = {
     listNotes: function() {
         var files = [];
         fs.readdirSync(prePath).forEach(function (file) {
-            files.push(file);
+            if (file != 'img') {
+                files.push(file);
+            }
         });
         return files;
     },
@@ -41,7 +43,9 @@ module.exports = {
     },
 
     writeImg: function(path, base64Data) {
+        path = prePath + '/img' + path;
         var dataBuffer = new Buffer(base64Data, 'base64');
-        fs.writeFile("image.png", dataBuffer);
+        fs.writeFile(path, dataBuffer);
+        return path;
     }
 };
