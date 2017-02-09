@@ -184,7 +184,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
         //     }
         // }
 
-        if (event.key == '@') {
+        if (event.key == '@' || event.key == 'Process') {
             this.editIsMark = true;
             return;
         } else if (event.key == ' ') {
