@@ -242,6 +242,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
 
         if ((event.ctrlKey && event.key === '`') || event.key === 'Enter') { // ctrl + s
             this.parseNote(currText);
+            this.saveNote();
         }
     }
 
