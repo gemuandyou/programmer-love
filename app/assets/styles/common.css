@@ -9,6 +9,7 @@
     -o-transition: background-color,color 0.5s;
     transition: background-color,color 0.5s;
     user-select: none;
+    cursor: pointer;
 }
 
 .btn:hover {

@@ -12,7 +12,7 @@ import {NotesService} from "../../service/notes/notes.service";
 import {Notify} from "../../tools/notification";
 @Component({
     templateUrl: 'app/comps/notes/notes.html',
-    styleUrls: ['app/assets/styles/notes.css'],
+    styleUrls: ['app/assets/styles/notes.css', 'app/assets/styles/common.css'],
     // changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [NotesService]
 })

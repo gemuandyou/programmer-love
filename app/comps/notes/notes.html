@@ -12,6 +12,7 @@
         <a class="btn" (click)="editorFlex = !editorFlex"><span *ngIf="editorFlex">+</span><span *ngIf="!editorFlex">-</span></a>
         <a class="btn" (click)="saveNote();" *ngIf="!editorFlex">Save</a>
         <a class="btn" (click)="helper = !helper" *ngIf="!editorFlex">Help</a>
+        <a class="btn" (click)="todo = !todo" *ngIf="!editorFlex">TODO</a>
     </div>
     <!--<ol class="notes-editor-line">-->
     <!--<li></li>-->
@@ -34,6 +35,13 @@
                 "ol、ul"html标签，其中的"li"内容在@ol或@ul标签的括号
                 中以#号分割。实例：@ol(#a#b)，会生成"<ol><li>a</li><li>b</li></ol>"
             </li>
+        </ol>
+    </div>
+    <div class="editor-helper" *ngIf="todo">
+        <p>需要完善的内容</p>
+        <ol>
+            <li>添加@code标签，粘贴代码为纯文本，根据标签表明语言解析关键字高亮</li>
+            <li>由于保存机制过于简单，所以建议每个笔记内容不要太多</li>
         </ol>
     </div>
     <p style="display: none;" #clipboard></p>
