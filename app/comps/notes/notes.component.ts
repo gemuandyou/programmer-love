@@ -33,8 +33,6 @@ export class NotesComponent implements OnInit, AfterViewInit{
         ',','.','<','>','?','/'];
     specialWord: String[] = ["@", "#"]; // TODO 2017-01-31 09:43:07 特殊字符需要用\转义
 
-    urlMap: any = {}; // URL映射关系。key值以um:开头。解决URL太长的问题，所以这里做个映射
-
     constructor(title: Title, private ref: ChangeDetectorRef, private noteService: NotesService) {
         title.setTitle("程序员日志");
     }
@@ -135,30 +133,29 @@ export class NotesComponent implements OnInit, AfterViewInit{
                         let rng = sel.getRangeAt(0);
                         rng.deleteContents();
 
-                        let now = new Date().getTime();
+                        let cpImgUrl: String = ''; // 粘贴过来的图片，解析后生成路径
 
                         // 保存截图
                         this.noteService.saveImg({data: imgSrc}).subscribe((resp) => {
                             if (resp.status === 200) {
-                                this.urlMap['um:' + now] = resp._body;
+                                cpImgUrl = resp._body;
+                                let imgTagTextEle = document.createTextNode('-[' + cpImgUrl + '] ');
+                                rng.insertNode(imgTagTextEle);
+
+                                let imgTagEle = document.createElement('span');
+                                imgTagEle.style.fontSize = 'italic';
+                                imgTagEle.style.color = '#00c0ff';
+                                imgTagEle.contentEditable = 'false';
+                                let imgTagName = document.createTextNode('@img');
+                                imgTagEle.appendChild(imgTagName);
+                                rng.insertNode(imgTagEle);
+
+                                rng = rng.cloneRange();
+                                rng.collapse(false);
+                                sel.removeAllRanges();
+                                sel.addRange(rng);
                             }
                         });
-
-                        let imgTagTextEle = document.createTextNode('-[um:' + now + '] ');
-                        rng.insertNode(imgTagTextEle);
-
-                        let imgTagEle = document.createElement('span');
-                        imgTagEle.style.fontSize = 'italic';
-                        imgTagEle.style.color = '#00c0ff';
-                        imgTagEle.contentEditable = 'false';
-                        let imgTagName = document.createTextNode('@img');
-                        imgTagEle.appendChild(imgTagName);
-                        rng.insertNode(imgTagEle);
-
-                        rng = rng.cloneRange();
-                        rng.collapse(false);
-                        sel.removeAllRanges();
-                        sel.addRange(rng);
                     };
                     reader.readAsDataURL(blob);
                 }
@@ -417,7 +414,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
                 break;
             case 'IMG':
                 let src = text.substring(text.indexOf('[') + 1, text.indexOf(']'));
-                html = '<img src="' + this.urlMap[src] + '"/>';
+                html = '<img src="' + src + '"/>';
                 break;
             case 'PRE':
                 html = text.substring(text.indexOf('@[') + 2, text.lastIndexOf(']@')); // 若不存在'@['则从0开始了
