@@ -37,6 +37,7 @@
     height: calc(60% - 1rem);
     float: left;
     overflow: auto;
+    line-height: 1.5rem;
 }
 
 .edit {
