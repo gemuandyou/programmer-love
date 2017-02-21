@@ -10,6 +10,8 @@ import {Mark} from "./mark";
 import copyWithin = require("core-js/fn/array/copy-within");
 import {NotesService} from "../../service/notes/notes.service";
 import {Notify} from "../../tools/notification";
+import {UUID} from "../../tools/uuid";
+
 @Component({
     templateUrl: 'app/comps/notes/notes.html',
     styleUrls: ['app/assets/styles/notes.css', 'app/assets/styles/common.css'],
@@ -28,6 +30,8 @@ export class NotesComponent implements OnInit, AfterViewInit{
     editIsMark: boolean = false; // 正在编辑的是否是html标记
     notes: String[] = []; // 笔记名列表
     currentNote: String = ''; // 当前笔记
+
+    preCache: {} = {}; // 缓存pre标签内容，将pre标签内容与UUID做映射
 
     canInputKey: any[] = ['`','!','@','#','$','%','^','&','*','(',')','-', '_','=','+','[',']','{','}',';',':','"','\'',
         ',','.','<','>','?','/'];
@@ -389,7 +393,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
             case 'URL':
                 let href = text.substring(text.indexOf('[') + 1, text.indexOf(']'));
                 let aTxt = text.substring(text.indexOf(']') + 1);
-                html = '<a href="' + href + '">' + aTxt + '</a>';
+                html = '<a href="' + href + '" target="_blank">' + aTxt + '</a>';
                 break;
             case 'OL':
                 let olTxt = text.substring(text.indexOf('(') + 1, text.indexOf(')'));
@@ -419,6 +423,12 @@ export class NotesComponent implements OnInit, AfterViewInit{
                 break;
             case 'PRE':
                 html = text.substring(text.indexOf('@[') + 2, text.lastIndexOf(']@')); // 若不存在'@['则从0开始了
+                let preCtx = this.preCache[html];
+                if (preCtx) {
+                    html = preCtx.replace(/&lt;/g, '<');
+                    html = html.replace(/&gt;/g, '>');
+                    html = html.replace(/&amp;/g, '&');
+                }
                 break;
             case 'FontColor':
                 html = '<span style="color: ' + renderParam + ';">' + text + '</span>';
@@ -474,6 +484,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
         this.notesEditorEle = this.notesEditor.nativeElement;
         if (this.notesEditorEle) {
             let notesContent = this.notesEditorEle.innerHTML;
+            notesContent = this.editComplication(notesContent);
             this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote}).subscribe((resp) => {
                 if (resp.status === 200) {
                     Notify.success('保存成功');
@@ -487,7 +498,9 @@ export class NotesComponent implements OnInit, AfterViewInit{
         this.noteService.getNote(note).subscribe((resp) => {
             if (resp.status === 200) {
                 this.notesEditorEle = this.notesEditor.nativeElement;
-                this.notesEditorEle.innerHTML = JSON.parse(resp._body).noteData;
+                let noteDate = JSON.parse(resp._body).noteData;
+                noteDate = this.editSimplify(noteDate);
+                this.notesEditorEle.innerHTML = noteDate;
                 this.parseNote(this.notesEditorEle.innerText);
             }
         });
@@ -511,6 +524,42 @@ export class NotesComponent implements OnInit, AfterViewInit{
         currEle.setAttribute('class', 'active');
         this.currentNote = currEle.textContent;
         this.getNote(this.currentNote);
+    }
+
+    /**
+     * 将pre标签内容用UUID替换
+     * @param body
+     * @returns {String}
+     */
+    editSimplify(body: String): String {
+        let reg = /@pre<\/span>\-@\[(^(\]@))*\]@/g;
+        let original = body.toString();
+        let result;
+        while ((result = reg.exec(original)) != null) {
+            let uuid = UUID.generate();
+            let preCtx = result[0];
+            preCtx = preCtx.substring(14, preCtx.length - 2);
+            this.preCache[uuid] = preCtx;
+            body = body.replace(result[0], '@pre</span>-@[' + uuid + ']@');
+        }
+        return body;
+    }
+
+    /**
+     * 将用UUID替换的pre标签内容恢复
+     * @param body
+     * @returns {string}
+     */
+    editComplication(body: String): String {
+        let reg = /@pre<\/span>\-@\[[0-9a-z\-]{36}\]@/g;
+        let original = body.toString();
+        let result;
+        while ((result = reg.exec(original)) != null) {
+            let preCtx = result[0];
+            preCtx = preCtx.substring(14, preCtx.length - 2);
+            body = body.replace(result[0], '@pre</span>-@[' + this.preCache[preCtx] + ']@');
+        }
+        return body;
     }
 
 }
