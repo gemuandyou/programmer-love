@@ -66,7 +66,8 @@ export class NotesComponent implements OnInit, AfterViewInit{
             sel.addRange(rng);
 
             for (let item of items) {
-                if (item.kind === 'string' && 'text/html' === item.type) {
+                if (!(item.kind === 'string' && 'text/html' === item.type)) {
+                } else {
                     item.getAsString((s) => {
                         s = s.replace(/<html>/g, '')
                             .replace(/<\/html>/g, '')
@@ -95,7 +96,9 @@ export class NotesComponent implements OnInit, AfterViewInit{
                         rng.deleteContents();
 
                         // 将删除的文本内容渲染成@pre标签
-                        let preTagTextEle = document.createTextNode('-@[' + s + ']@ ');
+                        let uuid = UUID.generate();
+                        this.preCache[uuid] = s;
+                        let preTagTextEle = document.createTextNode('-@[' + uuid + ']@ ');
                         rng.insertNode(preTagTextEle);
 
                         let preTagEle = document.createElement('span');
@@ -423,12 +426,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
                 break;
             case 'PRE':
                 html = text.substring(text.indexOf('@[') + 2, text.lastIndexOf(']@')); // 若不存在'@['则从0开始了
-                let preCtx = this.preCache[html];
-                if (preCtx) {
-                    html = preCtx.replace(/&lt;/g, '<');
-                    html = html.replace(/&gt;/g, '>');
-                    html = html.replace(/&amp;/g, '&');
-                }
+                html = this.preCache[html];
                 break;
             case 'FontColor':
                 html = '<span style="color: ' + renderParam + ';">' + text + '</span>';
