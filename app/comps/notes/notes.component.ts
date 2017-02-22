@@ -532,7 +532,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
      * @returns {String}
      */
     editSimplify(body: String): String {
-        let reg = /@pre<\/span>\-@\[(^(\]@))*\]@/g;
+        let reg = /@pre<\/span>\-@\[((?!\]@)[\s\S])*\]@/g;
         let original = body.toString();
         let result;
         while ((result = reg.exec(original)) != null) {
