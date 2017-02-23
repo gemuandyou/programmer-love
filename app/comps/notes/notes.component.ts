@@ -13,6 +13,7 @@ import {NotesService} from "../../service/notes/notes.service";
 import {Notify} from "../../tools/notification";
 import {UUID} from "../../tools/uuid";
 import {CodeParser} from "../../tools/code-parser";
+import {PasteFormat} from "../../service/notes/paste-format";
 
 @Component({
     templateUrl: 'app/comps/notes/notes.html',
@@ -30,7 +31,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
     pasteContent: {} = {}; // 粘贴的内容。html内容和文本内容
     pasteSel: any; // 粘贴内容时的getSelection
     pasteRng: any; // 粘贴内容时的Range对象
-    keepFormat: boolean = true; // 是否保持粘贴内容格式
+    pasteFormat: number = PasteFormat.KEEP_FORMAT.valueOf(); // 是否保持粘贴内容格式
     pasteWayEle: any;
 
     notesEditorEle: any;
@@ -67,32 +68,51 @@ export class NotesComponent implements OnInit, AfterViewInit{
         NotesComponent.reRenderPasteContentEmit.subscribe(() => {
             this.reRenderPasteContent();
         });
-        NotesComponent.choosePasteFormatEmit.subscribe(() => {
-            this.keepFormat = !this.keepFormat;
+        NotesComponent.choosePasteFormatEmit.subscribe((keyCode) => {
+            let childs = this.pasteWayEle.getElementsByTagName('li');
+            for (let i = 0; i < childs.length; i++) {
+                let child = childs[i];
+                if (child.className === 'active') {
+                    if (keyCode == 40 && (i + 1) < childs.length) {
+                        this.pasteFormat = childs[i + 1].value;
+                        break;
+                    }
+                    if (keyCode == 38 && (i - 1) >= 0) {
+                        this.pasteFormat = childs[i - 1].value;
+                        break;
+                    }
+                }
+            }
         });
         this.notesEditorEle = this.notesEditor.nativeElement;
         // 监听粘贴事件
         this.notesEditorEle.addEventListener('paste', (e) => {
             let pasteItems = e.clipboardData.items;
             this.pasteHandle(pasteItems);
-            // 选择粘贴方式（文本或保留原格式）
-            this.pasteWayEle = this.pasteWay.nativeElement;
-            this.pasteWayEle.style.display =  'inline-block';
-            // 监听上下键事件，切换粘贴方式
-            document.addEventListener('keydown', NotesComponent.keyDownEventFn);
         });
     }
 
     static keyDownEventFn(event): void {
         if (event.keyCode === 40 || event.keyCode === 38) {
             event.preventDefault();
-            NotesComponent.choosePasteFormatEmit.emit();
+            NotesComponent.choosePasteFormatEmit.emit(event.keyCode);
         }
         if (event.keyCode === 13) {
             event.preventDefault();
             NotesComponent.reRenderPasteContentEmit.emit();
             document.removeEventListener('keydown', NotesComponent.keyDownEventFn); // BUG 2017-02-22 17:56:57
         }
+    }
+
+    /**
+     * 粘贴格式选择
+     */
+    pasteChooseListener(): void {
+        // 选择粘贴方式（文本或保留原格式）
+        this.pasteWayEle = this.pasteWay.nativeElement;
+        this.pasteWayEle.style.display =  'inline-block';
+        // 监听上下键事件，切换粘贴方式
+        document.addEventListener('keydown', NotesComponent.keyDownEventFn);
     }
 
     /**
@@ -131,6 +151,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
                     this.pasteRng = this.pasteSel.getRangeAt(0);
                     this.pasteRng.deleteContents();
                 });
+                this.pasteChooseListener();
             }
             // 普通文本
             if (item.kind === 'string' && 'text/plain' === item.type) {
@@ -157,6 +178,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
                     this.pasteRng = this.pasteSel.getRangeAt(0);
                     this.pasteRng.deleteContents();
                 });
+                this.pasteChooseListener();
             }
             // 文件
             if (item.kind === 'file' && /image\//.test(item.type)) { // 粘贴图片
@@ -218,7 +240,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
      * 重新渲染粘贴的内容
      */
     reRenderPasteContent(): void {
-        if ((this.keepFormat && this.pasteContent['html']) || !this.pasteContent['plain']) {
+        if ((this.pasteFormat === PasteFormat.KEEP_FORMAT.valueOf() && this.pasteContent['html']) || !this.pasteContent['plain']) {
             // 将删除的文本内容渲染成@pre标签
             let uuid = UUID.generate();
             this.preCache[uuid] = this.pasteContent['html'];
@@ -238,9 +260,13 @@ export class NotesComponent implements OnInit, AfterViewInit{
             this.pasteSel.removeAllRanges();
             this.pasteSel.addRange(this.pasteRng);
         }
-        if ((!this.keepFormat && this.pasteContent['plain']) || !this.pasteContent['html']){
+        if ((this.pasteFormat !== PasteFormat.KEEP_FORMAT.valueOf() && this.pasteContent['plain']) || !this.pasteContent['html']){
             // 将删除的文本内容渲染成@pre标签
-            let code = new CodeParser(this.pasteContent['plain']).javaParser();
+            let code = this.pasteContent['plain'];
+            if (this.pasteFormat === PasteFormat.JAVA_FORMAT.valueOf()) {
+                code = new CodeParser(code).javaParser();
+            }
+
             let uuid = UUID.generate();
             this.preCache[uuid] = code;
             let preTagTextEle = document.createTextNode('-@[' + uuid + ']@ ');

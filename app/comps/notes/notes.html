@@ -16,8 +16,12 @@
     </div>
     <div class="paste-way">
         <ul #pasteWay>
-            <li [ngClass]="{'active': keepFormat}">保留原格式</li>
-            <li [ngClass]="{'active': !keepFormat}">仅粘贴文本</li>
+            <li [ngClass]="{'active': pasteFormat == 1}" value="1">保留原格式</li>
+            <li [ngClass]="{'active': pasteFormat == 2}" value="2">仅粘贴文本</li>
+            <li [ngClass]="{'active': pasteFormat == 3}" value="3">Java格式</li>
+        </ul>
+        <ul>
+            <li>a</li>
         </ul>
     </div>
     <!--<ol class="notes-editor-line">-->
