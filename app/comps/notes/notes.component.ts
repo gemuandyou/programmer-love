@@ -3,7 +3,8 @@
  */
 import {
     Component, ViewChild, AfterViewChecked, AfterContentChecked, NgZone, OnChanges,
-    SimpleChanges, DoCheck, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, AfterViewInit, OnInit
+    SimpleChanges, DoCheck, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, AfterViewInit, OnInit, EventEmitter,
+    Output
 } from "@angular/core";
 import {Title} from "@angular/platform-browser";
 import {Mark} from "./mark";
@@ -11,6 +12,7 @@ import copyWithin = require("core-js/fn/array/copy-within");
 import {NotesService} from "../../service/notes/notes.service";
 import {Notify} from "../../tools/notification";
 import {UUID} from "../../tools/uuid";
+import {CodeParser} from "../../tools/code-parser";
 
 @Component({
     templateUrl: 'app/comps/notes/notes.html',
@@ -23,6 +25,13 @@ export class NotesComponent implements OnInit, AfterViewInit{
     @ViewChild('notesEditor') notesEditor;
     @ViewChild('notesView') notesView;
     @ViewChild('clipboard') clipboard;
+    @ViewChild('pasteWay') pasteWay;
+
+    pasteContent: {} = {}; // 粘贴的内容。html内容和文本内容
+    pasteSel: any; // 粘贴内容时的getSelection
+    pasteRng: any; // 粘贴内容时的Range对象
+    keepFormat: boolean = true; // 是否保持粘贴内容格式
+    pasteWayEle: any;
 
     notesEditorEle: any;
     marks: any = Mark.markMap; // html标记的映射对象
@@ -32,6 +41,9 @@ export class NotesComponent implements OnInit, AfterViewInit{
     currentNote: String = ''; // 当前笔记
 
     preCache: {} = {}; // 缓存pre标签内容，将pre标签内容与UUID做映射
+
+    @Output() static choosePasteFormatEmit: EventEmitter<any> = new EventEmitter(); // 粘贴内容格式选择事件通知
+    @Output() static reRenderPasteContentEmit: EventEmitter<any> = new EventEmitter(); // 重新渲染粘贴内容事件通知
 
     canInputKey: any[] = ['`','!','@','#','$','%','^','&','*','(',')','-', '_','=','+','[',']','{','}',';',':','"','\'',
         ',','.','<','>','?','/'];
@@ -52,123 +64,203 @@ export class NotesComponent implements OnInit, AfterViewInit{
     }
 
     ngAfterViewInit(): void {
-        this.notesEditorEle = this.notesEditor.nativeElement;
-        this.notesEditorEle.addEventListener('paste', (e) => {
-            let items = e.clipboardData.items;
-
-            let sel = window.getSelection();
-            let spanEle = document.createElement('span');
-            let rng = sel.getRangeAt(0);
-            rng.insertNode(spanEle);
-            let textEle = document.createTextNode('-');
-            rng.insertNode(textEle);
-            sel.removeAllRanges();
-            sel.addRange(rng);
-
-            for (let item of items) {
-                if (!(item.kind === 'string' && 'text/html' === item.type)) {
-                } else {
-                    item.getAsString((s) => {
-                        s = s.replace(/<html>/g, '')
-                            .replace(/<\/html>/g, '')
-                            .replace(/<body>/g, '')
-                            .replace(/<\/body>/g, '');
-                        if (s.indexOf('<pre ') !== -1 && s.toString().lastIndexOf('</pre>') !== -1) {
-                            s = s.substring(s.indexOf('<pre '), s.toString().lastIndexOf('</pre>') + 6);
-                        } else {
-                            s = '<pre>' + s + '</pre>';
-                        }
-
-                        // 在编译器中 获取光标位置，生成pre标签
-                        let rng = sel.getRangeAt(0);
-                        let sc = rng.startContainer;
-                        let so = rng.startOffset;
-                        // 删除复制的文本内容
-                        rng = document.createRange();
-
-                        rng.setStart(sc, 0);
-                        rng.setEnd(sc, so);
-                        sel.removeAllRanges();
-                        sel.addRange(rng);
-                        sel.deleteFromDocument();
-
-                        rng = sel.getRangeAt(0);
-                        rng.deleteContents();
-
-                        // 将删除的文本内容渲染成@pre标签
-                        let uuid = UUID.generate();
-                        this.preCache[uuid] = s;
-                        let preTagTextEle = document.createTextNode('-@[' + uuid + ']@ ');
-                        rng.insertNode(preTagTextEle);
-
-                        let preTagEle = document.createElement('span');
-                        preTagEle.style.fontSize = 'italic';
-                        preTagEle.style.color = '#00c0ff';
-                        preTagEle.contentEditable = 'false';
-                        let imgTagName = document.createTextNode('@pre');
-                        preTagEle.appendChild(imgTagName);
-                        rng.insertNode(preTagEle);
-
-                        rng = rng.cloneRange();
-                        rng.collapse(false);
-                        sel.removeAllRanges();
-                        sel.addRange(rng);
-
-                    });
-                }
-                if (item.kind === 'file' && /image\//.test(item.type)) { // 粘贴图片
-                    var blob = item.getAsFile();
-                    var reader = new FileReader();
-                    reader.onload = (event) => {
-                        let eventTarget: any = event.target;
-
-                        // 在编辑器中 获取光标位置，直接生成图片
-                        // let sel = window.getSelection();
-                        // let rng = sel.getRangeAt(0);
-                        // rng.deleteContents();
-                        // let imgEle = document.createElement('img');
-                        // imgEle.src = event.target.result;
-                        // rng.insertNode(imgEle);
-                        // rng.collapse(true);
-                        // sel.removeAllRanges();
-                        // sel.addRange(rng);
-
-                        // 在编译器中 获取光标位置，生成图片标签
-                        let imgSrc = eventTarget.result;
-
-                        let sel = window.getSelection();
-                        let rng = sel.getRangeAt(0);
-                        rng.deleteContents();
-
-                        let cpImgUrl: String = ''; // 粘贴过来的图片，解析后生成路径
-
-                        // 保存截图
-                        this.noteService.saveImg({data: imgSrc}).subscribe((resp) => {
-                            if (resp.status === 200) {
-                                cpImgUrl = resp._body;
-                                let imgTagTextEle = document.createTextNode('-[' + cpImgUrl + '] ');
-                                rng.insertNode(imgTagTextEle);
-
-                                let imgTagEle = document.createElement('span');
-                                imgTagEle.style.fontSize = 'italic';
-                                imgTagEle.style.color = '#00c0ff';
-                                imgTagEle.contentEditable = 'false';
-                                let imgTagName = document.createTextNode('@img');
-                                imgTagEle.appendChild(imgTagName);
-                                rng.insertNode(imgTagEle);
-
-                                rng = rng.cloneRange();
-                                rng.collapse(false);
-                                sel.removeAllRanges();
-                                sel.addRange(rng);
-                            }
-                        });
-                    };
-                    reader.readAsDataURL(blob);
-                }
-            }
+        NotesComponent.reRenderPasteContentEmit.subscribe(() => {
+            this.reRenderPasteContent();
         });
+        NotesComponent.choosePasteFormatEmit.subscribe(() => {
+            this.keepFormat = !this.keepFormat;
+        });
+        this.notesEditorEle = this.notesEditor.nativeElement;
+        // 监听粘贴事件
+        this.notesEditorEle.addEventListener('paste', (e) => {
+            let pasteItems = e.clipboardData.items;
+            this.pasteHandle(pasteItems);
+            // 选择粘贴方式（文本或保留原格式）
+            this.pasteWayEle = this.pasteWay.nativeElement;
+            this.pasteWayEle.style.display =  'inline-block';
+            // 监听上下键事件，切换粘贴方式
+            document.addEventListener('keydown', NotesComponent.keyDownEventFn);
+        });
+    }
 
+    static keyDownEventFn(event): void {
+        if (event.keyCode === 40 || event.keyCode === 38) {
+            event.preventDefault();
+            NotesComponent.choosePasteFormatEmit.emit();
+        }
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            NotesComponent.reRenderPasteContentEmit.emit();
+            document.removeEventListener('keydown', NotesComponent.keyDownEventFn); // BUG 2017-02-22 17:56:57
+        }
+    }
+
+    /**
+     * 粘贴内容
+     * @param sel
+     * @param items
+     */
+    pasteHandle(pasteItems): void {
+        this.pasteSel = window.getSelection();
+        for (let item of pasteItems) {
+            // HTML内容
+            if (item.kind === 'string' && 'text/html' === item.type) {
+                item.getAsString((s) => {
+                    s = s.replace(/<html>/g, '')
+                        .replace(/<\/html>/g, '')
+                        .replace(/<body>/g, '')
+                        .replace(/<\/body>/g, '');
+                    if (s.indexOf('<pre ') !== -1 && s.toString().lastIndexOf('</pre>') !== -1) {
+                        s = s.substring(s.indexOf('<pre '), s.toString().lastIndexOf('</pre>') + 6);
+                    } else {
+                        s = '<pre>' + s + '</pre>';
+                    }
+                    this.pasteContent['html'] = s;
+                    // 在编译器中 获取光标位置，生成pre标签
+                    this.pasteRng = this.pasteSel.getRangeAt(0);
+                    let sc = this.pasteRng.startContainer;
+                    let so = this.pasteRng.startOffset;
+                    let ec = this.pasteRng.endContainer;
+                    let eo = this.pasteRng.endOffset;
+                    // 删除复制的文本内容
+                    this.pasteRng = document.createRange();
+                    this.pasteRng.setStart(sc, 0);
+                    this.pasteRng.setEnd(ec, eo);
+                    this.pasteSel.addRange(this.pasteRng);
+                    this.pasteSel.deleteFromDocument();
+                    this.pasteRng = this.pasteSel.getRangeAt(0);
+                    this.pasteRng.deleteContents();
+                });
+            }
+            // 普通文本
+            if (item.kind === 'string' && 'text/plain' === item.type) {
+                item.getAsString((s) => {
+                    s = s.replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});
+                    if (s.indexOf('<pre ') !== -1 && s.toString().lastIndexOf('</pre>') !== -1) {
+                        s = s.substring(s.indexOf('<pre '), s.toString().lastIndexOf('</pre>') + 6);
+                    } else {
+                        s = '<pre>' + s + '</pre>';
+                    }
+                    this.pasteContent['plain'] = s;
+                    // 在编译器中 获取光标位置，生成pre标签
+                    this.pasteRng = this.pasteSel.getRangeAt(0);
+                    let sc = this.pasteRng.startContainer;
+                    let so = this.pasteRng.startOffset;
+                    let ec = this.pasteRng.endContainer;
+                    let eo = this.pasteRng.endOffset;
+                    // 删除复制的文本内容
+                    this.pasteRng = document.createRange();
+                    this.pasteRng.setStart(sc, 0);
+                    this.pasteRng.setEnd(ec, eo);
+                    this.pasteSel.addRange(this.pasteRng);
+                    this.pasteSel.deleteFromDocument();
+                    this.pasteRng = this.pasteSel.getRangeAt(0);
+                    this.pasteRng.deleteContents();
+                });
+            }
+            // 文件
+            if (item.kind === 'file' && /image\//.test(item.type)) { // 粘贴图片
+                var blob = item.getAsFile();
+                var reader = new FileReader();
+                reader.onload = (event) => {
+                    let eventTarget: any = event.target;
+
+                    // 在编辑器中 获取光标位置，直接生成图片
+                    // let sel = window.getSelection();
+                    // let rng = sel.getRangeAt(0);
+                    // rng.deleteContents();
+                    // let imgEle = document.createElement('img');
+                    // imgEle.src = event.target.result;
+                    // rng.insertNode(imgEle);
+                    // rng.collapse(true);
+                    // sel.removeAllRanges();
+                    // sel.addRange(rng);
+
+                    // 在编译器中 获取光标位置，生成图片标签
+                    let imgSrc = eventTarget.result;
+
+                    let sel = window.getSelection();
+                    let rng = sel.getRangeAt(0);
+                    rng.deleteContents();
+
+                    let cpImgUrl: String = ''; // 粘贴过来的图片，解析后生成路径
+
+                    // 保存截图
+                    this.noteService.saveImg({data: imgSrc}).subscribe((resp) => {
+                        if (resp.status === 200) {
+                            cpImgUrl = resp._body;
+                            let imgTagTextEle = document.createTextNode('-[' + cpImgUrl + '] ');
+                            rng.insertNode(imgTagTextEle);
+
+                            let imgTagEle = document.createElement('span');
+                            imgTagEle.style.fontSize = 'italic';
+                            imgTagEle.style.color = '#00c0ff';
+                            imgTagEle.contentEditable = 'false';
+                            let imgTagName = document.createTextNode('@img');
+                            imgTagEle.appendChild(imgTagName);
+                            rng.insertNode(imgTagEle);
+
+                            rng = rng.cloneRange();
+                            rng.collapse(false);
+                            sel.removeAllRanges();
+                            sel.addRange(rng);
+                        }
+                    });
+                };
+                reader.readAsDataURL(blob);
+                // this.pasteWayEle.style.display =  'none';
+                break;
+            }
+        }
+    }
+
+    /**
+     * 重新渲染粘贴的内容
+     */
+    reRenderPasteContent(): void {
+        if ((this.keepFormat && this.pasteContent['html']) || !this.pasteContent['plain']) {
+            // 将删除的文本内容渲染成@pre标签
+            let uuid = UUID.generate();
+            this.preCache[uuid] = this.pasteContent['html'];
+            let preTagTextEle = document.createTextNode('-@[' + uuid + ']@ ');
+            this.pasteRng.insertNode(preTagTextEle);
+
+            let preTagEle = document.createElement('span');
+            preTagEle.style.fontSize = 'italic';
+            preTagEle.style.color = '#00c0ff';
+            preTagEle.contentEditable = 'false';
+            let imgTagName = document.createTextNode('@pre');
+            preTagEle.appendChild(imgTagName);
+            this.pasteRng.insertNode(preTagEle);
+
+            this.pasteRng = this.pasteRng.cloneRange();
+            this.pasteRng.collapse(false);
+            this.pasteSel.removeAllRanges();
+            this.pasteSel.addRange(this.pasteRng);
+        }
+        if ((!this.keepFormat && this.pasteContent['plain']) || !this.pasteContent['html']){
+            // 将删除的文本内容渲染成@pre标签
+            let code = new CodeParser(this.pasteContent['plain']).javaParser();
+            let uuid = UUID.generate();
+            this.preCache[uuid] = code;
+            let preTagTextEle = document.createTextNode('-@[' + uuid + ']@ ');
+            this.pasteRng.insertNode(preTagTextEle);
+
+            let preTagEle = document.createElement('span');
+            preTagEle.style.fontSize = 'italic';
+            preTagEle.style.color = '#00c0ff';
+            preTagEle.contentEditable = 'false';
+            let imgTagName = document.createTextNode('@pre');
+            preTagEle.appendChild(imgTagName);
+            this.pasteRng.insertNode(preTagEle);
+
+            this.pasteRng = this.pasteRng.cloneRange();
+            this.pasteRng.collapse(false);
+            this.pasteSel.removeAllRanges();
+            this.pasteSel.addRange(this.pasteRng);
+        }
+        this.pasteWayEle.style.display =  'none';
+        this.pasteContent = {};
     }
 
     /**

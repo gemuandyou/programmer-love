@@ -14,6 +14,12 @@
         <a class="btn" (click)="helper = !helper" *ngIf="!editorFlex">Help</a>
         <a class="btn" (click)="todo = !todo" *ngIf="!editorFlex">TODO</a>
     </div>
+    <div class="paste-way">
+        <ul #pasteWay>
+            <li [ngClass]="{'active': keepFormat}">保留原格式</li>
+            <li [ngClass]="{'active': !keepFormat}">仅粘贴文本</li>
+        </ul>
+    </div>
     <!--<ol class="notes-editor-line">-->
     <!--<li></li>-->
     <!--<li></li>-->

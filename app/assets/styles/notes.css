@@ -100,12 +100,32 @@
 .editorFlex {
     display: none;
 }
+
 .editFlex {
     height: 1.5rem;
 }
+
 .formFlex {
     height: calc(100% - 2rem - 1.5rem);
 }
+
 .viewFlex {
     height: calc(100% - 1rem - 2rem - 1.5rem);
+}
+
+.paste-way {
+    position: absolute;
+    background-color: white;
+}
+
+.paste-way ul {
+    list-style: none;
+    width: 7rem;
+    padding: 0;
+    text-align: center;
+    display: none;
+}
+
+.paste-way ul .active {
+    background-color: cornflowerblue;
 }
