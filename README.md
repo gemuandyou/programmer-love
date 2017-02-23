@@ -6,7 +6,7 @@
 
 ### Notes
 >用来记录日志或笔记的模块。快速记录笔记和日志等信息。这个模块目前是给自己用的，会在使用中不断完善。
-* 示例图片如下
+* 示例图片如下（编辑区内容显示已优化）
 !['示例图片'](https://github.com/gemuandyou/programmer-love-original/blob/master/app/assets/other/notes-demo.png?raw=true)
 
 ### So on
