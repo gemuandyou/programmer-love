@@ -335,22 +335,28 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 let remainHtml = originalHtml.substring(originalHtml.lastIndexOf(this.editMark) + this.editMark.length);
                 originalHtml = originalHtml.substring(0, originalHtml.lastIndexOf(this.editMark));
                 let isSpecialMark = this.checkSpecialMark(this.editMark);
+                let cursorOffset = 0; // 光标偏移量
                 switch (isSpecialMark) {
                     case 1:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-[]';
+                        cursorOffset = 2;
                         break;
                     case 2:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-()';
+                        cursorOffset = 2;
                         break;
                     case 3:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-yellow-' +
                             '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + '>' + '</span>';
+                        cursorOffset = 1;
                         break;
                     case 4:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-@[]@';
+                        cursorOffset = 3;
                         break;
                     default:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-';
+                        cursorOffset = 1;
                         if (this.editMark === '@tab') {
                             this.editIsMark = false;
                         }
@@ -362,14 +368,14 @@ export class NotesComponent implements OnInit, AfterViewInit {
 
                 // 将光标移动到末尾
                 let range = document.createRange();
-                let editSpans = document.getElementsByClassName('edit-span"');
-                for (let editSpan in editSpans) {
-                    console.log(editSpan);
-                }
-                range.selectNodeContents(editSpans[0]);
+                let editSpans: HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
+                let editTxtEle = editSpans[0].nextSibling;
+                range.selectNodeContents(editTxtEle);
+                range.setEnd(range.endContainer, cursorOffset);
                 range.collapse(false);
                 sel.removeAllRanges();
                 sel.addRange(range);
+                editSpans[0].className = editSpans[0].className.replace(/edit\-span/g, '');
                 // document.execCommand('removeFormat', false, null); // 将选中的区域删除其格式化标签。第二个参数为是否弹窗提示.toggle效果
             }
             if (this.editMark.length > 10) {
