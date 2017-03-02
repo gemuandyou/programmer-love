@@ -21,7 +21,7 @@ import {PasteFormat} from "../../service/notes/paste-format";
     // changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [NotesService]
 })
-export class NotesComponent implements OnInit, AfterViewInit{
+export class NotesComponent implements OnInit, AfterViewInit {
 
     @ViewChild('notesEditor') notesEditor;
     @ViewChild('notesView') notesView;
@@ -46,8 +46,8 @@ export class NotesComponent implements OnInit, AfterViewInit{
     @Output() static choosePasteFormatEmit: EventEmitter<any> = new EventEmitter(); // 粘贴内容格式选择事件通知
     @Output() static reRenderPasteContentEmit: EventEmitter<any> = new EventEmitter(); // 重新渲染粘贴内容事件通知
 
-    canInputKey: any[] = ['`','!','@','#','$','%','^','&','*','(',')','-', '_','=','+','[',']','{','}',';',':','"','\'',
-        ',','.','<','>','?','/'];
+    canInputKey: any[] = ['`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', ']', '{', '}', ';', ':', '"', '\'',
+        ',', '.', '<', '>', '?', '/'];
     specialWord: String[] = ["@", "#"]; // TODO 2017-01-31 09:43:07 特殊字符需要用\转义
 
     constructor(title: Title, private ref: ChangeDetectorRef, private noteService: NotesService) {
@@ -110,7 +110,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
     pasteChooseListener(): void {
         // 选择粘贴方式（文本或保留原格式）
         this.pasteWayEle = this.pasteWay.nativeElement;
-        this.pasteWayEle.style.display =  'inline-block';
+        this.pasteWayEle.style.display = 'inline-block';
         // 监听上下键事件，切换粘贴方式
         document.addEventListener('keydown', NotesComponent.keyDownEventFn);
     }
@@ -122,6 +122,10 @@ export class NotesComponent implements OnInit, AfterViewInit{
      */
     pasteHandle(pasteItems): void {
         this.pasteSel = window.getSelection();
+        // 在编译器中 获取光标位置
+        this.pasteRng = this.pasteSel.getRangeAt(0);
+        let beforeEc = this.pasteRng.endContainer;
+        let beforeEo = this.pasteRng.endOffset;
         for (let item of pasteItems) {
             // HTML内容
             if (item.kind === 'string' && 'text/html' === item.type) {
@@ -136,16 +140,14 @@ export class NotesComponent implements OnInit, AfterViewInit{
                         s = '<pre>' + s + '</pre>';
                     }
                     this.pasteContent['html'] = s;
-                    // 在编译器中 获取光标位置，生成pre标签
+                    // 在编译器中 获取光标位置
                     this.pasteRng = this.pasteSel.getRangeAt(0);
-                    let sc = this.pasteRng.startContainer;
-                    let so = this.pasteRng.startOffset;
-                    let ec = this.pasteRng.endContainer;
-                    let eo = this.pasteRng.endOffset;
-                    // 删除复制的文本内容
+                    let afterEc = this.pasteRng.endContainer;
+                    let afterEo = this.pasteRng.endOffset;
+                    // // 删除复制的文本内容
                     this.pasteRng = document.createRange();
-                    this.pasteRng.setStart(sc, 0);
-                    this.pasteRng.setEnd(ec, eo);
+                    this.pasteRng.setStart(beforeEc, beforeEo);
+                    this.pasteRng.setEnd(afterEc, afterEo);
                     this.pasteSel.addRange(this.pasteRng);
                     this.pasteSel.deleteFromDocument();
                     this.pasteRng = this.pasteSel.getRangeAt(0);
@@ -156,23 +158,18 @@ export class NotesComponent implements OnInit, AfterViewInit{
             // 普通文本
             if (item.kind === 'string' && 'text/plain' === item.type) {
                 item.getAsString((s) => {
-                    s = s.replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});
-                    if (s.indexOf('<pre ') !== -1 && s.toString().lastIndexOf('</pre>') !== -1) {
-                        s = s.substring(s.indexOf('<pre '), s.toString().lastIndexOf('</pre>') + 6);
-                    } else {
-                        s = '<pre>' + s + '</pre>';
-                    }
+                    s = s.replace(/[<>&"]/g, function (c) {
+                        return {'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;'}[c];
+                    });
                     this.pasteContent['plain'] = s;
-                    // 在编译器中 获取光标位置，生成pre标签
+                    // 在编译器中 获取光标位置
                     this.pasteRng = this.pasteSel.getRangeAt(0);
-                    let sc = this.pasteRng.startContainer;
-                    let so = this.pasteRng.startOffset;
-                    let ec = this.pasteRng.endContainer;
-                    let eo = this.pasteRng.endOffset;
+                    let afterEc = this.pasteRng.endContainer;
+                    let afterEo = this.pasteRng.endOffset;
                     // 删除复制的文本内容
                     this.pasteRng = document.createRange();
-                    this.pasteRng.setStart(sc, 0);
-                    this.pasteRng.setEnd(ec, eo);
+                    this.pasteRng.setStart(beforeEc, beforeEo);
+                    this.pasteRng.setEnd(afterEc, afterEo);
                     this.pasteSel.addRange(this.pasteRng);
                     this.pasteSel.deleteFromDocument();
                     this.pasteRng = this.pasteSel.getRangeAt(0);
@@ -230,7 +227,6 @@ export class NotesComponent implements OnInit, AfterViewInit{
                     });
                 };
                 reader.readAsDataURL(blob);
-                // this.pasteWayEle.style.display =  'none';
                 break;
             }
         }
@@ -240,7 +236,8 @@ export class NotesComponent implements OnInit, AfterViewInit{
      * 重新渲染粘贴的内容
      */
     reRenderPasteContent(): void {
-        if ((this.pasteFormat === PasteFormat.KEEP_FORMAT.valueOf() && this.pasteContent['html']) || !this.pasteContent['plain']) {
+        // 保留格式
+        if (this.pasteFormat === PasteFormat.KEEP_FORMAT.valueOf() && (this.pasteContent['html'] || !this.pasteContent['plain'])) {
             // 将删除的文本内容渲染成@pre标签
             let uuid = UUID.generate();
             this.preCache[uuid] = this.pasteContent['html'];
@@ -255,17 +252,16 @@ export class NotesComponent implements OnInit, AfterViewInit{
             preTagEle.appendChild(imgTagName);
             this.pasteRng.insertNode(preTagEle);
 
-            this.pasteRng = this.pasteRng.cloneRange();
+            let pasteRng = this.pasteRng.cloneRange();
             this.pasteRng.collapse(false);
             this.pasteSel.removeAllRanges();
-            this.pasteSel.addRange(this.pasteRng);
+            this.pasteSel.addRange(pasteRng);
         }
-        if ((this.pasteFormat !== PasteFormat.KEEP_FORMAT.valueOf() && this.pasteContent['plain']) || !this.pasteContent['html']){
+        // 解析为Java代码
+        if (this.pasteFormat === PasteFormat.JAVA_FORMAT.valueOf() && (this.pasteContent['plain'] || !this.pasteContent['html'])) {
             // 将删除的文本内容渲染成@pre标签
             let code = this.pasteContent['plain'];
-            if (this.pasteFormat === PasteFormat.JAVA_FORMAT.valueOf()) {
-                code = new CodeParser(code).javaParser();
-            }
+            code = new CodeParser(code).javaParser();
 
             let uuid = UUID.generate();
             this.preCache[uuid] = code;
@@ -280,12 +276,24 @@ export class NotesComponent implements OnInit, AfterViewInit{
             preTagEle.appendChild(imgTagName);
             this.pasteRng.insertNode(preTagEle);
 
-            this.pasteRng = this.pasteRng.cloneRange();
+            let pasteRng = this.pasteRng.cloneRange();
             this.pasteRng.collapse(false);
             this.pasteSel.removeAllRanges();
-            this.pasteSel.addRange(this.pasteRng);
+            this.pasteSel.addRange(pasteRng);
         }
-        this.pasteWayEle.style.display =  'none';
+        // 纯文本
+        if (this.pasteFormat === PasteFormat.TEXT.valueOf() && (this.pasteContent['plain'] || !this.pasteContent['html'])) {
+            // 将删除的文本内容渲染成@pre标签
+            let code = this.pasteContent['plain'];
+            let text = document.createTextNode(code);
+            this.pasteRng.insertNode(text);
+
+            let pasteRng = this.pasteRng.cloneRange();
+            this.pasteRng.collapse(false);
+            this.pasteSel.removeAllRanges();
+            this.pasteSel.addRange(pasteRng);
+        }
+        this.pasteWayEle.style.display = 'none';
         this.pasteContent = {};
     }
 
@@ -297,64 +305,68 @@ export class NotesComponent implements OnInit, AfterViewInit{
 
         let sel = window.getSelection();
 
-        // 验证是否是输入的内容
-        // if (/^[0-9]$/g.test(event.key) || /^[a-zA-Z]$/g.test(event.key) || this.canInputKey.indexOf(event.key) !== -1) {
-        //     let partText = rng.startOffset > 0 ? currText.substring(0, rng.startOffset - 1) : currText;
-        //     if (partText.lastIndexOf('@') !== -1) {
-        //         let markName = partText.substring(partText.lastIndexOf('@'));
-        //         if (this.checkMark(markName)) {
-        //             console.log(rng.startContainer.textContent);
-        //             return;
-        //         }
-        //     }
-        // }
-
         if (event.key == '@' || event.key == 'Process') {
+            this.editMark = '@';
             this.editIsMark = true;
             return;
         } else if (event.key == ' ') {
+            this.editMark = '';
             this.editIsMark = false;
             return;
         }
 
         if (this.editIsMark) {
-            let originalHtml = this.notesEditorEle.innerHTML;
-            if (originalHtml.indexOf('<br>') !== -1 && originalHtml.indexOf('<br>') > originalHtml.lastIndexOf('@')) {
-                this.editMark = originalHtml.substring(originalHtml.lastIndexOf('@'), originalHtml.indexOf('<br>'));
-            } else {
-                this.editMark = originalHtml.substring(originalHtml.lastIndexOf('@'));
-            }
-            this.editMark = this.editMark.replace(/<(\/[a-z]*|[a-z]*)>/g, '').replace(/\n/g, '').replace(/ /g, '');
+            // 可以在任意地方写标签（当让不能在标签里）
+            let rng = sel.getRangeAt(0);
+            let endEle = rng.endContainer;
+            let endTxt = endEle.textContent;
+            let endOffset = rng.endOffset;
+            this.editMark = endTxt.substring(endTxt.lastIndexOf("@"), endOffset);
+            // 只能在最后写标签
+            // if (originalHtml.indexOf('<br>') !== -1 && originalHtml.indexOf('<br>') > originalHtml.lastIndexOf('@')) {
+            //     this.editMark = originalHtml.substring(originalHtml.lastIndexOf('@'), originalHtml.indexOf('<br>'));
+            // } else {
+            //     this.editMark = originalHtml.substring(originalHtml.lastIndexOf('@'));
+            // }
+            // this.editMark = this.editMark.replace(/<(\/[a-z]*|[a-z]*)>/g, '').replace(/\n/g, '').replace(/ /g, '');
             let isMark = this.checkMark(this.editMark);
             if (isMark) {
+                let originalHtml = this.notesEditorEle.innerHTML;
+                let remainHtml = originalHtml.substring(originalHtml.lastIndexOf(this.editMark) + this.editMark.length);
                 originalHtml = originalHtml.substring(0, originalHtml.lastIndexOf(this.editMark));
                 let isSpecialMark = this.checkSpecialMark(this.editMark);
-                switch(isSpecialMark) {
+                switch (isSpecialMark) {
                     case 1:
-                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + this.editMark + '</span>-[]';
+                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-[]';
                         break;
                     case 2:
-                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + this.editMark + '</span>-()';
+                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-()';
                         break;
                     case 3:
-                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + this.editMark + '</span>-transparent->';
+                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-yellow-' +
+                            '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + '>' + '</span>';
                         break;
                     case 4:
-                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + this.editMark + '</span>-@[]@';
+                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-@[]@';
+                        break;
                     default:
-                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + this.editMark + '</span>-';
+                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-';
                         if (this.editMark === '@tab') {
                             this.editIsMark = false;
-                            originalHtml += '<br><br>';
                         }
                         break;
                 }
-                this.notesEditorEle.innerHTML = originalHtml;
+                this.notesEditorEle.innerHTML = originalHtml + remainHtml;
                 this.editIsMark = false;
+                this.editMark = '';
 
                 // 将光标移动到末尾
                 let range = document.createRange();
-                range.selectNodeContents(this.notesEditorEle);
+                let editSpans = document.getElementsByClassName('edit-span"');
+                for (let editSpan in editSpans) {
+                    console.log(editSpan);
+                }
+                range.selectNodeContents(editSpans[0]);
                 range.collapse(false);
                 sel.removeAllRanges();
                 sel.addRange(range);
@@ -362,6 +374,7 @@ export class NotesComponent implements OnInit, AfterViewInit{
             }
             if (this.editMark.length > 10) {
                 this.editIsMark = false;
+                this.editMark = '';
             }
         }
 
@@ -399,6 +412,9 @@ export class NotesComponent implements OnInit, AfterViewInit{
                 if (lineHtml === '') {
                     if (html.match(/<blockquote>/g) && html.match(/<blockquote>/g) &&
                         (!html.match(/<\/blockquote>/g) || html.match(/<blockquote>/g).length !== html.match(/<\/blockquote>/g).length)) {
+                        if (html.endsWith("<br><br>")) {
+                            html = html.substring(0, html.length - 8);
+                        }
                         html += '</blockquote>';
                     }
                     continue;
@@ -459,9 +475,9 @@ export class NotesComponent implements OnInit, AfterViewInit{
                         afterText = '';
                     }
                 } else if (this.checkSpecialMark(mark.key) === 4) {
-                    if (afterText.lastIndexOf(']@') !== -1) {
-                        handleText = afterText.substring(afterText.indexOf('@['), afterText.lastIndexOf(']@') + 2);
-                        afterText = afterText.substring(afterText.lastIndexOf(']@') + 2);
+                    if (afterText.indexOf(']@') !== -1) {
+                        handleText = afterText.substring(afterText.indexOf('@['), afterText.indexOf(']@') + 2);
+                        afterText = afterText.substring(afterText.indexOf(']@') + 2);
                     }
                 } else {
                     afterText = '';

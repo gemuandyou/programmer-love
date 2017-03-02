@@ -25,6 +25,6 @@ export class CodeParser {
             }
         }
         return '<pre style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">java</div>' +
-            '<div style="background-color: #f1f1f1">' + codeTxt + '</pre></div>';
+            '<div style="background-color: #f1f1f1">' + codeTxt + '</div></pre>';
     }
 }

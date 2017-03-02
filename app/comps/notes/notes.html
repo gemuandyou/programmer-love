@@ -50,8 +50,10 @@
     <div class="editor-helper" *ngIf="todo">
         <p>需要完善的内容</p>
         <ul>
+            <li><s>粘贴文本内容时，会删除相邻的同级文本。需要分隔标签分隔。</s></li>
             <li>添加@code标签，粘贴代码为纯文本，根据标签表明语言解析关键字高亮</li>
             <li>由于保存机制过于简单，所以建议每个笔记内容不要太多</li>
+            <li>写标签的时候后面有内容，不能生成标签符号</li>
         </ul>
     </div>
     <p style="display: none;" #clipboard></p>
