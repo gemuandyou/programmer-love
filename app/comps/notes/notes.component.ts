@@ -313,6 +313,9 @@ export class NotesComponent implements OnInit, AfterViewInit {
             this.editMark = '';
             this.editIsMark = false;
             return;
+        } else if (event.key == 'Escape') {
+            this.pasteWayEle.style.display = 'none';
+            return;
         }
 
         if (this.editIsMark) {
@@ -489,7 +492,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     }
                 } else if (markType === 4) { // @pre标签目前不支持手动写
                     if (afterText.indexOf(']@') !== -1) {
-                        handleText = afterText.substring(afterText.indexOf('@[') + 2, afterText.indexOf(']@'));
+                        handleText = afterText.substring(afterText.indexOf('@['), afterText.indexOf(']@') + 2);
                         afterText = afterText.substring(afterText.indexOf(']@') + 2);
                     }
                 } else if (markType === 5) {

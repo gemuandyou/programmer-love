@@ -131,6 +131,8 @@
 .paste-way {
     position: absolute;
     background-color: white;
+    background-color: #8c8888;
+    color: #f3eaea;
 }
 
 .paste-way ul {
