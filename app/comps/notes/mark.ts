@@ -19,7 +19,8 @@ export class Mark {
         {key: '@pre', val: 'PRE'},
         {key: '@fc', val: 'FontColor'},
         {key: '@fbc', val: 'FontBackgroundColor'},
-        {key: '@tab', val: 'TAB'}
+        {key: '@tab', val: 'TAB'},
+        {key: '@code', val: 'CODE'}
     ];
 }
 

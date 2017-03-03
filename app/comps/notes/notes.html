@@ -8,11 +8,15 @@
 </div>
 <div class="edit" [ngClass]="{'editFlex':editorFlex}">
     <div class="notes-tools">
-        <span *ngFor="let mark of marks">{{mark.key}}->{{mark.val}}</span>
-        <a class="btn" (click)="editorFlex = !editorFlex"><span *ngIf="editorFlex">+</span><span *ngIf="!editorFlex">-</span></a>
-        <a class="btn" (click)="saveNote();" *ngIf="!editorFlex">Save</a>
-        <a class="btn" (click)="helper = !helper" *ngIf="!editorFlex">Help</a>
-        <a class="btn" (click)="todo = !todo" *ngIf="!editorFlex">TODO</a>
+        <div class="notes-tags-declare">
+            <span *ngFor="let mark of marks">{{mark.key}}->{{mark.val}}</span>
+        </div>
+        <div class="notes-tools-btn">
+            <a class="btn" (click)="editorFlex = !editorFlex"><span *ngIf="editorFlex">+</span><span *ngIf="!editorFlex">-</span></a>
+            <a class="btn" (click)="saveNote();" *ngIf="!editorFlex">Save</a>
+            <a class="btn" (click)="helper = !helper" *ngIf="!editorFlex">Help</a>
+            <a class="btn" (click)="todo = !todo" *ngIf="!editorFlex">TODO</a>
+        </div>
     </div>
     <div class="paste-way">
         <ul #pasteWay>
@@ -28,13 +32,14 @@
     <!--<li></li>-->
     <!--<li></li>-->
     <!--</ol>-->
-    <div class="notes-editor" contenteditable="plaintext-only" #notesEditor (keyup)="confirmEdit($event)" [ngClass]="{'editorFlex':editorFlex}"></div>
+    <div class="notes-editor" contenteditable="plaintext-only" #notesEditor (keyup)="changeEdit($event)" [ngClass]="{'editorFlex':editorFlex}"></div>
     <div class="editor-helper" *ngIf="helper">
         <p>
             编写标签时，最好只编辑最后一个标签。
             使用@tab标签来进行缩进，遇到空行结束缩进。可嵌套使用。
             标签渲染的内容以空格为截止符，若紧连接标签后需要打印空格，则输入两个空格即可，如：@h1-abc  a。标签目前分为三种。
             请注意别XSS攻击，跪谢了。
+            @pre标签目前不支持手动写，一般都是粘贴的内容。
         </p>
         <ol>
             <li>普通标签。如：@h1-、@i-、@b-等。</li>
@@ -51,9 +56,11 @@
         <p>需要完善的内容</p>
         <ul>
             <li><s>粘贴文本内容时，会删除相邻的同级文本。需要分隔标签分隔。</s></li>
-            <li>添加@code标签，粘贴代码为纯文本，根据标签表明语言解析关键字高亮</li>
+            <li><s>添加@code标签，粘贴代码为纯文本，根据标签表明语言解析关键字高亮。</s>code语言类型支持需要后续补充。</li>
+            <li><s>粘贴内容选择格式。</s>粘贴代码语言选择需要后续补充。</li>
             <li>由于保存机制过于简单，所以建议每个笔记内容不要太多</li>
             <li><s>写标签的时候后面有内容，不能生成标签符号</s></li>
+            <li>日期目录悬浮显示内容结构目录，如果不读取日记内容，如何获取日记目录结构呢？，如果读取日记内容，那么悬浮就没有意义，点击就可以了。如何解决呢？:(</li>
         </ul>
     </div>
     <p style="display: none;" #clipboard></p>

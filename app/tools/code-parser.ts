@@ -27,4 +27,10 @@ export class CodeParser {
         return '<pre style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">java</div>' +
             '<div style="background-color: #f1f1f1">' + codeTxt + '</div></pre>';
     }
+
+    basisParser(): String {
+        let codeTxt = this._codeTxt.toString();
+        return '<pre style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">basis</div>' +
+            '<div style="background-color: #f1f1f1">' + codeTxt + '</div></pre>';
+    }
 }

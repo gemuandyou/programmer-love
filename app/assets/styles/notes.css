@@ -87,6 +87,21 @@
     line-height: 1.5rem;
 }
 
+.notes-tags-declare {
+    width: calc(100% - 12rem);
+    display: inline-block;
+    /*溢出使用省略号代替*/
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.notes-tools-btn {
+    width: 12rem;
+    display: inline-block;
+    float: right;
+}
+
 .notes-tools a {
     float: right;
     margin-right: 0.5rem;

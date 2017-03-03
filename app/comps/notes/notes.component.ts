@@ -300,7 +300,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 编辑内容更改
      */
-    confirmEdit(event): void {
+    changeEdit(event): void {
         let currText = this.notesEditorEle.innerText;
 
         let sel = window.getSelection();
@@ -335,28 +335,33 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 let remainHtml = originalHtml.substring(originalHtml.lastIndexOf(this.editMark) + this.editMark.length);
                 originalHtml = originalHtml.substring(0, originalHtml.lastIndexOf(this.editMark));
                 let isSpecialMark = this.checkSpecialMark(this.editMark);
-                let cursorOffset = 0; // 光标偏移量
+                let cursorOffsetSt = 0; // 光标起始偏移量
+                let cursorOffsetEd = 0; // 光标终止偏移量
                 switch (isSpecialMark) {
                     case 1:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-[]';
-                        cursorOffset = 2;
+                        cursorOffsetSt = cursorOffsetEd = 2;
                         break;
                     case 2:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-()';
-                        cursorOffset = 2;
+                        cursorOffsetSt = cursorOffsetEd = 2;
                         break;
                     case 3:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-yellow-' +
                             '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + '>' + '</span>';
-                        cursorOffset = 1;
+                        cursorOffsetSt = 1, cursorOffsetEd = 7;
                         break;
                     case 4:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-@[]@';
-                        cursorOffset = 3;
+                        cursorOffsetSt = cursorOffsetEd = 3;
+                        break;
+                    case 5:
+                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-basis-@[]@';
+                        cursorOffsetSt = 1, cursorOffsetEd = 6;
                         break;
                     default:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-';
-                        cursorOffset = 1;
+                        cursorOffsetSt = cursorOffsetEd = 1;
                         if (this.editMark === '@tab') {
                             this.editIsMark = false;
                         }
@@ -371,8 +376,9 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 let editSpans: HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
                 let editTxtEle = editSpans[0].nextSibling;
                 range.selectNodeContents(editTxtEle);
-                range.setEnd(range.endContainer, cursorOffset);
-                range.collapse(false);
+                range.setStart(range.startContainer, cursorOffsetSt);
+                range.setEnd(range.endContainer, cursorOffsetEd);
+                // range.collapse(false);
                 sel.removeAllRanges();
                 sel.addRange(range);
                 editSpans[0].className = editSpans[0].className.replace(/edit\-span/g, '');
@@ -449,17 +455,18 @@ export class NotesComponent implements OnInit, AfterViewInit {
         for (let mark of this.marks) {
             while (text.indexOf(mark.key + '-') !== -1) {
                 let newText = '';
-                let colorStyle = '';
+                let attachParam = '';
                 let beforeText = text.substring(0, text.indexOf(mark.key + '-'));
                 newText += beforeText;
 
                 let afterText = text.substring(text.indexOf(mark.key + '-') + (mark.key + '-').length);
                 let handleText = afterText.substring(0);
+                let markType = this.checkSpecialMark(mark.key);
                 // 截取标签后的内容
-                if (this.checkSpecialMark(mark.key) === 0 && afterText.indexOf(' ') !== -1) {
+                if (markType === 0 && afterText.indexOf(' ') !== -1) {
                     handleText = afterText.substring(0, afterText.indexOf(' '));
                     afterText = afterText.substring(afterText.indexOf(' ') + 1);
-                } else if (this.checkSpecialMark(mark.key) === 1) {
+                } else if (markType === 1) {
                     if (afterText.indexOf(' ') !== -1) {
                         handleText = afterText.substring(0, afterText.indexOf(' '));
                         afterText = afterText.substring(afterText.indexOf(' ') + 1);
@@ -467,29 +474,36 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         handleText = afterText;
                         afterText = '';
                     }
-                } else if (this.checkSpecialMark(mark.key) === 2) {
+                } else if (markType === 2) {
                     handleText = afterText.substring(0, afterText.indexOf(')') + 1);
                     afterText = afterText.substring(afterText.indexOf(')') + 1);
-                } else if (this.checkSpecialMark(mark.key) === 3) {
-                    let colorStyleEo = afterText.indexOf('->');
-                    colorStyle = afterText.substring(0, colorStyleEo);
+                } else if (markType === 3) {
+                    let attachParamEo = afterText.indexOf('->');
+                    attachParam = afterText.substring(0, attachParamEo);
                     if (afterText.indexOf(' ') !== -1) {
-                        handleText = afterText.substring(colorStyleEo + 2, afterText.indexOf(' '));
+                        handleText = afterText.substring(attachParamEo + 2, afterText.indexOf(' '));
                         afterText = afterText.substring(afterText.indexOf(' ') + 1);
                     } else {
-                        handleText = afterText.substring(colorStyleEo + 2);
+                        handleText = afterText.substring(attachParamEo + 2);
                         afterText = '';
                     }
-                } else if (this.checkSpecialMark(mark.key) === 4) {
+                } else if (markType === 4) { // @pre标签目前不支持手动写
                     if (afterText.indexOf(']@') !== -1) {
-                        handleText = afterText.substring(afterText.indexOf('@['), afterText.indexOf(']@') + 2);
+                        handleText = afterText.substring(afterText.indexOf('@[') + 2, afterText.indexOf(']@'));
+                        afterText = afterText.substring(afterText.indexOf(']@') + 2);
+                    }
+                } else if (markType === 5) {
+                    let attachParamEo = afterText.indexOf('->');
+                    attachParam = afterText.substring(0, attachParamEo);
+                    if (afterText.indexOf(']@') !== -1) {
+                        handleText = afterText.substring(afterText.indexOf('@[') + 2, afterText.indexOf(']@'));
                         afterText = afterText.substring(afterText.indexOf(']@') + 2);
                     }
                 } else {
                     afterText = '';
                 }
                 handleText = handleText.replace(mark.key + '-', '');
-                let html = this.parseToHtml(handleText, mark.val, colorStyle);
+                let html = this.parseToHtml(handleText, mark.val, attachParam);
                 newText += html;
 
                 newText += afterText;
@@ -574,6 +588,16 @@ export class NotesComponent implements OnInit, AfterViewInit {
             case 'FontBackgroundColor':
                 html = '<span style="background-color: ' + renderParam + ';">' + text + '</span>';
                 break;
+            case 'CODE':
+                switch (renderParam) {
+                    case 'java':
+                        html = new CodeParser(text).javaParser().toString();
+                        break;
+                    default:
+                        html = new CodeParser(text).basisParser().toString();
+                        break;
+                }
+                break;
         }
         return html;
     }
@@ -602,6 +626,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         let includeMarks: String[] = ['@ol', '@ul']; // 需要包含内容的标签
         let styleMarks: String[] = ['@fc', '@fbc']; // 需要颜色样式参数的标签
         let specialParamMarks: String[] = ['@pre']; // 参数中包含特俗符号的标签，所有参数都当做普通字符串处理，用@[和]@括起来
+        let codeMarks: String[] = ['@code']; // 代码标签
         if (paramMarks.indexOf(markName) !== -1) {
             return 1; // 带参数标签
         } else if (includeMarks.indexOf(markName) !== -1) {
@@ -610,6 +635,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
             return 3; // 带颜色样式参数标签
         } else if (specialParamMarks.indexOf(markName) !== -1) {
             return 4; // 带参数标签。参数内容用@[和]@括起来
+        } else if (codeMarks.indexOf(markName) !== -1) {
+            return 5; // 代码标签
         } else {
             return 0;
         }
