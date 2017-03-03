@@ -335,8 +335,10 @@ export class NotesComponent implements OnInit, AfterViewInit {
             let isMark = this.checkMark(this.editMark);
             if (isMark) {
                 let originalHtml = this.notesEditorEle.innerHTML;
+                // TODO 2017-03-03 14:41:29 根据当前光标位置获取之前和之后的内容（分隔editor中的内容）
                 let remainHtml = originalHtml.substring(originalHtml.lastIndexOf(this.editMark) + this.editMark.length);
                 originalHtml = originalHtml.substring(0, originalHtml.lastIndexOf(this.editMark));
+
                 let isSpecialMark = this.checkSpecialMark(this.editMark);
                 let cursorOffsetSt = 0; // 光标起始偏移量
                 let cursorOffsetEd = 0; // 光标终止偏移量
