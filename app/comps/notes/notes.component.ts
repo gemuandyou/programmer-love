@@ -361,9 +361,12 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         cursorOffsetSt = cursorOffsetEd = 2;
                         break;
                     case 3:
-                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-yellow-' +
-                            '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + '>' + '</span>';
-                        cursorOffsetSt = 1, cursorOffsetEd = 7;
+                        let color = 'yellow';
+                        if (this.editMark === '@fc')
+                            color = 'blue';
+                        originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-' + color +
+                            '-' + '<span style="font-style: italic; color: #00c0ff;" contenteditable="false">' + '>' + '</span> ';
+                        cursorOffsetSt = 1, cursorOffsetEd = color.length + 1;
                         break;
                     case 4:
                         originalHtml += '<span style="font-style: italic; color: #00c0ff;" contenteditable="false" class="edit-span">' + this.editMark + '</span>-@[]@';
@@ -404,7 +407,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             }
         }
 
-        if ((event.ctrlKey && event.key === '`') || event.key === 'Enter') { // ctrl + s
+        if (((event.key === 'Control' || event.ctrlKey) && event.key === '`') || event.key === 'Enter') { // ctrl + s
             this.parseNote(currText);
             this.saveNote();
         }
