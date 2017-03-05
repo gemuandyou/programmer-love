@@ -319,7 +319,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         }
 
         if (this.editIsMark) {
-            // 可以在任意地方写标签（当让不能在标签里）
+            // 可以在任意地方写标签（当然不能在标签里=。=！）
             let rng = sel.getRangeAt(0);
             let endEle = rng.endContainer;
             let endTxt = endEle.textContent;
@@ -334,10 +334,19 @@ export class NotesComponent implements OnInit, AfterViewInit {
             // this.editMark = this.editMark.replace(/<(\/[a-z]*|[a-z]*)>/g, '').replace(/\n/g, '').replace(/ /g, '');
             let isMark = this.checkMark(this.editMark);
             if (isMark) {
+
+                // 2017-03-03 14:41:29 根据当前光标位置获取之前和之后的内容（分隔editor中的内容）
+                let positionEle = document.createElement('div');
+                let positionEleClassName;
+                do {
+                    positionEleClassName = 'position-span-' + new Date().getTime();
+                } while (!document.getElementsByClassName(positionEleClassName));
+                let positionEleHtml = '<span class="' + positionEleClassName + '"></span>';
+                positionEle.innerHTML = positionEleHtml;
+                rng.insertNode(positionEle.childNodes[0]);
                 let originalHtml = this.notesEditorEle.innerHTML;
-                // TODO 2017-03-03 14:41:29 根据当前光标位置获取之前和之后的内容（分隔editor中的内容）
-                let remainHtml = originalHtml.substring(originalHtml.lastIndexOf(this.editMark) + this.editMark.length);
-                originalHtml = originalHtml.substring(0, originalHtml.lastIndexOf(this.editMark));
+                let remainHtml = originalHtml.substring(originalHtml.indexOf(positionEleHtml) + positionEleHtml.length);
+                originalHtml = originalHtml.substring(0, originalHtml.indexOf(positionEleHtml) - this.editMark.length);
 
                 let isSpecialMark = this.checkSpecialMark(this.editMark);
                 let cursorOffsetSt = 0; // 光标起始偏移量
@@ -444,8 +453,6 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 .replace(/<\/h4><br>/g, '</h1>')
                 .replace(/<\/h5><br>/g, '</h1>')
                 .replace(/<\/h6><br>/g, '</h1>');
-
-            // TODO 将@tab转为<blockquote>标签， 将双回车\n\n转为</blockquote>标签
 
             this.notesView.nativeElement.innerHTML = html;
         }
