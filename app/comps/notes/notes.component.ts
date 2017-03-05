@@ -334,6 +334,10 @@ export class NotesComponent implements OnInit, AfterViewInit {
             // this.editMark = this.editMark.replace(/<(\/[a-z]*|[a-z]*)>/g, '').replace(/\n/g, '').replace(/ /g, '');
             let isMark = this.checkMark(this.editMark);
             if (isMark) {
+                let editSpans: HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
+                for (let index = 0; index < editSpans.length; index++) {
+                    editSpans[index].className = editSpans[index].className.replace(/edit\-span/g, '');
+                }
 
                 // 2017-03-03 14:41:29 根据当前光标位置获取之前和之后的内容（分隔editor中的内容）
                 let positionEle = document.createElement('div');
@@ -390,15 +394,14 @@ export class NotesComponent implements OnInit, AfterViewInit {
 
                 // 将光标移动到末尾
                 let range = document.createRange();
-                let editSpans: HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
-                let editTxtEle = editSpans[0].nextSibling;
+                let editSpans1: HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
+                let editTxtEle = editSpans1[0].nextSibling;
                 range.selectNodeContents(editTxtEle);
                 range.setStart(range.startContainer, cursorOffsetSt);
                 range.setEnd(range.endContainer, cursorOffsetEd);
                 // range.collapse(false);
                 sel.removeAllRanges();
                 sel.addRange(range);
-                editSpans[0].className = editSpans[0].className.replace(/edit\-span/g, '');
                 // document.execCommand('removeFormat', false, null); // 将选中的区域删除其格式化标签。第二个参数为是否弹窗提示.toggle效果
             }
             if (this.editMark.length > 10) {
