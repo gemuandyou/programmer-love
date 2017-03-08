@@ -442,8 +442,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     html += this.renderView(lineHtml);
                 }
                 if (lineHtml === '') {
-                    if (html.match(/<blockquote>/g) && html.match(/<blockquote>/g) &&
-                        (!html.match(/<\/blockquote>/g) || html.match(/<blockquote>/g).length !== html.match(/<\/blockquote>/g).length)) {
+                    if (html.match(/<blockquote style="margin-right: 0">/g) && html.match(/<blockquote style="margin-right: 0">/g) &&
+                        (!html.match(/<\/blockquote>/g) || html.match(/<blockquote style="margin-right: 0">/g).length !== html.match(/<\/blockquote>/g).length)) {
                         if (html.endsWith("<br><br>")) {
                             html = html.substring(0, html.length - 8);
                         }
@@ -469,7 +469,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * @param text
      */
     private renderView(text: String): String {
-        text = text.replace(/@tab-/g, '<blockquote>');
+        text = text.replace(/@tab-/g, '<blockquote style="margin-right: 0">');
         for (let mark of this.marks) {
             while (text.indexOf(mark.key + '-') !== -1) {
                 let newText = '';
