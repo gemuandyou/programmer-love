@@ -41,7 +41,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     notes: String[] = []; // 笔记名列表
     currentNote: String = ''; // 当前笔记
 
-    preCache: {} = {}; // 缓存pre标签内容，将pre标签内容与UUID做映射
+    cache: {} = {}; // 缓存pre标签内容，将pre标签内容与UUID做映射
 
     @Output() static choosePasteFormatEmit: EventEmitter<any> = new EventEmitter(); // 粘贴内容格式选择事件通知
     @Output() static reRenderPasteContentEmit: EventEmitter<any> = new EventEmitter(); // 重新渲染粘贴内容事件通知
@@ -240,7 +240,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         if (this.pasteFormat === PasteFormat.KEEP_FORMAT.valueOf() && (this.pasteContent['html'] || !this.pasteContent['plain'])) {
             // 将删除的文本内容渲染成@pre标签
             let uuid = UUID.generate();
-            this.preCache[uuid] = this.pasteContent['html'];
+            this.cache[uuid] = this.pasteContent['html'];
             let preTagTextEle = document.createTextNode('-@[' + uuid + ']@ ');
             this.pasteRng.insertNode(preTagTextEle);
 
@@ -261,10 +261,10 @@ export class NotesComponent implements OnInit, AfterViewInit {
         if (this.pasteFormat === PasteFormat.JAVA_FORMAT.valueOf() && (this.pasteContent['plain'] || !this.pasteContent['html'])) {
             // 将删除的文本内容渲染成@pre标签
             let code = this.pasteContent['plain'];
-            code = new CodeParser(code).javaParser();
+            code = new CodeParser(code).codeParser('java');
 
             let uuid = UUID.generate();
-            this.preCache[uuid] = code;
+            this.cache[uuid] = code;
             let preTagTextEle = document.createTextNode('-@[' + uuid + ']@ ');
             this.pasteRng.insertNode(preTagTextEle);
 
@@ -283,7 +283,6 @@ export class NotesComponent implements OnInit, AfterViewInit {
         }
         // 纯文本
         if (this.pasteFormat === PasteFormat.TEXT.valueOf() && (this.pasteContent['plain'] || !this.pasteContent['html'])) {
-            // 将删除的文本内容渲染成@pre标签
             let code = this.pasteContent['plain'];
             let text = document.createTextNode(code);
             this.pasteRng.insertNode(text);
@@ -419,25 +418,26 @@ export class NotesComponent implements OnInit, AfterViewInit {
     private parseNote(noteEditorContent: String): void {
         if (noteEditorContent) {
             let html = '';
-            let preHtml = '';
+            let isSerial = false;
             let isPre = false;
+            let serialHtml = '';
             let linesHtml = noteEditorContent.split('\n');
             for (let lineHtml of linesHtml) {
                 if (lineHtml.indexOf('@[') !== -1) {
-                    isPre = true;
+                    isSerial = true;
                 }
                 if (lineHtml.indexOf(']@') !== -1) {
-                    isPre = false;
-                    preHtml += lineHtml;
+                    isSerial = false;
+                    serialHtml += lineHtml;
                 }
-                if (isPre) {
-                    preHtml += lineHtml;
-                    preHtml += '<br>';
+                if (isSerial) {
+                    serialHtml += lineHtml;
+                    serialHtml += '\n';
                     continue;
                 }
-                if (preHtml !== '') {
-                    html += this.renderView(preHtml);
-                    preHtml = '';
+                if (serialHtml !== '') {
+                    html += this.renderView(serialHtml);
+                    serialHtml = '';
                 } else {
                     html += this.renderView(lineHtml);
                 }
@@ -511,7 +511,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         afterText = afterText.substring(afterText.indexOf(']@') + 2);
                     }
                 } else if (markType === 5) {
-                    let attachParamEo = afterText.indexOf('->');
+                    let attachParamEo = afterText.indexOf('-');
                     attachParam = afterText.substring(0, attachParamEo);
                     if (afterText.indexOf(']@') !== -1) {
                         handleText = afterText.substring(afterText.indexOf('@[') + 2, afterText.indexOf(']@'));
@@ -598,7 +598,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 break;
             case 'PRE':
                 html = text.substring(text.indexOf('@[') + 2, text.lastIndexOf(']@')); // 若不存在'@['则从0开始了
-                html = this.preCache[html];
+                html = this.cache[html];
                 break;
             case 'FontColor':
                 html = '<span style="color: ' + renderParam + ';">' + text + '</span>';
@@ -607,13 +607,10 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 html = '<span style="background-color: ' + renderParam + ';">' + text + '</span>';
                 break;
             case 'CODE':
-                switch (renderParam) {
-                    case 'java':
-                        html = new CodeParser(text).javaParser().toString();
-                        break;
-                    default:
-                        html = new CodeParser(text).basisParser().toString();
-                        break;
+                if (renderParam) {
+                    html = new CodeParser(text).codeParser(renderParam).toString();
+                } else {
+                    html = new CodeParser(text).basisParser().toString();
                 }
                 break;
         }
@@ -671,6 +668,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote}).subscribe((resp) => {
                 if (resp.status === 200) {
                     Notify.success('保存成功');
+                    this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.clientHeight;
                     this.ngOnInit();
                 }
             });
@@ -730,7 +728,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             let uuid = UUID.generate();
             let preCtx = result[0];
             preCtx = preCtx.substring(14, preCtx.length - 2);
-            this.preCache[uuid] = preCtx;
+            this.cache[uuid] = preCtx;
             body = body.replace(result[0], '@pre</span>-@[' + uuid + ']@');
         }
         return body;
@@ -748,7 +746,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         while ((result = reg.exec(original)) != null) {
             let preCtx = result[0];
             preCtx = preCtx.substring(14, preCtx.length - 2);
-            body = body.replace(result[0], '@pre</span>-@[' + this.preCache[preCtx] + ']@');
+            body = body.replace(result[0], '@pre</span>-@[' + this.cache[preCtx] + ']@');
         }
         return body;
     }
