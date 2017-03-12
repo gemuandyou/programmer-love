@@ -528,7 +528,11 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 text = newText;
             }
         }
-        text += '<br>';
+        if (text[text.length - 1] !== '\\') {
+            text += '<br>';
+        } else {
+            text = text.substr(0, text.length - 1);
+        }
         return text;
     }
 
