@@ -45,3 +45,23 @@ app 页面
     background-color: whitesmoke;
 }
 
+.menu > .audio-div {
+    position: absolute;
+    bottom: 0;
+    background-color: whitesmoke;
+}
+
+.menu > .audio-div > ul{
+    padding-left: 0;
+    list-style: none;
+    color: rgba(145, 41, 177, 0.64);
+}
+
+.menu > .audio-div > ul > li:hover {
+    background-color: #ececec;
+    cursor: pointer;
+}
+
+.menu > .audio-div > ul > .playing {
+    color: rgba(255, 13, 55, 0.35);
+}
