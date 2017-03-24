@@ -15,7 +15,6 @@ export class CodeParser {
     private jsWords: String[] = [''];
     private nodeWords: String[] = ['require'];
 
-
     constructor(private _codeTxt: String) {};
 
     codeParser(renderParam?: String): String {
