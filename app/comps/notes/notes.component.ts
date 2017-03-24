@@ -672,7 +672,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
             this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote}).subscribe((resp) => {
                 if (resp.status === 200) {
                     Notify.success('保存成功');
-                    this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.clientHeight;
+                    // view模块向下滚动到底
+                    this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.scrollHeight;
                     this.ngOnInit();
                 }
             });

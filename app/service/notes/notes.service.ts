@@ -31,4 +31,8 @@ export class NotesService {
     saveImg(params: any): Observable<any> {
         return this.http.post(`wimg`, params);
     }
+
+    getMusicBox(): Observable<any> {
+        return this.http.get(`musicBox`);
+    }
 }

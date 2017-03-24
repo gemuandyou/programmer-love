@@ -1,10 +1,24 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {NotesService} from "./service/notes/notes.service";
 @Component({
     selector: 'my-app',
     templateUrl: 'app/app.html',
-    styleUrls: ['app/assets/styles/app.css', 'app/assets/styles/common.css']
+    styleUrls: ['app/assets/styles/app.css', 'app/assets/styles/common.css'],
+    providers: [NotesService]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+    musics: Array<any> = [];
+
+    constructor(private noteService: NotesService) {
+    }
+
+   ngOnInit(): void {
+        this.noteService.getMusicBox().subscribe((resp) => {
+            let musics = resp._body;
+            this.musics = musics ? JSON.parse(musics) : [];
+        });
+    }
 
     playMusic(ev, index) {
         let audios = document.getElementsByClassName('music');
