@@ -11,7 +11,7 @@ export class CodeParser {
         'public', 'return', 'strictfp', 'short', 'static', 'super', 'switch', 'synchronized', 'this', 'throw', 'throws',
         'transient', 'try',	'void', 'volatile', 'while',
         'Double', 'Boolean', 'Float', 'Integer', 'Long'];
-    private pythonWords: String[] = ['range'];
+    private pythonWords: String[] = ['range', 'from', 'import'];
     private jsWords: String[] = [''];
     private nodeWords: String[] = ['require'];
 
