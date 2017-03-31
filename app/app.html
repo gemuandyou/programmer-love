@@ -1,14 +1,15 @@
 <router-outlet></router-outlet>
 <div class="menu">
-    <audio class="music" preload src="app/assets/music/任然-山外小楼夜听雨.mp3"></audio>
-    <audio class="music" preload src="app/assets/music/双笙%20-%20画双.mp3"></audio>
-    <div class="audio-div" *ngIf="showMusic" style="left: 3rem;">
+    <div class="audio-div" [ngStyle]="{'display': showMusic ? 'inline-block':'none'}" style="left: 3rem;">
         <ul>
-            <li (click)="playMusic($event, 0)">任然-山外小楼夜听雨</li>
-            <li (click)="playMusic($event, 1)">画双-双笙</li>
+            <li *ngFor="let music of musics; let i = index;" (click)="playMusic($event, i)">
+                {{music.fileName}}
+                <audio class="music" preload src="{{music.filePath}}"></audio>
+            </li>
         </ul>
     </div>
-    <span style="position: absolute; left: 0; color: burlywood; width: 3rem; cursor: default;" (click)="showMusic = !showMusic">music</span>
+    <button style="position: absolute; left: 0; color: burlywood; width: 3rem; cursor: default;"
+          (click)="showMusic = !showMusic">music</button>
     <ul>
         <li routerLink="/charity">Charity</li>
         <li routerLink="/notes">Notes</li>

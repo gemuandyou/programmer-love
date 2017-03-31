@@ -3,6 +3,7 @@
  */
 var http_proxy = require('http-proxy');
 var db = require('./app/node/db');
+var music = require('./app/node/music');
 var proxy = http_proxy.createProxyServer({
     target: 'http://localhost:8080/myrest/'
 });
@@ -46,6 +47,11 @@ var api = function (req, res, next) {
             res.write(path);
             res.end();
         });
+    } else if (/\/musicBox/.test(req.url)) {
+        var files = music.getMusicBox();
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.write(JSON.stringify(files).toString());
+        res.end();
     } else {
         next();
     }

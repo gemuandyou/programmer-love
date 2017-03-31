@@ -49,12 +49,14 @@ app 页面
     position: absolute;
     bottom: 0;
     background-color: whitesmoke;
+    border: 1px solid #ffd9d9;
 }
 
 .menu > .audio-div > ul{
     padding-left: 0;
     list-style: none;
     color: rgba(145, 41, 177, 0.64);
+    text-align: left;
 }
 
 .menu > .audio-div > ul > li:hover {
