@@ -48,12 +48,12 @@ export class CodeParser {
             }
         }
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">' + renderParam + '</div>' +
-            '<div style="background-color: #f1f1f1; white-space: normal;"><pre style="font-family: serif; margin: 0;">' + codeTxt + '</pre></div></div>';
+            '<div style="white-space: normal;"><pre style="background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;">' + codeTxt + '</pre></div></div>';
     }
 
     basisParser(): String {
         let codeTxt = this._codeTxt.toString();
-        return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">basis</div>' +
-            '<div style="background-color: #f1f1f1; white-space: normal;"><pre style="font-family: serif; margin: 0;">' + codeTxt + '</pre></div></div>';
+        return '<div style="font-family: Monaco,\'Lucida Console\',monospace;">' +
+            '<div style="white-space: normal;"><pre style="background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;">' + codeTxt + '</pre></div></div>';
     }
 }

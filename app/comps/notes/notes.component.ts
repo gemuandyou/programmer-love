@@ -135,9 +135,15 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         .replace(/<body>/g, '')
                         .replace(/<\/body>/g, '');
                     if (s.indexOf('<pre ') !== -1 && s.toString().lastIndexOf('</pre>') !== -1) {
-                        s = s.substring(s.indexOf('<pre '), s.toString().lastIndexOf('</pre>') + 6);
+                        s = s.substring(s.indexOf('<pre ') + 5, s.toString().lastIndexOf('</pre>') + 6);
+                        var tmp = s.substring(s.indexOf('style=') + 6);
+                        var quo = tmp.charAt(0);
+                        tmp = tmp.substring(1);
+                        var style = tmp.substring(0, tmp.indexOf(quo));
+                        var remain = tmp.substring(tmp.indexOf(quo));
+                        s = '<pre style="border-radius: 0.5rem;padding: 0.5rem;' + style + remain;
                     } else {
-                        s = '<pre>' + s + '</pre>';
+                        s = '<pre style="border-radius: 0.5rem;padding: 0.5rem;">' + s + '</pre>';
                     }
                     this.pasteContent['html'] = s;
                     // 在编译器中 获取光标位置
@@ -419,7 +425,6 @@ export class NotesComponent implements OnInit, AfterViewInit {
         if (noteEditorContent) {
             let html = '';
             let isSerial = false;
-            let isPre = false;
             let serialHtml = '';
             let linesHtml = noteEditorContent.split('\n');
             for (let lineHtml of linesHtml) {
@@ -435,22 +440,28 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     serialHtml += '\n';
                     continue;
                 }
+
+                // 换行
+                if (lineHtml === '') {
+                    if (html.match(/<blockquote style="margin-right: 0">/g) &&
+                        (!html.match(/<\/blockquote>/g) || html.match(/<blockquote style="margin-right: 0">/g).length !== html.match(/<\/blockquote>/g).length)) {
+                        if (html.endsWith("<br><br>")) {
+                            html = html.substring(0, html.length - 8);
+                        }
+                        html += '</blockquote>';
+                    } else {
+                        html += '<br>';
+                    }
+                    continue;
+                }
+
                 if (serialHtml !== '') {
                     html += this.renderView(serialHtml);
                     serialHtml = '';
                 } else {
                     html += this.renderView(lineHtml);
                 }
-                if (lineHtml === '') {
-                    if (html.match(/<blockquote style="margin-right: 0">/g) && html.match(/<blockquote style="margin-right: 0">/g) &&
-                        (!html.match(/<\/blockquote>/g) || html.match(/<blockquote style="margin-right: 0">/g).length !== html.match(/<\/blockquote>/g).length)) {
-                        if (html.endsWith("<br><br>")) {
-                            html = html.substring(0, html.length - 8);
-                        }
-                        html += '</blockquote>';
-                    }
-                    continue;
-                }
+
             }
             // H1~H6样式修改
             html = html.replace(/<\/h1><br>/g, '</h1>')
@@ -577,7 +588,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             case 'OL':
                 let olTxt = text.substring(text.indexOf('(') + 1, text.indexOf(')'));
                 let liTxts: String[] = olTxt.split('#');
-                html = '<ol>';
+                html = '<ol style="margin: 0;">';
                 for (let liTxt of liTxts) {
                     if (liTxt) {
                         html += '<li>' + liTxt + '</li>';
@@ -588,7 +599,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             case 'UL':
                 let ulTxt = text.substring(text.indexOf('(') + 1, text.indexOf(')'));
                 liTxts = ulTxt.split('#');
-                html = '<ul>';
+                html = '<ul style="margin: 0;">';
                 for (let liTxt of liTxts) {
                     if (liTxt) {
                         html += '<li>' + liTxt + '</li>';
@@ -706,21 +717,6 @@ export class NotesComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * 切换笔记激活状态
-     * @param e
-     */
-    toggleActive(e): void {
-        let currEle = e.target;
-        let childrenEle = currEle.parentElement.children;
-        for (let ele of childrenEle) {
-            ele.removeAttribute('class');
-        }
-        currEle.setAttribute('class', 'active');
-        this.currentNote = currEle.textContent;
-        this.getNote(this.currentNote);
-    }
-
-    /**
      * 将pre标签内容用UUID替换
      * @param body
      * @returns {String}
@@ -754,6 +750,29 @@ export class NotesComponent implements OnInit, AfterViewInit {
             body = body.replace(result[0], '@pre</span>-@[' + this.cache[preCtx] + ']@');
         }
         return body;
+    }
+
+    /**
+     * 切换笔记激活状态
+     * @param e
+     */
+    toggleActive(e): void {
+        let currEle = e.target;
+        let childrenEle = currEle.parentElement.children;
+        for (let ele of childrenEle) {
+            ele.removeAttribute('class');
+        }
+        currEle.setAttribute('class', 'active');
+        this.currentNote = currEle.textContent;
+        this.getNote(this.currentNote);
+    }
+
+    /**
+     * 预览笔记
+     * @param e
+     */
+    previewNote(noteName: string): void {
+        console.log(noteName);
     }
 
 }
