@@ -48,8 +48,8 @@ app 页面
 .menu > .audio-div {
     position: absolute;
     bottom: 0;
-    background-color: whitesmoke;
-    border: 1px solid #ffd9d9;
+    background-color: rgba(125, 125, 125, 0.48);
+    border: 1px solid rgba(255, 217, 217, 0.26);
 }
 
 .menu > .audio-div > ul{
