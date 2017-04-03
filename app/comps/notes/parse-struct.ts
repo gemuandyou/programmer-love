@@ -14,10 +14,11 @@ export class ParseStructure {
         // 解析的优先级 TODO 目前只解析一层
         let tagPriority = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'b'];
         for (let tag of tagPriority) {
-            let tagDoms: NOdeListOf<Element> = dom.getElementsByTagName(tag);
-            for (let tagDom of tagDoms) {
+            let tagDoms: NodeListOf<Element> = dom.getElementsByTagName(tag);
+            for (let i = 0; i < tagDoms.length; i++) {
+                let tagDom: Element = tagDoms.item(i);
                 let structure: NoteStructure = {name: '', dom: null};
-                structure.name = tagDom.innerText;
+                structure.name = tagDom.textContent;
                 structure.dom = tagDom;
                 structures.push(structure);
             }
@@ -34,7 +35,7 @@ export interface NoteStructure {
     /**
      * 预览的节点
      */
-    dom: HTMLElement;
+    dom: Element;
     /**
      * 节点下的直接子节点
      */
