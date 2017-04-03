@@ -7,8 +7,9 @@ import {
     Output
 } from "@angular/core";
 import {Title} from "@angular/platform-browser";
-import {Mark} from "./mark";
 import copyWithin = require("core-js/fn/array/copy-within");
+import {Mark} from "./mark";
+import {ParseStructure, NoteStructure} from "./parse-struct";
 import {NotesService} from "../../service/notes/notes.service";
 import {Notify} from "../../tools/notification";
 import {UUID} from "../../tools/uuid";
@@ -49,6 +50,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
     canInputKey: any[] = ['`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', ']', '{', '}', ';', ':', '"', '\'',
         ',', '.', '<', '>', '?', '/'];
     specialWord: String[] = ["@", "#"]; // TODO 2017-01-31 09:43:07 特殊字符需要用\转义
+
+    previewStructures: NoteStructure[]; // 预览
 
     constructor(title: Title, private ref: ChangeDetectorRef, private noteService: NotesService) {
         title.setTitle("程序员日志");
@@ -769,10 +772,19 @@ export class NotesComponent implements OnInit, AfterViewInit {
 
     /**
      * 预览笔记
-     * @param e
      */
-    previewNote(noteName: string): void {
-        console.log(noteName);
+    previewNote(): void {
+        let parseStructure = new ParseStructure();
+        this.previewStructures = parseStructure.parseStructure(this.notesView.nativeElement);
+    }
+
+    /**
+     * 预览定位
+     * @param dom
+     */
+    positionPreview(dom: HTMLElement) {
+        let notesViewEle = this.notesView.nativeElement;
+        notesViewEle.scrollTop = dom.offsetTop;
     }
 
 }
