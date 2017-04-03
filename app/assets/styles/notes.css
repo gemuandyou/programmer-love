@@ -152,6 +152,7 @@
     top: 0;
     right: 0;
     text-align: right;
+    width: calc(100% - 10rem);
 }
 
 .note-preview-content {
