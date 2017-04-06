@@ -7,8 +7,9 @@ import {
     Output
 } from "@angular/core";
 import {Title} from "@angular/platform-browser";
-import {Mark} from "./mark";
 import copyWithin = require("core-js/fn/array/copy-within");
+import {Mark} from "./mark";
+import {ParseStructure, NoteStructure} from "./parse-struct";
 import {NotesService} from "../../service/notes/notes.service";
 import {Notify} from "../../tools/notification";
 import {UUID} from "../../tools/uuid";
@@ -619,7 +620,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 html = '<span style="color: ' + renderParam + ';">' + text + '</span>';
                 break;
             case 'FontBackgroundColor':
-                html = '<span style="background-color: ' + renderParam + ';margin: 0 0 0 0.5rem;padding: 0.2rem;border: 1px solid rgba(82, 78, 78, 0.22);                border-radius: 0.2rem;font-size: 0.5rem;">' + text + '</span>';
+                html = '<span style="background-color: ' + renderParam + ';padding: 0.2rem;border: 1px solid rgba(82, 78, 78, 0.22);                border-radius: 0.2rem;font-size: 0.5rem;">' + text + '</span>';
                 break;
             case 'CODE':
                 if (renderParam) {
@@ -769,10 +770,19 @@ export class NotesComponent implements OnInit, AfterViewInit {
 
     /**
      * 预览笔记
-     * @param e
      */
-    previewNote(noteName: string): void {
-        console.log(noteName);
+    previewNote(): void {
+        let parseStructure = new ParseStructure();
+        this.previewStructures = parseStructure.parseStructure(this.notesView.nativeElement);
+    }
+
+    /**
+     * 预览定位
+     * @param dom
+     */
+    positionPreview(dom: HTMLElement) {
+        let notesViewEle = this.notesView.nativeElement;
+        notesViewEle.scrollTop = dom.offsetTop;
     }
 
 }
