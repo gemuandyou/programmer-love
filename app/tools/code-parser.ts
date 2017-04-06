@@ -12,7 +12,7 @@ export class CodeParser {
         'transient', 'try',	'void', 'volatile', 'while',
         'Double', 'Boolean', 'Float', 'Integer', 'Long'];
     private pythonWords: String[] = ['range', 'from', 'import', 'for', 'in', 'not'];
-    private jsWords: String[] = [''];
+    private jsWords: String[] = ['document'];
     private nodeWords: String[] = ['require'];
 
     constructor(private _codeTxt: String) {};
@@ -28,7 +28,7 @@ export class CodeParser {
             case 'python':
                 keyWords = this.pythonWords;
                 break;
-            case 'javascript':
+            case 'js':
                 keyWords = this.jsWords;
                 break;
             case 'nodejs':
@@ -41,6 +41,13 @@ export class CodeParser {
             while ((result = reg.exec(codeTxt)) != null) {
                 codeTxt = codeTxt.replace(result, '<span style="font-weight: bold; color: dodgerblue">' + result.toString().trim() + '</span> ');
             }
+
+            reg = new RegExp(keyword + '\.', 'g');
+            result;
+            while ((result = reg.exec(codeTxt)) != null) {
+                codeTxt = codeTxt.replace(result, '<span style="font-weight: bold; color: dodgerblue">' + result.toString().substring(0, result.toString().length - 2) + '</span>.');
+            }
+
             reg = new RegExp(keyword + '\\(', 'g');
             result;
             while ((result = reg.exec(codeTxt)) != null) {

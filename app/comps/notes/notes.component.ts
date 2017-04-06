@@ -619,7 +619,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 html = '<span style="color: ' + renderParam + ';">' + text + '</span>';
                 break;
             case 'FontBackgroundColor':
-                html = '<span style="background-color: ' + renderParam + ';padding: 0.2rem;border: 1px solid rgba(82, 78, 78, 0.22);                border-radius: 0.2rem;font-size: 0.5rem;">' + text + '</span>';
+                html = '<span style="background-color: ' + renderParam + ';margin: 0 0 0 0.5rem;padding: 0.2rem;border: 1px solid rgba(82, 78, 78, 0.22);                border-radius: 0.2rem;font-size: 0.5rem;">' + text + '</span>';
                 break;
             case 'CODE':
                 if (renderParam) {
