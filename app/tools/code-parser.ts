@@ -37,21 +37,21 @@ export class CodeParser {
         }
         for (let keyword of keyWords) {
             let reg = new RegExp(keyword + ' ', 'g');
-            let result;
-            while ((result = reg.exec(codeTxt)) != null) {
-                codeTxt = codeTxt.replace(result, '<span style="font-weight: bold; color: dodgerblue">' + result.toString().trim() + '</span> ');
-            }
-
-            reg = new RegExp(keyword + '\.', 'g');
-            result;
-            while ((result = reg.exec(codeTxt)) != null) {
-                codeTxt = codeTxt.replace(result, '<span style="font-weight: bold; color: dodgerblue">' + result.toString().substring(0, result.toString().length - 2) + '</span>.');
+            let tmp = reg.exec(codeTxt);
+            if (tmp != null) {
+                codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + tmp.toString().trim() + '</span> ');
+            } else {
+                reg = new RegExp(keyword + '\.', 'g');
+                tmp = reg.exec(codeTxt);
+                if (tmp != null) {
+                    codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + tmp.toString().substring(0, tmp.toString().length - 1) + '</span>.');
+                }
             }
 
             reg = new RegExp(keyword + '\\(', 'g');
-            result;
-            while ((result = reg.exec(codeTxt)) != null) {
-                codeTxt = codeTxt.replace(result, '<span style="font-weight: bold; color: dodgerblue">' + result.toString().substring(0, result.toString().length - 1) + '</span>(');
+            tmp = reg.exec(codeTxt);
+            if (tmp != null) {
+                codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + tmp.toString().substring(0, tmp.toString().length - 1) + '</span>(');
             }
         }
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">' + renderParam + '</div>' +
