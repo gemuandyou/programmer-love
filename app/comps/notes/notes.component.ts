@@ -51,6 +51,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
         ',', '.', '<', '>', '?', '/'];
     specialWord: String[] = ["@", "#"]; // TODO 2017-01-31 09:43:07 特殊字符需要用\转义
 
+    previewStructures: NoteStructure[]; // 预览
+
     constructor(title: Title, private ref: ChangeDetectorRef, private noteService: NotesService) {
         title.setTitle("程序员日志");
     }
