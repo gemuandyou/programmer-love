@@ -14,6 +14,9 @@ export class CodeParser {
     private pythonWords: String[] = ['range', 'from', 'import', 'for', 'in', 'not'];
     private jsWords: String[] = ['document'];
     private nodeWords: String[] = ['require'];
+    private cWords: String[] = ['auto', 'else', 'long', 'switch', 'break', 'enum', 'register', 'typedef', 'case', 'extern',
+        'return', 'union', 'char', 'float', 'short', 'unsigned', 'const', 'for', 'signed', 'void', 'continue', 'goto',
+        'sizeof', 'volatile', 'default', 'if', 'static', 'while', 'do', 'int', 'struct', '_Packed', 'double'];
 
     constructor(private _codeTxt: String) {};
 
@@ -34,26 +37,33 @@ export class CodeParser {
             case 'nodejs':
                 keyWords = this.nodeWords;
                 break;
+            case 'c':
+                keyWords = this.cWords;
+                break;
         }
         for (let keyword of keyWords) {
             let reg = new RegExp(keyword + ' ', 'g');
-            let tmp = reg.exec(codeTxt);
-            if (tmp != null) {
-                codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + tmp.toString().trim() + '</span> ');
-            } else {
-                reg = new RegExp(keyword + '\.', 'g');
-                tmp = reg.exec(codeTxt);
-                if (tmp != null) {
-                    codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + tmp.toString().substring(0, tmp.toString().length - 1) + '</span>.');
-                }
+            if (reg.exec(codeTxt) != null) {
+                codeTxt = codeTxt.replace(reg, '@st-' + keyword + '-@et ');
             }
 
-            reg = new RegExp(keyword + '\\(', 'g');
-            tmp = reg.exec(codeTxt);
-            if (tmp != null) {
-                codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + tmp.toString().substring(0, tmp.toString().length - 1) + '</span>(');
+            let reg1 = new RegExp(keyword + '\\.', 'g');
+            if (reg1.exec(codeTxt) != null) {
+                codeTxt = codeTxt.replace(reg1, '@st-' + keyword + '-@et.');
+            }
+
+            let reg2 = new RegExp(keyword + '\\(', 'g');
+            if (reg2.exec(codeTxt) != null) {
+                codeTxt = codeTxt.replace(reg2, '@st-' + keyword + '-@et(');
             }
         }
+
+        for (let keyword of keyWords) {
+            codeTxt = codeTxt.replace('@st-' + keyword + '-@et ', '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span> ');
+            codeTxt = codeTxt.replace('@st-' + keyword + '-@et.', '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>.');
+            codeTxt = codeTxt.replace('@st-' + keyword + '-@et(', '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>(');
+        }
+
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">' + renderParam + '</div>' +
             '<div style="white-space: normal;"><pre style="background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;">' + codeTxt + '</pre></div></div>';
     }
