@@ -69,6 +69,7 @@ export class CodeParser {
             codeTxt = codeTxt.replace(reg2, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>(');
         }
         // 解析注释
+        // 第一种注释 格式：/*abc*/
         let reg = new RegExp('/\\*.*?\\*/'); // 非贪婪匹配
         for (let tmp = reg.exec(codeTxt); tmp != null;) {
             codeTxt = codeTxt.replace(reg, '@anno-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-onna@');
@@ -77,7 +78,18 @@ export class CodeParser {
         }
         let reg1 = new RegExp('@anno-.*?-onna@'); // 非贪婪匹配
         for (let tmp = reg1.exec(codeTxt); tmp != null; tmp = reg1.exec(codeTxt)) {
-            codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: darkolivegreen">/*' + tmp.toString().substring(6, tmp.toString().length - 6) + '*/</span>')
+            codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: #969696; font-size: 80%;">/*' + tmp.toString().substring(6, tmp.toString().length - 6) + '*/</span>')
+        }
+        // 第二种注释 // abc
+        let reg = new RegExp('//.*?\\n'); // 非贪婪匹配
+        for (let tmp = reg.exec(codeTxt); tmp != null;) {
+            codeTxt = codeTxt.replace(reg, '@anno1-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-1onna@');
+            tmp = reg.exec(codeTxt);
+            console.log(tmp);
+        }
+        let reg1 = new RegExp('@anno1-.*?-1onna@'); // 非贪婪匹配
+        for (let tmp = reg1.exec(codeTxt); tmp != null; tmp = reg1.exec(codeTxt)) {
+            codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: #969696; font-size: 80%;">//' + tmp.toString().substring(7, tmp.toString().length - 7) + '</span>\n')
         }
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">' + renderParam + '</div>' +
