@@ -9,7 +9,7 @@ export class CodeParser {
         'continue', 'default', 'do', 'double', 'else', 'enum', 'extends', 'final', 'finally', 'float', 'for', 'goto', 'if',
         'implements', 'import', 'instanceof', 'int', 'interface', 'long', 'native', 'new', 'package', 'private', 'protected',
         'public', 'return', 'strictfp', 'short', 'static', 'super', 'switch', 'synchronized', 'this', 'throw', 'throws',
-        'transient', 'try',	'void', 'volatile', 'while',
+        'transient', 'try', 'void', 'volatile', 'while',
         'Double', 'Boolean', 'Float', 'Integer', 'Long'];
     private pythonWords: String[] = ['range', 'from', 'import', 'for', 'in', 'not'];
     private jsWords: String[] = ['document'];
@@ -18,7 +18,8 @@ export class CodeParser {
         'return', 'union', 'char', 'float', 'short', 'unsigned', 'const', 'for', 'signed', 'void', 'continue', 'goto',
         'sizeof', 'volatile', 'default', 'if', 'static', 'while', 'do', 'int', 'struct', '_Packed', 'double'];
 
-    constructor(private _codeTxt: String) {};
+    constructor(private _codeTxt: String) {
+    };
 
     codeParser(renderParam?: String): String {
         if (!renderParam) return this.basisParser();
@@ -41,9 +42,11 @@ export class CodeParser {
                 keyWords = this.cWords;
                 break;
         }
+        // 解析代码关键字
         for (let keyword of keyWords) {
             let reg = new RegExp(keyword + ' ', 'g');
             if (reg.exec(codeTxt) != null) {
+                console.log(reg.exec(codeTxt));
                 codeTxt = codeTxt.replace(reg, '@st-' + keyword + '-@et ');
             }
 
@@ -57,11 +60,24 @@ export class CodeParser {
                 codeTxt = codeTxt.replace(reg2, '@st-' + keyword + '-@et(');
             }
         }
-
         for (let keyword of keyWords) {
-            codeTxt = codeTxt.replace('@st-' + keyword + '-@et ', '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span> ');
-            codeTxt = codeTxt.replace('@st-' + keyword + '-@et.', '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>.');
-            codeTxt = codeTxt.replace('@st-' + keyword + '-@et(', '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>(');
+            let reg = new RegExp('@st-' + keyword + '-@et ', 'g');
+            let reg1 = new RegExp('@st-' + keyword + '-@et\\.', 'g');
+            let reg2 = new RegExp('@st-' + keyword + '-@et\\(', 'g');
+            codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span> ');
+            codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>.');
+            codeTxt = codeTxt.replace(reg2, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>(');
+        }
+        // 解析注释
+        let reg = new RegExp('/\\*.*?\\*/'); // 非贪婪匹配
+        for (let tmp = reg.exec(codeTxt); tmp != null;) {
+            codeTxt = codeTxt.replace(reg, '@anno-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-onna@');
+            tmp = reg.exec(codeTxt);
+            console.log(tmp);
+        }
+        let reg1 = new RegExp('@anno-.*?-onna@'); // 非贪婪匹配
+        for (let tmp = reg1.exec(codeTxt); tmp != null; tmp = reg1.exec(codeTxt)) {
+            codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: darkolivegreen">/*' + tmp.toString().substring(6, tmp.toString().length - 6) + '*/</span>')
         }
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">' + renderParam + '</div>' +
