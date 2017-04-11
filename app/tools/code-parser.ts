@@ -118,7 +118,6 @@ export class CodeParser {
         for (let tmp = reg.exec(codeTxt); tmp != null;) {
             codeTxt = codeTxt.replace(reg, '@anno-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-onna@');
             tmp = reg.exec(codeTxt);
-            console.log(tmp);
         }
         let reg1 = new RegExp('@anno-.*?-onna@'); // 非贪婪匹配
         for (let tmp = reg1.exec(codeTxt); tmp != null; tmp = reg1.exec(codeTxt)) {
@@ -129,11 +128,11 @@ export class CodeParser {
         for (let tmp = reg2.exec(codeTxt); tmp != null;) {
             codeTxt = codeTxt.replace(reg2, '@anno1-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-1onna@');
             tmp = reg2.exec(codeTxt);
-            console.log(tmp);
         }
         let reg3 = new RegExp('@anno1-.*?-1onna@'); // 非贪婪匹配
         for (let tmp = reg3.exec(codeTxt); tmp != null; tmp = reg3.exec(codeTxt)) {
             codeTxt = codeTxt.replace(reg3, '<span style="font-weight: bold; color: #969696; font-size: 80%;">//' + tmp.toString().substring(7, tmp.toString().length - 7) + '</span>\n')
+            tmp = reg3.exec(codeTxt);
         }
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">' + renderParam + '</div>' +

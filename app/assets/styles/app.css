@@ -16,7 +16,7 @@ app 页面
  */
 .menu {
     background-color: rgba(66, 157, 255, 0.22);
-    color: #656464;
+    color: #a5a5a5;
     margin: 0 auto;
     position: fixed;
     bottom: 0;
@@ -56,12 +56,13 @@ app 页面
 .menu > .audio-div > ul{
     padding-left: 0;
     list-style: none;
-    color: rgba(145, 41, 177, 0.64);
+    color: rgba(31, 198, 165, 0.64);
     text-align: left;
 }
 
 .menu > .audio-div > ul > li:hover {
     background-color: #ececec;
+    color: rgba(81, 81, 96, 0.64);
     cursor: pointer;
 }
 

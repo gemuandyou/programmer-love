@@ -8,11 +8,12 @@
             </li>
         </ul>
     </div>
-    <button style="position: absolute; left: 0; color: burlywood; width: 3rem; cursor: default;"
-          (click)="showMusic = !showMusic">music</button>
+    <button class="btn" style="position: absolute; left: 0; width: 3rem; cursor: default;"
+            (click)="showMusic = !showMusic">music</button>
     <ul>
         <li routerLink="/charity">Charity</li>
         <li routerLink="/notes">Notes</li>
         <li routerLink="/essay">So on</li>
     </ul>
+    <span #localTime style="position: absolute; right: 0; width: 12rem; cursor: default; height: 2rem; line-height: 2rem; bottom: 0;" (click)="startAndStopTime()"></span>
 </div>
