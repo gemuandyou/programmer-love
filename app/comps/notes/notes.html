@@ -71,7 +71,7 @@
         <p style="display: none;" #clipboard></p>
     </div>
     <div class="note-preview">
-        <button (click)="previewNote(); needPreview = !needPreview;">预览</button>
+        <button class="btn" (click)="previewNote(); needPreview = !needPreview;">预览</button>
         <div class="note-preview-content" *ngIf="needPreview">
             <ul>
                 <li *ngFor="let struct of previewStructures" (click)="positionPreview(struct.dom);needPreview = false;">{{struct.name}}</li>

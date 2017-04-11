@@ -17,6 +17,18 @@ export class CodeParser {
     private cWords: String[] = ['auto', 'else', 'long', 'switch', 'break', 'enum', 'register', 'typedef', 'case', 'extern',
         'return', 'union', 'char', 'float', 'short', 'unsigned', 'const', 'for', 'signed', 'void', 'continue', 'goto',
         'sizeof', 'volatile', 'default', 'if', 'static', 'while', 'do', 'int', 'struct', '_Packed', 'double'];
+    private htmlWords: String[] = [
+        // html标签
+        '!DOCTYPE', 'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside', 'audio', 'b', 'base', 'basefont',
+        'bdi', 'bdo', 'big', 'blockquote', 'body', 'br', 'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col',
+        'colgroup', 'command', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt', 'em', 'embed',
+        'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'frame', 'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'head', 'header', 'hr', 'html', 'i', 'iframe', 'img', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li',
+        'link', 'map', 'mark', 'menu', 'meta', 'meter', 'nav', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option',
+        'output', 'p', 'param', 'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script', 'section', 'select',
+        'small', 'source', 'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'textarea',
+        'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'video', 'wbr'
+    ];
 
     constructor(private _codeTxt: String) {
     };
@@ -41,32 +53,64 @@ export class CodeParser {
             case 'c':
                 keyWords = this.cWords;
                 break;
+            case 'html':
+                keyWords = this.htmlWords;
+                break;
         }
         // 解析代码关键字
         for (let keyword of keyWords) {
-            let reg = new RegExp(keyword + ' ', 'g');
-            if (reg.exec(codeTxt) != null) {
-                console.log(reg.exec(codeTxt));
-                codeTxt = codeTxt.replace(reg, '@st-' + keyword + '-@et ');
-            }
+            switch (renderParam) {
+                case 'html':
+                    let reg3 = new RegExp('\&lt;' + keyword + ' ', 'g');
+                    if (reg3.exec(codeTxt) != null) {
+                        codeTxt = codeTxt.replace(reg3, '@st-' + keyword + '-@et ');
+                    }
+                    let reg4 = new RegExp('\&lt;' + keyword + '\&gt;', 'g');
+                    if (reg4.exec(codeTxt) != null) {
+                        codeTxt = codeTxt.replace(reg4, '@st-' + keyword + '-@et>');
+                    }
+                    let reg5 = new RegExp('\&lt;\\/' + keyword + '\&gt;', 'g');
+                    if (reg5.exec(codeTxt) != null) {
+                        codeTxt = codeTxt.replace(reg5, '/@st-' + keyword + '-@et>');
+                    }
+                    break;
+                default:
+                    let reg = new RegExp(keyword + ' ', 'g');
+                    if (reg.exec(codeTxt) != null) {
+                        codeTxt = codeTxt.replace(reg, '@st-' + keyword + '-@et ');
+                    }
 
-            let reg1 = new RegExp(keyword + '\\.', 'g');
-            if (reg1.exec(codeTxt) != null) {
-                codeTxt = codeTxt.replace(reg1, '@st-' + keyword + '-@et.');
-            }
+                    let reg1 = new RegExp(keyword + '\\.', 'g');
+                    if (reg1.exec(codeTxt) != null) {
+                        codeTxt = codeTxt.replace(reg1, '@st-' + keyword + '-@et.');
+                    }
 
-            let reg2 = new RegExp(keyword + '\\(', 'g');
-            if (reg2.exec(codeTxt) != null) {
-                codeTxt = codeTxt.replace(reg2, '@st-' + keyword + '-@et(');
+                    let reg2 = new RegExp(keyword + '\\(', 'g');
+                    if (reg2.exec(codeTxt) != null) {
+                        codeTxt = codeTxt.replace(reg2, '@st-' + keyword + '-@et(');
+                    }
+                    break;
             }
         }
         for (let keyword of keyWords) {
-            let reg = new RegExp('@st-' + keyword + '-@et ', 'g');
-            let reg1 = new RegExp('@st-' + keyword + '-@et\\.', 'g');
-            let reg2 = new RegExp('@st-' + keyword + '-@et\\(', 'g');
-            codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span> ');
-            codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>.');
-            codeTxt = codeTxt.replace(reg2, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>(');
+            switch (renderParam) {
+                case 'html':
+                    let reg5 = new RegExp('\\/@st-' + keyword + '-@et>', 'g');
+                    codeTxt = codeTxt.replace(reg5, '&lt;/<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>>');
+                    let reg3 = new RegExp('@st-' + keyword + '-@et ', 'g');
+                    codeTxt = codeTxt.replace(reg3, '<<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span> ');
+                    let reg4 = new RegExp('@st-' + keyword + '-@et>', 'g');
+                    codeTxt = codeTxt.replace(reg4, '<<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>>');
+                    break;
+                default:
+                    let reg = new RegExp('@st-' + keyword + '-@et ', 'g');
+                    let reg1 = new RegExp('@st-' + keyword + '-@et\\.', 'g');
+                    let reg2 = new RegExp('@st-' + keyword + '-@et\\(', 'g');
+                    codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span> ');
+                    codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>.');
+                    codeTxt = codeTxt.replace(reg2, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>(');
+                    break;
+            }
         }
         // 解析注释
         // 第一种注释 格式：/*abc*/
