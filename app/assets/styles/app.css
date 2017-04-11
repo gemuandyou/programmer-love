@@ -15,7 +15,8 @@
 app 页面
  */
 .menu {
-    background-color: #429dff;
+    background-color: rgba(66, 157, 255, 0.22);
+    color: #656464;
     margin: 0 auto;
     position: fixed;
     bottom: 0;

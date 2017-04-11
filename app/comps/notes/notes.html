@@ -1,79 +1,81 @@
-<div class="form" [ngClass]="{'formFlex':editorFlex}">
-    <button class="btn" (click)="newNote();">New</button>
-    <ul class="notes-list">
-        <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note}}</li>{{a}}
-    </ul>
-</div>
-<div class="view" [ngClass]="{'viewFlex':editorFlex}" #notesView>
-</div>
-<div class="edit" [ngClass]="{'editFlex':editorFlex}">
-    <div class="notes-tools">
-        <div class="notes-tags-declare">
-            <span *ngFor="let mark of marks">{{mark.key}}->{{mark.val}}</span>
+<div class="notes">
+    <div class="form" [ngClass]="{'formFlex':editorFlex}">
+        <button class="btn" (click)="newNote();">New</button>
+        <ul class="notes-list">
+            <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note}}</li>{{a}}
+        </ul>
+    </div>
+    <div class="view" [ngClass]="{'viewFlex':editorFlex}" #notesView>
+    </div>
+    <div class="edit" [ngClass]="{'editFlex':editorFlex}">
+        <div class="notes-tools">
+            <div class="notes-tags-declare">
+                <span *ngFor="let mark of marks">{{mark.key}}->{{mark.val}}</span>
+            </div>
+            <div class="notes-tools-btn">
+                <a class="btn" (click)="editorFlex = !editorFlex"><span *ngIf="editorFlex">+</span><span *ngIf="!editorFlex">-</span></a>
+                <a class="btn" (click)="saveNote();" *ngIf="!editorFlex">Save</a>
+                <a class="btn" (click)="helper = !helper" *ngIf="!editorFlex">Help</a>
+                <a class="btn" (click)="todo = !todo" *ngIf="!editorFlex">TODO</a>
+            </div>
         </div>
-        <div class="notes-tools-btn">
-            <a class="btn" (click)="editorFlex = !editorFlex"><span *ngIf="editorFlex">+</span><span *ngIf="!editorFlex">-</span></a>
-            <a class="btn" (click)="saveNote();" *ngIf="!editorFlex">Save</a>
-            <a class="btn" (click)="helper = !helper" *ngIf="!editorFlex">Help</a>
-            <a class="btn" (click)="todo = !todo" *ngIf="!editorFlex">TODO</a>
+        <div class="paste-way">
+            <ul #pasteWay>
+                <li [ngClass]="{'active': pasteFormat == 1}" value="1">保留原格式</li>
+                <li [ngClass]="{'active': pasteFormat == 2}" value="2">仅粘贴文本</li>
+                <li [ngClass]="{'active': pasteFormat == 3}" value="3">Java格式</li>
+            </ul>
+            <ul>
+                <li>a</li>
+            </ul>
         </div>
+        <!--<ol class="notes-editor-line">-->
+        <!--<li></li>-->
+        <!--<li></li>-->
+        <!--</ol>-->
+        <div class="notes-editor" contenteditable="plaintext-only" #notesEditor (keyup)="changeEdit($event)" [ngClass]="{'editorFlex':editorFlex}"></div>
+        <div class="editor-helper" *ngIf="helper">
+            <p>
+                使用@tab标签来进行缩进，遇到空行结束缩进。可嵌套使用。
+                标签渲染的内容以空格为截止符，若紧连接标签后需要打印空格，则输入两个空格即可，如：@h1-abc  a。标签目前分为三种。
+                请注意别XSS攻击，跪谢了。
+                @pre标签目前不支持手动写，一般都是粘贴的内容。
+                多个@code标签之间需要换行。
+            </p>
+            <ol>
+                <li>普通标签。如：@h1-、@i-、@b-等。</li>
+                <li>带有参数的标签。如：@url[]。参数值写在[]中，实例：@url[https://www.abc.com]ALink，会生成
+                    "<a href='https://www.abc.com'>ALink</a>"
+                </li>
+                <li>带有包含内容的标签。如：@ol()、@ul()。不难看出这个标签会生成
+                    "ol、ul"html标签，其中的"li"内容在@ol或@ul标签的括号
+                    中以#号分割。实例：@ol(#a#b)，会生成"<ol><li>a</li><li>b</li></ol>"
+                </li>
+                <li>对于展示内容不想换行的，只需在编辑区行未添加"\"符号即可。
+                </li>
+            </ol>
+        </div>
+        <div class="editor-helper" *ngIf="todo">
+            <p>需要完善的内容</p>
+            <ul>
+                <li><s>粘贴文本内容时，会删除相邻的同级文本。需要分隔标签分隔。</s></li>
+                <li><s>添加@code标签，粘贴代码为纯文本，根据标签表明语言解析关键字高亮。</s>code语言类型支持需要后续补充。</li>
+                <li><s>粘贴内容选择格式。</s>粘贴代码语言选择需要后续补充。</li>
+                <li>由于保存机制过于简单，所以建议每个笔记内容不要太多</li>
+                <li><s>写标签的时候后面有内容，不能生成标签符号。</s> <s>但是现在后面不能出现所写标签符号。当前光标位置无法获取。</s></li>
+                <li>日期目录悬浮显示内容结构目录，如果不读取日记内容，如何获取日记目录结构呢？，如果读取日记内容，那么悬浮就没有意义，点击就可以了。如何解决呢？:(</li>
+                <li>音乐盒音乐轮询播放，音量调节等。</li>
+                <li>预览优化。</li>
+            </ul>
+        </div>
+        <p style="display: none;" #clipboard></p>
     </div>
-    <div class="paste-way">
-        <ul #pasteWay>
-            <li [ngClass]="{'active': pasteFormat == 1}" value="1">保留原格式</li>
-            <li [ngClass]="{'active': pasteFormat == 2}" value="2">仅粘贴文本</li>
-            <li [ngClass]="{'active': pasteFormat == 3}" value="3">Java格式</li>
-        </ul>
-        <ul>
-            <li>a</li>
-        </ul>
-    </div>
-    <!--<ol class="notes-editor-line">-->
-    <!--<li></li>-->
-    <!--<li></li>-->
-    <!--</ol>-->
-    <div class="notes-editor" contenteditable="plaintext-only" #notesEditor (keyup)="changeEdit($event)" [ngClass]="{'editorFlex':editorFlex}"></div>
-    <div class="editor-helper" *ngIf="helper">
-        <p>
-            使用@tab标签来进行缩进，遇到空行结束缩进。可嵌套使用。
-            标签渲染的内容以空格为截止符，若紧连接标签后需要打印空格，则输入两个空格即可，如：@h1-abc  a。标签目前分为三种。
-            请注意别XSS攻击，跪谢了。
-            @pre标签目前不支持手动写，一般都是粘贴的内容。
-            多个@code标签之间需要换行。
-        </p>
-        <ol>
-            <li>普通标签。如：@h1-、@i-、@b-等。</li>
-            <li>带有参数的标签。如：@url[]。参数值写在[]中，实例：@url[https://www.abc.com]ALink，会生成
-                "<a href='https://www.abc.com'>ALink</a>"
-            </li>
-            <li>带有包含内容的标签。如：@ol()、@ul()。不难看出这个标签会生成
-                "ol、ul"html标签，其中的"li"内容在@ol或@ul标签的括号
-                中以#号分割。实例：@ol(#a#b)，会生成"<ol><li>a</li><li>b</li></ol>"
-            </li>
-            <li>对于展示内容不想换行的，只需在编辑区行未添加"\"符号即可。
-            </li>
-        </ol>
-    </div>
-    <div class="editor-helper" *ngIf="todo">
-        <p>需要完善的内容</p>
-        <ul>
-            <li><s>粘贴文本内容时，会删除相邻的同级文本。需要分隔标签分隔。</s></li>
-            <li><s>添加@code标签，粘贴代码为纯文本，根据标签表明语言解析关键字高亮。</s>code语言类型支持需要后续补充。</li>
-            <li><s>粘贴内容选择格式。</s>粘贴代码语言选择需要后续补充。</li>
-            <li>由于保存机制过于简单，所以建议每个笔记内容不要太多</li>
-            <li><s>写标签的时候后面有内容，不能生成标签符号。</s> <s>但是现在后面不能出现所写标签符号。当前光标位置无法获取。</s></li>
-            <li>日期目录悬浮显示内容结构目录，如果不读取日记内容，如何获取日记目录结构呢？，如果读取日记内容，那么悬浮就没有意义，点击就可以了。如何解决呢？:(</li>
-            <li>音乐盒音乐轮询播放，音量调节等。</li>
-            <li>预览优化。</li>
-        </ul>
-    </div>
-    <p style="display: none;" #clipboard></p>
-</div>
-<div class="note-preview">
-    <button (click)="previewNote(); needPreview = !needPreview;">预览</button>
-    <div class="note-preview-content" *ngIf="needPreview">
-        <ul>
-            <li *ngFor="let struct of previewStructures" (click)="positionPreview(struct.dom);needPreview = false;">{{struct.name}}</li>
-        </ul>
+    <div class="note-preview">
+        <button (click)="previewNote(); needPreview = !needPreview;">预览</button>
+        <div class="note-preview-content" *ngIf="needPreview">
+            <ul>
+                <li *ngFor="let struct of previewStructures" (click)="positionPreview(struct.dom);needPreview = false;">{{struct.name}}</li>
+            </ul>
+        </div>
     </div>
 </div>

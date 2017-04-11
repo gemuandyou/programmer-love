@@ -1,5 +1,12 @@
+.notes {
+    height: 100%;
+    width: 100%;
+    background-image: url('app/assets/images/notes_bg.jpg');
+    background-size: 100% 100%;
+}
+
 .form {
-    background-color: #c6cfda;
+    background-color: rgba(164, 166, 191, 0.37);
     width: 10rem;
     height: 60%;
     float: left;
@@ -14,7 +21,7 @@
 }
 
 .form ul li {
-    color: #222;
+    color: #f3f3f3;
     -webkit-transition: color 0.1s;
     -moz-transition: color 0.1s;
     -ms-transition: color 0.1s;
@@ -31,7 +38,8 @@
 }
 
 .view {
-    background-color: #fafafa;
+    background-color: rgba(250, 250, 250, 0.48);
+    color: #4c4c4c;
     padding: 0.5rem;
     width: calc(100% - 10rem - 1rem);
     height: calc(60% - 1rem);
@@ -41,7 +49,8 @@
 }
 
 .edit {
-    background-color: aliceblue;
+    background-color: rgba(240, 248, 255, 0);
+    color: rgb(221, 222, 224);
     width: 100%;
     height: calc(40% - 2rem);
     float: left;
@@ -82,7 +91,7 @@
 .notes-tools {
     width: 100%;
     height: 1.5rem;
-    background-color: azure;
+    background-color: rgba(240, 248, 255, 0);
     font-size: 0.8rem;
     line-height: 1.5rem;
 }
