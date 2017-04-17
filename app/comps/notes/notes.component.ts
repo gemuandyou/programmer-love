@@ -129,6 +129,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
         this.pasteRng = this.pasteSel.getRangeAt(0);
         let beforeEc = this.pasteRng.endContainer;
         let beforeEo = this.pasteRng.endOffset;
+        let pasteRngTmp = document.createRange();
+        pasteRngTmp.setStart(beforeEc, beforeEo);
         for (let item of pasteItems) {
             // HTML内容
             if (item.kind === 'string' && 'text/html' === item.type) {
@@ -154,13 +156,11 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     let afterEc = this.pasteRng.endContainer;
                     let afterEo = this.pasteRng.endOffset;
                     // // 删除复制的文本内容
-                    this.pasteRng = document.createRange();
-                    this.pasteRng.setStart(beforeEc, beforeEo);
-                    this.pasteRng.setEnd(afterEc, afterEo);
-                    this.pasteSel.addRange(this.pasteRng);
-                    this.pasteSel.deleteFromDocument();
-                    this.pasteRng = this.pasteSel.getRangeAt(0);
-                    this.pasteRng.deleteContents();
+                    pasteRngTmp.setEnd(afterEc, afterEo);
+                    this.pasteSel.addRange(pasteRngTmp);
+                    // this.pasteSel.deleteFromDocument();
+                    // this.pasteRng = this.pasteSel.getRangeAt(0);
+                    // this.pasteRng.deleteContents();
                 });
                 this.pasteChooseListener();
             }
@@ -176,13 +176,11 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     let afterEc = this.pasteRng.endContainer;
                     let afterEo = this.pasteRng.endOffset;
                     // 删除复制的文本内容
-                    this.pasteRng = document.createRange();
-                    this.pasteRng.setStart(beforeEc, beforeEo);
-                    this.pasteRng.setEnd(afterEc, afterEo);
-                    this.pasteSel.addRange(this.pasteRng);
-                    this.pasteSel.deleteFromDocument();
-                    this.pasteRng = this.pasteSel.getRangeAt(0);
-                    this.pasteRng.deleteContents();
+                    pasteRngTmp.setEnd(afterEc, afterEo);
+                    this.pasteSel.addRange(pasteRngTmp);
+                    // this.pasteSel.deleteFromDocument();
+                    // this.pasteRng = this.pasteSel.getRangeAt(0);
+                    // this.pasteRng.deleteContents();
                 });
                 this.pasteChooseListener();
             }
