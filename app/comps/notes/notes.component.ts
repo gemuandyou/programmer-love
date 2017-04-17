@@ -144,9 +144,9 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         tmp = tmp.substring(1);
                         var style = tmp.substring(0, tmp.indexOf(quo));
                         var remain = tmp.substring(tmp.indexOf(quo));
-                        s = '<pre style="border-radius: 0.5rem;padding: 0.5rem;' + style + remain;
+                        s = '<pre style="overflow: auto; border-radius: 0.5rem;padding: 0.5rem;' + style + remain;
                     } else {
-                        s = '<pre style="border-radius: 0.5rem;padding: 0.5rem;">' + s + '</pre>';
+                        s = '<pre style="overflow: auto; border-radius: 0.5rem;padding: 0.5rem;">' + s + '</pre>';
                     }
                     this.pasteContent['html'] = s;
                     // 在编译器中 获取光标位置
