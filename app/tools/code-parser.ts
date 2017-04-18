@@ -85,7 +85,7 @@ export class CodeParser {
                         codeTxt = codeTxt.replace(reg1, '@st-' + keyword + '-@et.');
                     }
 
-                    let reg2 = new RegExp(keyword + '\\(', 'g');
+                    let reg2 = new RegExp(' ' + keyword + '\\(', 'g');
                     if (reg2.exec(codeTxt) != null) {
                         codeTxt = codeTxt.replace(reg2, '@st-' + keyword + '-@et(');
                     }
@@ -108,7 +108,7 @@ export class CodeParser {
                     let reg2 = new RegExp('@st-' + keyword + '-@et\\(', 'g');
                     codeTxt = codeTxt.replace(reg, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span> ');
                     codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>.');
-                    codeTxt = codeTxt.replace(reg2, '<span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>(');
+                    codeTxt = codeTxt.replace(reg2, ' <span style="font-weight: bold; color: dodgerblue">' + keyword + '</span>(');
                     break;
             }
         }
