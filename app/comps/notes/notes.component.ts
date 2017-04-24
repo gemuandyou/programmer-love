@@ -629,6 +629,13 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     html = new CodeParser(text).basisParser().toString();
                 }
                 break;
+            case 'HR':
+                let ctx = '';
+                if (text) {
+                    ctx = '<span style="line-height: 0rem;background-color: #bdbdbd;border-radius: 0.3rem;padding: 0 0.3rem;color: #fff676;">' + text + '</span>';
+                }
+                html = '<div style="border-top: 1px solid #ddddd8;height: 1px;margin: 0.7rem 0;text-align: center;">' + ctx + '</div>';
+                break;
         }
         return html;
     }

@@ -20,7 +20,8 @@ export class Mark {
         {key: '@fc', val: 'FontColor'},
         {key: '@fbc', val: 'FontBackgroundColor'},
         {key: '@tab', val: 'TAB'},
-        {key: '@code', val: 'CODE'}
+        {key: '@code', val: 'CODE'},
+        {key: '@hr', val: 'HR'}
     ];
 }
 
