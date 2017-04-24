@@ -7,6 +7,7 @@ import {CharityModule} from "./comps/charity/charity.module";
 import {HttpModule} from "@angular/http";
 import {NotesModule} from "./comps/notes/notes.module";
 import {EssayModule} from "./comps/essay/essay.module";
+import {MedicineModule} from "./comps/medicine/medicine.module";
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {EssayModule} from "./comps/essay/essay.module";
         HttpModule, // 如果使用http就必须注入这个。不然报错：No provider for Http!
         CharityModule,
         NotesModule,
-        EssayModule
+        EssayModule,
+        MedicineModule
     ],
     declarations: [
         AppComponent
