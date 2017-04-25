@@ -1,6 +1,7 @@
 .freehand-div {
     width: 100%;
     height: calc(100% - 2rem);
+    overflow: overlay;
 }
 
 .freehand-preview {

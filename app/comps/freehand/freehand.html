@@ -1,5 +1,7 @@
-<div class="freehand-div">
+<div #freehand class="freehand-div">
     <button class="btn" style="position: absolute;" (click)="saveImg();">保存</button>
+    <button class="btn" style="position: absolute; left: 3rem;" (click)="clearCanvas();">清空画布</button>
+    <button class="btn" style="position: absolute; left: 7.6rem;" (click)="eraserCanvas();">橡皮擦</button>
     <div class="freehand-preview">
         <div *ngFor="let imgData of imgsPreview">
             <img [src]="imgData" (click)="loadImg($event);"/>
