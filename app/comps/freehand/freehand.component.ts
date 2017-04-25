@@ -11,7 +11,6 @@ export class FreehandComponent implements AfterViewInit {
 
     imgsPreview: string[] = []; // 图片预览
     isErase: boolean = false; // 画笔是否是橡皮檫
-    iconSize = 32; // 画笔图标长宽（px）
     eraseSize = 20; // 橡皮擦图标长宽（px）
     marginLeft = 200; // 画布左间隔长度（px）
 
@@ -48,7 +47,7 @@ export class FreehandComponent implements AfterViewInit {
                 ctx.clearRect(mX + 2, mY + 2, this.eraseSize, this.eraseSize);
             } else {
                 ctx.beginPath(); // 开始起点
-                ctx.moveTo(mX, mY + this.iconSize); // 开始移动
+                ctx.moveTo(mX, mY); // 开始移动
                 ctx.lineWidth = 1;
             }
             starting = true;
@@ -61,7 +60,7 @@ export class FreehandComponent implements AfterViewInit {
                 if (this.isErase) {
                     ctx.clearRect(lX + 2, lY + 2, this.eraseSize, this.eraseSize);
                 } else {
-                    ctx.lineTo(lX, lY + this.iconSize); // 移动
+                    ctx.lineTo(lX, lY); // 移动
                     ctx.strokeStyle = '#ECECEC';
                     ctx.stroke(); // 画线
                 }
