@@ -8,6 +8,7 @@ import {HttpModule} from "@angular/http";
 import {NotesModule} from "./comps/notes/notes.module";
 import {EssayModule} from "./comps/essay/essay.module";
 import {MedicineModule} from "./comps/medicine/medicine.module";
+import {FreehandModule} from "./comps/freehand/freehand.module";
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import {MedicineModule} from "./comps/medicine/medicine.module";
         CharityModule,
         NotesModule,
         EssayModule,
-        MedicineModule
+        MedicineModule,
+        FreehandModule
     ],
     declarations: [
         AppComponent
