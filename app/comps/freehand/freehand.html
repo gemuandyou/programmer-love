@@ -1,3 +1,9 @@
-<div class="freehand-div" style="width: 100%; height: calc(100% - 2rem);">
-    <canvas id="freehand" style="background-color: #353535; color: white"></canvas>
+<div class="freehand-div">
+    <button class="btn" style="position: absolute;" (click)="saveImg();">保存</button>
+    <div class="freehand-preview">
+        <div *ngFor="let imgData of imgsPreview">
+            <img [src]="imgData" (click)="loadImg($event);"/>
+        </div>
+    </div>
+    <canvas id="freehand" style="background-color: #353535; color: white; float: left;"></canvas>
 </div>

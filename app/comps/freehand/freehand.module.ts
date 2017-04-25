@@ -3,7 +3,9 @@
  */
 import {NgModule} from "@angular/core";
 import {FreehandComponent} from "./freehand.component";
+import {CommonModule} from "@angular/common";
 @NgModule({
+    imports: [CommonModule],
     declarations: [
         FreehandComponent
     ]

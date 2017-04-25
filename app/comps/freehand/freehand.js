@@ -5,7 +5,7 @@ var cvsDom = document.getElementById('freehand');
 var cvsDiv = document.getElementsByClassName('freehand-div')[0];
 var ctx=cvsDom.getContext("2d");
 var starting = false;
-cvsDom.setAttribute('width', cvsDiv.offsetWidth);
+cvsDom.setAttribute('width', cvsDiv.offsetWidth - 200);
 cvsDom.setAttribute('height', cvsDiv.offsetHeight);
 cvsDom.onmousedown = function (e) {
     e = window.event || e;
