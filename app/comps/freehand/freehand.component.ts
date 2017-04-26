@@ -12,26 +12,51 @@ export class FreehandComponent implements AfterViewInit {
     imgsPreview: string[] = []; // 图片预览
     isErase: boolean = false; // 画笔是否是橡皮檫
     eraseSize = 20; // 橡皮擦图标长宽（px）
-    marginLeft = 200; // 画布左间隔长度（px）
+    marginLeft = 200; // PC端画布左间隔长度（px）
+    marginTop = 132; // 移动端画布上间隔长度（px）
+    isPc: boolean = true;
 
     @ViewChild('freehand') freehand;
+    @ViewChild('freehandPreview') freehandPreview;
 
     constructor(title: Title) {
         title.setTitle("鼠绘");
+
+        // 判断浏览器类型，区分移动端和PC端
+        // this.browserInfo = navigator.appVersion;
+        var style = document.createElement('link');
+        style.rel = "stylesheet";
+        let isAndroid = navigator.appVersion.match(/android/gi);
+        let isIPhone = navigator.appVersion.match(/iphone/gi);
+        this.isPc = !isAndroid && !isIPhone;
+        if (!this.isPc) {
+            style.href = 'app/assets/styles/freehand-mobile.css';
+        } else {
+            style.href = 'app/assets/styles/freehand-pc.css';
+        }
+        document.head.appendChild(style);
     }
 
     ngAfterViewInit() {
+
         // var script = document.createElement('script');
         // document.body.appendChild(script);
         // script.type = "text/javascript";
         // script.src = 'app/comps/freehand/freehand.js';
 
+        // 初始化事件
         var cvsDom = document.getElementsByTagName('canvas')[0];
         var cvsDiv = this.freehand.nativeElement;
         var starting = false;
-        cvsDom.setAttribute('width', (cvsDiv.offsetWidth - this.marginLeft) + '');
-        cvsDom.setAttribute('height', (cvsDiv.offsetHeight) + '');
+        if (this.isPc) {
+            cvsDom.setAttribute('width', (cvsDiv.offsetWidth - this.marginLeft) + '');
+            cvsDom.setAttribute('height', (cvsDiv.offsetHeight) + '');
+        } else {
+            cvsDom.setAttribute('width', (cvsDiv.offsetWidth) + '');
+            cvsDom.setAttribute('height', (cvsDiv.offsetHeight - this.marginTop) + '');
+        }
         var ctx = cvsDom.getContext('2d');
+        // PC端
         cvsDom.onmouseover = () => {
             if (this.isErase) {
                 cvsDom.style.cursor = 'url("app/assets/images/erase.png"), default';
@@ -74,6 +99,47 @@ export class FreehandComponent implements AfterViewInit {
             ctx.closePath(); // 结束点
             starting = false;
         };
+
+        // 移动端
+        cvsDom.addEventListener('touchstart', (e) => {
+            var touch = e.touches.item(0);
+            var mX = touch.pageX;
+            var mY = touch.pageY - this.marginTop;
+            if (this.isErase) {
+                ctx.clearRect(mX + 2, mY + 2, this.eraseSize, this.eraseSize);
+            } else {
+                ctx.beginPath(); // 开始起点
+                ctx.moveTo(mX, mY); // 开始移动
+                ctx.lineWidth = 1;
+            }
+            console.log(mX, mY)
+            starting = true;
+        });
+        cvsDom.addEventListener('touchmove', (e) => {
+            if (starting) {
+                var touch = e.touches.item(0);
+                var lX = touch.pageX;
+                var lY = touch.pageY - this.marginTop;
+                if (this.isErase) {
+                    ctx.clearRect(lX + 2, lY + 2, this.eraseSize, this.eraseSize);
+                } else {
+                    ctx.lineTo(lX, lY); // 移动
+                    ctx.strokeStyle = '#ECECEC';
+                    ctx.stroke(); // 画线
+                }
+            }
+            // 取消移动端浏览器的“橡皮筋效果”
+            e.stopPropagation();
+            e.preventDefault();
+        });
+        cvsDom.addEventListener('touchend', (e) => {
+            ctx.closePath(); // 结束点
+            starting = false;
+        });
+        cvsDom.addEventListener('touchcancel', (e) => {
+            ctx.closePath(); // 结束点
+            starting = false;
+        });
 
     }
 

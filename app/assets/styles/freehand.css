@@ -3,22 +3,3 @@
     height: calc(100% - 2rem);
     overflow: overlay;
 }
-
-.freehand-preview {
-    width: 200px;
-    height: calc(100% - 2rem);
-    float: left;
-    background-color: #3e3b3b;
-    padding-top: 2rem;
-    overflow-y: auto;
-}
-
-.freehand-preview img {
-    width: 198px;
-    border: 1px solid #888;
-    margin-bottom: 0.3rem;
-}
-
-.freehand-preview img:hover {
-    box-shadow: 0px 0px 5px #d89a9a;
-}
