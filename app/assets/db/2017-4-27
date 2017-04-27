@@ -1,0 +1,4 @@
+{
+  "noteData": "<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@h1</span>-Java随笔\n\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@h2</span>-保留指定位数的小数\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@i</span>-使用DecimalFormat\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@code</span>-java-@[Integer size = 6;\nDouble d = 100 / size.doubleValue();\nDecimalFormat df = new DecimalFormat(&amp;quot;0.0&amp;quot;);\nSystem.out.println(df.format(d)); /*自动进行了四舍五入，结果16.7*/]@ \\\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"edit-span\">@fc</span>-#911-<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\">&gt;</span>DecimalFormat构造器中为pattern字符串。若#和0占位位置有数据，则显示。若#位置没有数据则为空，若0位置没有数据则用0占位。",
+  "noteName": "2017-4-27"
+}
