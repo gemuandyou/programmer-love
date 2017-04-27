@@ -22,7 +22,7 @@ module.exports = {
     listNotes: function() {
         var files = [];
         fs.readdirSync(prePath).forEach(function (file) {
-            if (file != 'img') {
+            if (file != 'img' && file != 'freehand') {
                 files.push(file);
             }
         });

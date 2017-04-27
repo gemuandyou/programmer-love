@@ -321,7 +321,11 @@ export class NotesComponent implements OnInit, AfterViewInit {
             return;
         } else if (event.key == 'Escape') {
             this.pasteWayEle.style.display = 'none';
+            this.pasteContent = {};
             return;
+        } else if (event.key === 'Enter') {
+            this.editMark = '';
+            this.editIsMark = false;
         }
 
         if (this.editIsMark) {
