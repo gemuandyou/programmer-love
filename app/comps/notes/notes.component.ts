@@ -696,8 +696,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 if (resp.status === 200) {
                     Notify.success('保存成功');
                     // view模块向下滚动到底
-                    this.notesEditor.nativeElement.scrollTop = this.notesEditor.nativeElement.scrollHeight;
-                    this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.scrollHeight;
+                    // this.notesEditor.nativeElement.scrollTop = this.notesEditor.nativeElement.scrollHeight;
+                    // this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.scrollHeight;
                     this.ngOnInit();
                 }
             });
