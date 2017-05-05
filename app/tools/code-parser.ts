@@ -135,13 +135,13 @@ export class CodeParser {
             tmp = reg3.exec(codeTxt);
         }
 
-        return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: thistle; user-select: none;">' + renderParam + '</div>' +
-            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;">' + codeTxt + '</pre></div></div>';
+        return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: darkolivegreen; user-select: none;">' + renderParam + '</div>' +
+            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
     }
 
     basisParser(): String {
         let codeTxt = this._codeTxt.toString();
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;">' +
-            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;">' + codeTxt + '</pre></div></div>';
+            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
     }
 }
