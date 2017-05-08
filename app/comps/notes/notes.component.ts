@@ -710,7 +710,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 this.notesEditorEle = this.notesEditor.nativeElement;
                 let noteDate = JSON.parse(resp._body).noteData;
                 noteDate = this.editSimplify(noteDate);
-                this.notesEditorEle.innerHTML = noteDate;
+                this.notesEditorEle.innerHTML = '<pre>' + noteDate + '</pre>';
                 this.parseNote(this.notesEditorEle.innerText);
             }
         });
