@@ -797,4 +797,24 @@ export class NotesComponent implements OnInit, AfterViewInit {
         notesViewEle.scrollTop = dom.offsetTop;
     }
 
+    /**
+     * 导出笔记
+     */
+    exportNote(): void {
+        // let html = document.getElementsByTagName('html')[0].innerHTML;
+        // let htmlTmp:HTMLElement = document.createElement('html');
+        // htmlTmp.style.display = 'none';
+        // htmlTmp.innerHTML = html;
+        // htmlTmp.getElementsByClassName('form')[0].remove();
+        // htmlTmp.getElementsByClassName('edit')[0].remove();
+        // htmlTmp.getElementsByClassName('menu')[0].remove();
+        // htmlTmp.getElementsByClassName('notes')[0].style.overflow = 'hidden';
+        // htmlTmp.getElementsByClassName('view')[0].style.height = '100%';
+        // htmlTmp.getElementsByClassName('view')[0].style.width = 'calc(100% - 16px)';
+        // html = htmlTmp.innerHTML;
+        // htmlTmp.remove();
+
+
+    }
+
 }

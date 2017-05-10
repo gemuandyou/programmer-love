@@ -1,6 +1,7 @@
 <div class="notes">
     <div class="form" [ngClass]="{'formFlex':editorFlex}">
         <button class="btn" (click)="newNote();">New</button>
+        <button class="btn" (click)="exportNote();">Export</button>
         <ul class="notes-list">
             <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note}}</li>{{a}}
         </ul>
