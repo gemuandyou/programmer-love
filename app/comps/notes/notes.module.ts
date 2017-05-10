@@ -4,10 +4,13 @@
 import {NgModule} from "@angular/core";
 import {NotesComponent} from "./notes.component";
 import {CommonModule} from "@angular/common";
+import {ModalBoxComponent} from "../modalbox/modalbox.component";
+import {FormsModule} from "@angular/forms";
 @NgModule({
-    imports: [CommonModule],
+    imports: [CommonModule, FormsModule],
     declarations: [
-        NotesComponent
+        NotesComponent,
+        ModalBoxComponent
     ]
 })
 export class NotesModule {}

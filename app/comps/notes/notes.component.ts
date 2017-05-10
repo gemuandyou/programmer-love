@@ -15,12 +15,13 @@ import {Notify} from "../../tools/notification";
 import {UUID} from "../../tools/uuid";
 import {CodeParser} from "../../tools/code-parser";
 import {PasteFormat} from "../../service/notes/paste-format";
+import {ModalBoxComponent} from "../modalbox/modalbox.component";
 
 @Component({
     templateUrl: 'app/comps/notes/notes.html',
     styleUrls: ['app/assets/styles/notes.css', 'app/assets/styles/common.css'],
     // changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [NotesService]
+    providers: [NotesService, ModalBoxComponent]
 })
 export class NotesComponent implements OnInit, AfterViewInit {
 
@@ -53,8 +54,13 @@ export class NotesComponent implements OnInit, AfterViewInit {
 
     previewStructures: NoteStructure[]; // 预览
 
+    modalBoxComp: ModalBoxComponent; // 模态框Component对象
+
     constructor(title: Title, private ref: ChangeDetectorRef, private noteService: NotesService) {
         title.setTitle("程序员日志");
+        ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
+            this.modalBoxComp = modalBoxComp;
+        });
     }
 
     ngOnInit(): void {
@@ -814,7 +820,10 @@ export class NotesComponent implements OnInit, AfterViewInit {
         // html = htmlTmp.innerHTML;
         // htmlTmp.remove();
 
-
+        this.modalBoxComp.openModal("填写日志导入路径");
+        this.modalBoxComp.confirmEvent.subscribe(() => {
+            console.log(this.exportFilePath);
+        });
     }
 
 }
