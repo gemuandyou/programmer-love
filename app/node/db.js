@@ -47,5 +47,25 @@ module.exports = {
         var dataBuffer = new Buffer(base64Data, 'base64');
         fs.writeFile(path, dataBuffer);
         return path;
+    },
+
+    exportNote: function(path, html, assets) {
+        var basePath = path.substring(0, path.lastIndexOf('/'));
+        if (!fs.existsSync(basePath)) {
+            fs.mkdirSync(basePath);
+        }
+        fs.writeFile(path, html);
+        for (var index in assets) {
+            var assetPath = assets[index];
+            assetPath = assetPath.substring(assetPath.indexOf('/app/') + 1);
+            if (fs.existsSync(assetPath)) {
+                var file = fs.readFileSync(assetPath);
+                if (!fs.existsSync(basePath + '/assets/')) {
+                    fs.mkdirSync(basePath + '/assets/');
+                }
+                var filePath = basePath + '/assets/' + assetPath.substring(assetPath.lastIndexOf('/') + 1);
+                fs.writeFile(filePath, file);
+            }
+        }
     }
 };

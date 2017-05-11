@@ -23,3 +23,14 @@
     color: white;
     border: 1px solid white;
 }
+
+.form-input {
+    line-height: 1.5rem;
+    padding: 0 0.2rem;
+    border: 1px solid #ececec;
+    outline: none !important;
+}
+
+.form-input:focus {
+    border-color: #93a1bb;
+}

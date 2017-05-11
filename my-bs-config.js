@@ -52,6 +52,18 @@ var api = function (req, res, next) {
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.write(JSON.stringify(files).toString());
         res.end();
+    } else if (/\/exportNote/.test(req.url)) {
+        var body = [];
+        req.on('data', function (chunk) {
+            body.push(chunk);
+        });
+        req.on('end', function () {
+            body = Buffer.concat(body);
+            body = JSON.parse(body.toString());
+            db.exportNote(body['path'], body['html'], body['assets']);
+            res.write(body['path']);
+            res.end(body['path']);
+        });
     } else {
         next();
     }

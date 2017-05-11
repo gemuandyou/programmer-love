@@ -55,6 +55,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     previewStructures: NoteStructure[]; // 预览
 
     modalBoxComp: ModalBoxComponent; // 模态框Component对象
+    exportFilePath: string;
 
     constructor(title: Title, private ref: ChangeDetectorRef, private noteService: NotesService) {
         title.setTitle("程序员日志");
@@ -807,22 +808,46 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * 导出笔记
      */
     exportNote(): void {
-        // let html = document.getElementsByTagName('html')[0].innerHTML;
-        // let htmlTmp:HTMLElement = document.createElement('html');
-        // htmlTmp.style.display = 'none';
-        // htmlTmp.innerHTML = html;
-        // htmlTmp.getElementsByClassName('form')[0].remove();
-        // htmlTmp.getElementsByClassName('edit')[0].remove();
-        // htmlTmp.getElementsByClassName('menu')[0].remove();
-        // htmlTmp.getElementsByClassName('notes')[0].style.overflow = 'hidden';
-        // htmlTmp.getElementsByClassName('view')[0].style.height = '100%';
-        // htmlTmp.getElementsByClassName('view')[0].style.width = 'calc(100% - 16px)';
-        // html = htmlTmp.innerHTML;
-        // htmlTmp.remove();
-
         this.modalBoxComp.openModal("填写日志导入路径");
         this.modalBoxComp.confirmEvent.subscribe(() => {
-            console.log(this.exportFilePath);
+            let html = document.getElementsByTagName('html')[0].innerHTML;
+            let htmlTmp:HTMLElement = document.createElement('html');
+            htmlTmp.style.display = 'none';
+            htmlTmp.innerHTML = html;
+            htmlTmp.getElementsByTagName('modal-box')[0].remove();
+            htmlTmp.getElementsByClassName('form')[0].remove();
+            htmlTmp.getElementsByClassName('edit')[0].remove();
+            htmlTmp.getElementsByClassName('menu')[0].remove();
+            htmlTmp.getElementsByClassName('notes')[0].setAttribute('style', 'overflow:hidden');
+            htmlTmp.getElementsByClassName('view')[0].setAttribute('style', 'height:100%;width:calc(100% - 16px)');
+            let imgEles:NodeListOf<HTMLImageElement> = htmlTmp.getElementsByTagName('img');
+            let linkEles:NodeListOf<HTMLLinkElement> = htmlTmp.getElementsByTagName('link');
+            let scriptEles:NodeListOf<HTMLScriptElement> = htmlTmp.getElementsByTagName('script');
+            let assets = [];
+            for (let i = 0; i < imgEles.length; i++) {
+                let img: HTMLImageElement = imgEles.item(i);
+                assets.push(img.src);
+                img.src = './assets/' + img.src.substring(img.src.lastIndexOf('/') + 1);
+            }
+            for (let i = 0; i < linkEles.length; i++) {
+                let link: HTMLLinkElement = linkEles.item(i);
+                assets.push(link.href);
+                link.href = './assets/' + link.href.substring(link.href.lastIndexOf('/') + 1);
+            }
+            for (let i = 0; i < scriptEles.length; i++) {
+                let script: HTMLScriptElement = scriptEles.item(i);
+                assets.push(script.src);
+                script.src = './assets/' + script.src.substring(script.src.lastIndexOf('/') + 1);
+            }
+            html = htmlTmp.innerHTML;
+            html = html.replace('<head>', '<head><base href=".">');
+            htmlTmp.remove();
+            this.noteService.exportNote({path: this.exportFilePath, html: '<html>' + html + '</html>', assets: assets})
+                .subscribe((resp) => {
+                    if (resp.status == 200) {
+                        Notify.success('保存成功.位置: ' + resp._body);
+                    }
+                });
         });
     }
 

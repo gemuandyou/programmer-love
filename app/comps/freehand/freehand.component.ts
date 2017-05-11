@@ -28,7 +28,8 @@ export class FreehandComponent implements AfterViewInit {
         style.rel = "stylesheet";
         let isAndroid = navigator.appVersion.match(/android/gi);
         let isIPhone = navigator.appVersion.match(/iphone/gi);
-        this.isPc = !isAndroid && !isIPhone;
+        let isIPad = navigator.appVersion.match(/iPad/gi);
+        this.isPc = !isAndroid && !isIPhone && !isIPad;
         if (!this.isPc) {
             style.href = 'app/assets/styles/freehand-mobile.css';
         } else {

@@ -4,12 +4,12 @@
     width: 100%;
     background: #141A1E;
     text-align: center;
-    transition: opacity .2s linear;
-    opacity: 0;
+    transition: background-color .2s linear;
+    background-color: transparent;
 }
 
 .modal-open {
-    opacity: .75;
+    background-color: rgba(20, 26, 30, 0.74);
 }
 
 .modal-dialog {

@@ -35,4 +35,8 @@ export class NotesService {
     getMusicBox(): Observable<any> {
         return this.http.get(`musicBox`);
     }
+
+    exportNote(params: any): Observable<any> {
+        return this.http.post(`exportNote`, params);
+    }
 }
