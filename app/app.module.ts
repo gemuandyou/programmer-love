@@ -9,6 +9,7 @@ import {NotesModule} from "./comps/notes/notes.module";
 import {EssayModule} from "./comps/essay/essay.module";
 import {MedicineModule} from "./comps/medicine/medicine.module";
 import {FreehandModule} from "./comps/freehand/freehand.module";
+import {StoriesModule} from "./comps/stories/stories.module";
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import {FreehandModule} from "./comps/freehand/freehand.module";
         NotesModule,
         EssayModule,
         MedicineModule,
-        FreehandModule
+        FreehandModule,
+        StoriesModule
     ],
     declarations: [
         AppComponent

@@ -30,41 +30,41 @@ export class NotesComponent implements OnInit, AfterViewInit {
     @ViewChild('clipboard') clipboard;
     @ViewChild('pasteWay') pasteWay;
 
-    pasteContent: {} = {}; // 粘贴的内容。html内容和文本内容
-    pasteSel: any; // 粘贴内容时的getSelection
-    pasteRng: any; // 粘贴内容时的Range对象
-    pasteFormat: number = PasteFormat.KEEP_FORMAT.valueOf(); // 是否保持粘贴内容格式
-    pasteWayEle: any;
+    pasteContent:{} = {}; // 粘贴的内容。html内容和文本内容
+    pasteSel:any; // 粘贴内容时的getSelection
+    pasteRng:any; // 粘贴内容时的Range对象
+    pasteFormat:number = PasteFormat.KEEP_FORMAT.valueOf(); // 是否保持粘贴内容格式
+    pasteWayEle:any;
 
-    notesEditorEle: any;
-    marks: any = Mark.markMap; // html标记的映射对象
-    editMark: String = ''; // 正在编辑的html标记
-    editIsMark: boolean = false; // 正在编辑的是否是html标记
-    notes: String[] = []; // 笔记名列表
-    currentNote: String = ''; // 当前笔记
+    notesEditorEle:any;
+    marks:any = Mark.markMap; // html标记的映射对象
+    editMark:String = ''; // 正在编辑的html标记
+    editIsMark:boolean = false; // 正在编辑的是否是html标记
+    notes:String[] = []; // 笔记名列表
+    currentNote:String = ''; // 当前笔记
 
-    cache: {} = {}; // 缓存pre标签内容，将pre标签内容与UUID做映射
+    cache:{} = {}; // 缓存pre标签内容，将pre标签内容与UUID做映射
 
-    @Output() static choosePasteFormatEmit: EventEmitter<any> = new EventEmitter(); // 粘贴内容格式选择事件通知
-    @Output() static reRenderPasteContentEmit: EventEmitter<any> = new EventEmitter(); // 重新渲染粘贴内容事件通知
+    @Output() static choosePasteFormatEmit:EventEmitter<any> = new EventEmitter(); // 粘贴内容格式选择事件通知
+    @Output() static reRenderPasteContentEmit:EventEmitter<any> = new EventEmitter(); // 重新渲染粘贴内容事件通知
 
-    canInputKey: any[] = ['`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', ']', '{', '}', ';', ':', '"', '\'',
+    canInputKey:any[] = ['`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', ']', '{', '}', ';', ':', '"', '\'',
         ',', '.', '<', '>', '?', '/'];
-    specialWord: String[] = ["@", "#"]; // TODO 2017-01-31 09:43:07 特殊字符需要用\转义
+    specialWord:String[] = ["@", "#"]; // TODO 2017-01-31 09:43:07 特殊字符需要用\转义
 
-    previewStructures: NoteStructure[]; // 预览
+    previewStructures:NoteStructure[]; // 预览
 
-    modalBoxComp: ModalBoxComponent; // 模态框Component对象
-    exportFilePath: string;
+    modalBoxComp:ModalBoxComponent; // 模态框Component对象
+    exportFilePath:string;
 
-    constructor(title: Title, private ref: ChangeDetectorRef, private noteService: NotesService) {
+    constructor(title:Title, private ref:ChangeDetectorRef, private noteService:NotesService) {
         title.setTitle("程序员日志");
         ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
             this.modalBoxComp = modalBoxComp;
         });
     }
 
-    ngOnInit(): void {
+    ngOnInit():void {
         // 加载笔记列表
         this.noteService.listNotes().subscribe((resp) => {
             let listNotes = resp._body;
@@ -74,7 +74,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         });
     }
 
-    ngAfterViewInit(): void {
+    ngAfterViewInit():void {
         NotesComponent.reRenderPasteContentEmit.subscribe(() => {
             this.reRenderPasteContent();
         });
@@ -102,7 +102,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         });
     }
 
-    static keyDownEventFn(event): void {
+    static keyDownEventFn(event):void {
         if (event.keyCode === 40 || event.keyCode === 38) {
             event.preventDefault();
             NotesComponent.choosePasteFormatEmit.emit(event.keyCode);
@@ -117,7 +117,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 粘贴格式选择
      */
-    pasteChooseListener(): void {
+    pasteChooseListener():void {
         // 选择粘贴方式（文本或保留原格式）
         this.pasteWayEle = this.pasteWay.nativeElement;
         this.pasteWayEle.style.display = 'inline-block';
@@ -130,7 +130,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * @param sel
      * @param items
      */
-    pasteHandle(pasteItems): void {
+    pasteHandle(pasteItems):void {
         this.pasteSel = window.getSelection();
         // 在编译器中 获取光标位置
         this.pasteRng = this.pasteSel.getRangeAt(0);
@@ -196,7 +196,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 var blob = item.getAsFile();
                 var reader = new FileReader();
                 reader.onload = (event) => {
-                    let eventTarget: any = event.target;
+                    let eventTarget:any = event.target;
 
                     // 在编辑器中 获取光标位置，直接生成图片
                     // let sel = window.getSelection();
@@ -216,7 +216,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     let rng = sel.getRangeAt(0);
                     rng.deleteContents();
 
-                    let cpImgUrl: String = ''; // 粘贴过来的图片，解析后生成路径
+                    let cpImgUrl:String = ''; // 粘贴过来的图片，解析后生成路径
 
                     // 保存截图
                     this.noteService.saveImg({data: imgSrc}).subscribe((resp) => {
@@ -249,7 +249,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 重新渲染粘贴的内容
      */
-    reRenderPasteContent(): void {
+    reRenderPasteContent():void {
         // 保留格式
         if (this.pasteFormat === PasteFormat.KEEP_FORMAT.valueOf() && (this.pasteContent['html'] || !this.pasteContent['plain'])) {
             // 将删除的文本内容渲染成@pre标签
@@ -313,7 +313,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 编辑内容更改
      */
-    changeEdit(event): void {
+    changeEdit(event):void {
         let currText = this.notesEditorEle.innerText;
 
         let sel = window.getSelection();
@@ -351,7 +351,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             // this.editMark = this.editMark.replace(/<(\/[a-z]*|[a-z]*)>/g, '').replace(/\n/g, '').replace(/ /g, '');
             let isMark = this.checkMark(this.editMark);
             if (isMark) {
-                let editSpans: HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
+                let editSpans:HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
                 for (let index = 0; index < editSpans.length; index++) {
                     editSpans[index].className = editSpans[index].className.replace(/edit\-span/g, '');
                 }
@@ -411,7 +411,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
 
                 // 将光标移动到末尾
                 let range = document.createRange();
-                let editSpans1: HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
+                let editSpans1:HTMLCollectionOf<Element> = document.getElementsByClassName('edit-span');
                 let editTxtEle = editSpans1[0].nextSibling;
                 range.selectNodeContents(editTxtEle);
                 range.setStart(range.startContainer, cursorOffsetSt);
@@ -433,7 +433,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         }
     }
 
-    private parseNote(noteEditorContent: String): void {
+    private parseNote(noteEditorContent:String):void {
         if (noteEditorContent) {
             let html = '';
             let isSerial = false;
@@ -491,7 +491,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * 解析编辑器的文本内容到视图模块中
      * @param text
      */
-    private renderView(text: String): String {
+    private renderView(text:String):String {
         text = text.replace(/@tab-/g, '<blockquote style="margin-right: 0">');
         for (let mark of this.marks) {
             while (text.indexOf(mark.key + '-') !== -1) {
@@ -565,7 +565,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * @param markName 标签名
      * @param renderParam 特俗参数。如样式参数
      */
-    private parseToHtml(text: String, markName: String, renderParam?: String): String {
+    private parseToHtml(text:String, markName:String, renderParam?:String):String {
         let html = '';
         switch (markName) {
             case 'H1':
@@ -599,7 +599,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 break;
             case 'OL':
                 let olTxt = text.substring(text.indexOf('(') + 1, text.indexOf(')'));
-                let liTxts: String[] = olTxt.split('#');
+                let liTxts:String[] = olTxt.split('#');
                 html = '<ol style="margin: 0;">';
                 for (let liTxt of liTxts) {
                     if (liTxt) {
@@ -656,7 +656,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * @param text
      * @returns {boolean}
      */
-    private checkMark(text: String): boolean {
+    private checkMark(text:String):boolean {
         for (let mark of this.marks) {
             if (mark.key === text) {
                 return true;
@@ -670,12 +670,12 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * @param markName
      * @returns {number}
      */
-    private checkSpecialMark(markName: String): Number {
-        let paramMarks: String[] = ['@url', '@img']; // 需要参数的标签
-        let includeMarks: String[] = ['@ol', '@ul']; // 需要包含内容的标签
-        let styleMarks: String[] = ['@fc', '@fbc']; // 需要颜色样式参数的标签
-        let specialParamMarks: String[] = ['@pre']; // 参数中包含特俗符号的标签，所有参数都当做普通字符串处理，用@[和]@括起来
-        let codeMarks: String[] = ['@code']; // 代码标签
+    private checkSpecialMark(markName:String):Number {
+        let paramMarks:String[] = ['@url', '@img']; // 需要参数的标签
+        let includeMarks:String[] = ['@ol', '@ul']; // 需要包含内容的标签
+        let styleMarks:String[] = ['@fc', '@fbc']; // 需要颜色样式参数的标签
+        let specialParamMarks:String[] = ['@pre']; // 参数中包含特俗符号的标签，所有参数都当做普通字符串处理，用@[和]@括起来
+        let codeMarks:String[] = ['@code']; // 代码标签
         if (paramMarks.indexOf(markName) !== -1) {
             return 1; // 带参数标签
         } else if (includeMarks.indexOf(markName) !== -1) {
@@ -694,7 +694,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 保存笔记。将编辑的内容保存
      */
-    saveNote(): void {
+    saveNote():void {
         this.notesEditorEle = this.notesEditor.nativeElement;
         if (this.notesEditorEle) {
             let notesContent = this.notesEditorEle.innerHTML;
@@ -702,16 +702,18 @@ export class NotesComponent implements OnInit, AfterViewInit {
             this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote}).subscribe((resp) => {
                 if (resp.status === 200) {
                     Notify.success('保存成功');
-                    // view模块向下滚动到底
-                    // this.notesEditor.nativeElement.scrollTop = this.notesEditor.nativeElement.scrollHeight;
-                    // this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.scrollHeight;
+                    if (this.notesEditor.nativeElement.scrollTop > this.notesEditor.nativeElement.scrollHeight - 500) {
+                        // view模块向下滚动到底
+                        this.notesEditor.nativeElement.scrollTop = this.notesEditor.nativeElement.scrollHeight;
+                        this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.scrollHeight;
+                    }
                     this.ngOnInit();
                 }
             });
         }
     }
 
-    getNote(note: String): void {
+    getNote(note:String):void {
         this.noteService.getNote(note).subscribe((resp) => {
             if (resp.status === 200) {
                 this.notesEditorEle = this.notesEditor.nativeElement;
@@ -723,11 +725,11 @@ export class NotesComponent implements OnInit, AfterViewInit {
         });
     }
 
-    newNote(): void {
+    newNote():void {
         this.currentNote = '';
         this.notesEditor.nativeElement.innerHTML = '';
         this.notesView.nativeElement.innerHTML = '';
-        let notesListEle: HTMLCollectionOf<Element> = document.getElementsByClassName("notes-list");
+        let notesListEle:HTMLCollectionOf<Element> = document.getElementsByClassName("notes-list");
         if (notesListEle.length > 0) {
             let notesEle = notesListEle[0].children;
             for (let i = 0; i < notesEle.length; i++) {
@@ -741,7 +743,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * @param body
      * @returns {String}
      */
-    editSimplify(body: String): String {
+    editSimplify(body:String):String {
         let reg = /@pre<\/span>\-@\[((?!\]@)[\s\S])*\]@/g;
         let original = body.toString();
         let result;
@@ -760,7 +762,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * @param body
      * @returns {string}
      */
-    editComplication(body: String): String {
+    editComplication(body:String):String {
         let reg = /@pre<\/span>\-@\[[0-9a-z\-]{36}\]@/g;
         let original = body.toString();
         let result;
@@ -776,7 +778,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * 切换笔记激活状态
      * @param e
      */
-    toggleActive(e): void {
+    toggleActive(e):void {
         let currEle = e.target;
         let childrenEle = currEle.parentElement.children;
         for (let ele of childrenEle) {
@@ -790,7 +792,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 预览笔记
      */
-    previewNote(): void {
+    previewNote():void {
         let parseStructure = new ParseStructure();
         this.previewStructures = parseStructure.parseStructure(this.notesView.nativeElement);
     }
@@ -799,7 +801,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
      * 预览定位
      * @param dom
      */
-    positionPreview(dom: HTMLElement) {
+    positionPreview(dom:HTMLElement) {
         let notesViewEle = this.notesView.nativeElement;
         notesViewEle.scrollTop = dom.offsetTop;
     }
@@ -807,7 +809,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 导出笔记
      */
-    exportNote(): void {
+    exportNote():void {
         this.modalBoxComp.openModal("填写日志导入路径");
         this.modalBoxComp.confirmEvent.subscribe(() => {
             let html = document.getElementsByTagName('html')[0].innerHTML;
@@ -818,6 +820,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             htmlTmp.getElementsByClassName('form')[0].remove();
             htmlTmp.getElementsByClassName('edit')[0].remove();
             htmlTmp.getElementsByClassName('menu')[0].remove();
+            htmlTmp.getElementsByClassName('note-preview')[0].remove();
             htmlTmp.getElementsByClassName('notes')[0].setAttribute('style', 'overflow:hidden');
             htmlTmp.getElementsByClassName('view')[0].setAttribute('style', 'height:100%;width:calc(100% - 16px)');
             let imgEles:NodeListOf<HTMLImageElement> = htmlTmp.getElementsByTagName('img');
@@ -825,17 +828,17 @@ export class NotesComponent implements OnInit, AfterViewInit {
             let scriptEles:NodeListOf<HTMLScriptElement> = htmlTmp.getElementsByTagName('script');
             let assets = [];
             for (let i = 0; i < imgEles.length; i++) {
-                let img: HTMLImageElement = imgEles.item(i);
+                let img:HTMLImageElement = imgEles.item(i);
                 assets.push(img.src);
                 img.src = './assets/' + img.src.substring(img.src.lastIndexOf('/') + 1);
             }
             for (let i = 0; i < linkEles.length; i++) {
-                let link: HTMLLinkElement = linkEles.item(i);
+                let link:HTMLLinkElement = linkEles.item(i);
                 assets.push(link.href);
                 link.href = './assets/' + link.href.substring(link.href.lastIndexOf('/') + 1);
             }
             for (let i = 0; i < scriptEles.length; i++) {
-                let script: HTMLScriptElement = scriptEles.item(i);
+                let script:HTMLScriptElement = scriptEles.item(i);
                 assets.push(script.src);
                 script.src = './assets/' + script.src.substring(script.src.lastIndexOf('/') + 1);
             }
