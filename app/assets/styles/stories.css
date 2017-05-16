@@ -4,3 +4,37 @@
     height: 100%;
     width: 100%;
 }
+
+.stories-bar {
+    background-color: rgba(66, 157, 255, 0.22);
+    color: #a5a5a5;
+    margin: 0 auto;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    height: 3rem;
+}
+.stories-bar > ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    height: 3rem;
+}
+.stories-bar > ul > li {
+    display: inline-block;
+    padding: 0 0.5rem;
+    line-height: 3rem;
+    cursor: default;
+    -webkit-transition: background-color 0.5s;
+    -moz-transition: background-color 0.5s;
+    -ms-transition: background-color 0.5s;
+    -o-transition: background-color 0.5s;
+    transition: background-color 0.5s;
+}
+.stories-bar > ul > li:hover {
+    background-color: whitesmoke;
+}
+.stories-bar > ul >.live {
+    border-bottom: 1px solid blue;
+}

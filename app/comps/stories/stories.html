@@ -1,3 +1,8 @@
 <div class="stories">
-    stories
+    <div class="stories-bar">
+        <ul>
+            <li [ngClass]="{'live': isAutonym}" (click)="switchAutonym(true)">autonym</li>
+            <li [ngClass]="{'live': !isAutonym}" (click)="switchAutonym(false)">anonymity</li>
+        </ul>
+    </div>
 </div>
