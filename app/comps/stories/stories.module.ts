@@ -4,10 +4,15 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {StoriesComponent} from "./stories.component";
+import {StoriesRouterModule} from "./stories-routing.module";
+import {CircleComponent} from "./circle/circle.component";
+import {MineComponent} from "./mine/mine.component";
 @NgModule({
-    imports: [CommonModule],
+    imports: [CommonModule, StoriesRouterModule],
     declarations: [
-        StoriesComponent
+        StoriesComponent,
+        CircleComponent,
+        MineComponent
     ]
 })
 export class StoriesModule {}

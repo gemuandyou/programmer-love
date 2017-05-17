@@ -1,8 +1,11 @@
 <div class="stories">
     <div class="stories-bar">
         <ul>
-            <li [ngClass]="{'live': isAutonym}" (click)="switchAutonym(true)">autonym</li>
-            <li [ngClass]="{'live': !isAutonym}" (click)="switchAutonym(false)">anonymity</li>
+            <li routerLinkActive="live" [routerLink]="['circle']">我们的故事</li>
+            <li routerLinkActive="live" [routerLink]="['mine']">mine</li>
         </ul>
+    </div>
+    <div class="stories-content">
+        <router-outlet></router-outlet>
     </div>
 </div>

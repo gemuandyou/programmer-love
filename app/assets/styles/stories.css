@@ -9,7 +9,6 @@
     background-color: rgba(66, 157, 255, 0.22);
     color: #a5a5a5;
     margin: 0 auto;
-    position: fixed;
     top: 0;
     width: 100%;
     text-align: center;
@@ -36,5 +35,6 @@
     background-color: whitesmoke;
 }
 .stories-bar > ul >.live {
-    border-bottom: 1px solid blue;
+    border-bottom: 1px solid #ffffff;
+    color: lightgray;
 }
