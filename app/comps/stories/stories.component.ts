@@ -12,5 +12,6 @@ export class StoriesComponent {
 
     constructor(title: Title, private router: Router) {
         title.setTitle("故事会");
+        this.router.navigate(['stories', 'circle']);
     }
 }

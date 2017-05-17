@@ -15,9 +15,9 @@ const routes: Routes = [
             {path: '', redirectTo: 'passive', pathMatch: 'full'},
             {
                 path: 'passive', component: PassiveComponent, outlet: 'exhibition', children: [
-                {path: '', redirectTo: 'list'},
-                {path: 'list', component: PassiveListComponent}
-            ]
+                    {path: '', redirectTo: 'list'},
+                    {path: 'list', component: PassiveListComponent}
+                ]
             },
             {path: 'active', component: ActiveComponent, outlet: 'content'}
         ]

@@ -716,6 +716,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     getNote(note:String):void {
         this.noteService.getNote(note).subscribe((resp) => {
             if (resp.status === 200) {
+                this.notesView.nativeElement.scrollTop = 0;
                 this.notesEditorEle = this.notesEditor.nativeElement;
                 let noteDate = JSON.parse(resp._body).noteData;
                 noteDate = this.editSimplify(noteDate);
@@ -822,7 +823,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             htmlTmp.getElementsByClassName('menu')[0].remove();
             htmlTmp.getElementsByClassName('note-preview')[0].remove();
             htmlTmp.getElementsByClassName('notes')[0].setAttribute('style', 'overflow:hidden');
-            htmlTmp.getElementsByClassName('view')[0].setAttribute('style', 'height:100%;width:calc(100% - 16px)');
+            htmlTmp.getElementsByClassName('view')[0].setAttribute('style', 'height:100%;width:calc(100% - 7rem)');
             let imgEles:NodeListOf<HTMLImageElement> = htmlTmp.getElementsByTagName('img');
             let linkEles:NodeListOf<HTMLLinkElement> = htmlTmp.getElementsByTagName('link');
             let scriptEles:NodeListOf<HTMLScriptElement> = htmlTmp.getElementsByTagName('script');

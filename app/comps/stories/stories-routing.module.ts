@@ -6,12 +6,12 @@ import {StoriesComponent} from "./stories.component";
 /**
  * Created by gemu on 11/26/16.
  */
-const routes: Routes = [
+const routes:Routes = [
     {
         path: 'stories',
         component: StoriesComponent,
         children: [
-            {path: '', redirectTo: 'circle', pathMatch: 'full'},
+            //{path: '', pathMatch: 'full', redirectTo: 'circle'}, // 不可用
             {path: 'circle', component: CircleComponent},
             {path: 'mine', component: MineComponent}
         ]
