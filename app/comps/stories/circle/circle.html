@@ -4,8 +4,8 @@
         <input class="search-input" placeholder="搜索故事主人公、故事情节"/>
     </div>
     <div class="circle-content">
-        <div class="circle-block" *ngFor="let story of stories; let i = index;">
-            <template *pinterest="i">
+        <div class="circle-block" *ngFor="let story of stories; let i = index;" [@visibleAnimation]="visibleCircle[i] ? 'show' : 'hide'">
+            <template pinterest="{{i}}">
                 <img [src]="story.img"/>
                 <section>{{story.section | truncateSection}}</section>
             </template>

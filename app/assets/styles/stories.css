@@ -54,16 +54,17 @@
     right: -2rem;
 }
 .circle-content {
+    position: relative;
     padding: 0 15%;
 }
 .circle-block {
     position: absolute;
     display: inline-block;
-    width: calc(33% - 2rem - 2px);
-    margin: 1rem;
+    width: calc(26% - 2rem - 2px);
     border: 1px solid darkgrey;
-    transition: box-shadow 0.3s;
     float: left;
+    opacity: 0;
+    transition: box-shadow 0.3s;
 }
 .circle-block:hover {
     box-shadow: 0 0 20px gray;
