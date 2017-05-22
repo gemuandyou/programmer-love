@@ -164,6 +164,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     let afterEo = this.pasteRng.endOffset;
                     // // 删除复制的文本内容
                     pasteRngTmp.setEnd(afterEc, afterEo);
+                    this.pasteSel.removeAllRanges();
                     this.pasteSel.addRange(pasteRngTmp);
                     this.pasteSel.deleteFromDocument();
                     this.pasteRng = this.pasteSel.getRangeAt(0);
@@ -184,6 +185,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     let afterEo = this.pasteRng.endOffset;
                     // 删除复制的文本内容
                     pasteRngTmp.setEnd(afterEc, afterEo);
+                    this.pasteSel.removeAllRanges();
                     this.pasteSel.addRange(pasteRngTmp);
                     this.pasteSel.deleteFromDocument();
                     this.pasteRng = this.pasteSel.getRangeAt(0);
