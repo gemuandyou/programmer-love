@@ -4,7 +4,7 @@
 import {
     Component, ViewChild, AfterViewChecked, AfterContentChecked, NgZone, OnChanges,
     SimpleChanges, DoCheck, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, AfterViewInit, OnInit, EventEmitter,
-    Output
+    Output, ComponentFactoryResolver, ViewContainerRef, ComponentFactory, ComponentRef
 } from "@angular/core";
 import {Title} from "@angular/platform-browser";
 import copyWithin = require("core-js/fn/array/copy-within");
@@ -42,6 +42,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     editIsMark:boolean = false; // 正在编辑的是否是html标记
     notes:String[] = []; // 笔记名列表
     currentNote:String = ''; // 当前笔记
+    currentNoteTags:String = ''; // 当前笔记标签
 
     cache:{} = {}; // 缓存pre标签内容，将pre标签内容与UUID做映射
 
@@ -54,13 +55,14 @@ export class NotesComponent implements OnInit, AfterViewInit {
 
     previewStructures:NoteStructure[]; // 预览
 
-    modalBoxComp:ModalBoxComponent; // 模态框Component对象
+    modalBoxComps:{} = {}; // 模态框Component对象集合
     exportFilePath:string;
 
-    constructor(title:Title, private ref:ChangeDetectorRef, private noteService:NotesService) {
+    constructor(title: Title, private noteService: NotesService, private componentFactoryResolver: ComponentFactoryResolver,
+                private viewContainerRef: ViewContainerRef) {
         title.setTitle("程序员日志");
         ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
-            this.modalBoxComp = modalBoxComp;
+            this.modalBoxComps[modalBoxComp.identify] = modalBoxComp;
         });
     }
 
@@ -485,6 +487,11 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 .replace(/<\/h5><br>/g, '</h1>')
                 .replace(/<\/h6><br>/g, '</h1>');
 
+            if (this.currentNoteTags) {
+                html = '<div style="position: relative;left: -3rem;display:inline-block;' +
+                    'background-color: rgba(169, 169, 0, 0.66);padding: 2px 7px;font-size: 0.7rem;border-radius: 7px;' +
+                    'color: #fbfbfb;line-height: 1.3rem;">' + this.currentNoteTags + '</div>' + html;
+            }
             this.notesView.nativeElement.innerHTML = html;
         }
     }
@@ -696,12 +703,12 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 保存笔记。将编辑的内容保存
      */
-    saveNote():void {
+    saveNote(tags: string):void {
         this.notesEditorEle = this.notesEditor.nativeElement;
         if (this.notesEditorEle) {
             let notesContent = this.notesEditorEle.innerHTML;
             notesContent = this.editComplication(notesContent);
-            this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote}).subscribe((resp) => {
+            this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote, tags: tags}).subscribe((resp) => {
                 if (resp.status === 200) {
                     Notify.success('保存成功');
                     if (this.notesEditor.nativeElement.scrollTop > this.notesEditor.nativeElement.scrollHeight - 500) {
@@ -720,7 +727,9 @@ export class NotesComponent implements OnInit, AfterViewInit {
             if (resp.status === 200) {
                 this.notesView.nativeElement.scrollTop = 0;
                 this.notesEditorEle = this.notesEditor.nativeElement;
-                let noteDate = JSON.parse(resp._body).noteData;
+                let noteJson = JSON.parse(resp._body);
+                let noteDate = noteJson.noteData;
+                this.currentNoteTags = noteJson.tags;
                 noteDate = this.editSimplify(noteDate);
                 this.notesEditorEle.innerHTML = '<pre>' + noteDate + '</pre>';
                 this.parseNote(this.notesEditorEle.innerText);
@@ -810,11 +819,29 @@ export class NotesComponent implements OnInit, AfterViewInit {
     }
 
     /**
+     * 设置笔记标签
+     */
+    setNoteTag() {
+        if (!this.notesEditor.nativeElement.innerHTML) {
+            Notify.error('没有内容可以设置标签');
+            return;
+        }
+        this.modalBoxComps['setTag'].openModal("填写日志标签，使用分号分隔。");
+        this.modalBoxComps['setTag'].confirmEvent.subscribe(() => {
+            this.saveNote(this.tags);
+        });
+    }
+
+    /**
      * 导出笔记
      */
     exportNote():void {
-        this.modalBoxComp.openModal("填写日志导入路径");
-        this.modalBoxComp.confirmEvent.subscribe(() => {
+        if (!this.notesEditor.nativeElement.innerHTML) {
+            Notify.error('没有内容可以导出');
+            return;
+        }
+        this.modalBoxComps['export'].openModal("填写日志导入路径");
+        this.modalBoxComps['export'].confirmEvent.subscribe(() => {
             let html = document.getElementsByTagName('html')[0].innerHTML;
             let htmlTmp:HTMLElement = document.createElement('html');
             htmlTmp.style.display = 'none';

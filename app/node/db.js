@@ -51,6 +51,7 @@ module.exports = {
 
     exportNote: function(path, html, assets) {
         var basePath = path.substring(0, path.lastIndexOf('/'));
+        if (!basePath) return;
         if (!fs.existsSync(basePath)) {
             fs.mkdirSync(basePath);
         }

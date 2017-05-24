@@ -4,20 +4,24 @@
 import {Component} from "@angular/core";
 import {Title} from "@angular/platform-browser";
 @Component({
-    templateUrl: 'app/comps/stories/mine/mine.html',
+    templateUrl: 'app/comps/stories/mine/list/list.html',
     styleUrls: ['app/assets/styles/stories.css']
 })
-export class MineComponent {
+export class MineListComponent implements OnInit {
 
     stories:any[] = []; // 我的故事列表
     storiesPage:{} = {pageNo: 1, pageSize: 20}; // 我的故事列表分页信息
 
     constructor(title: Title) {
-        title.setTitle("故事-个人中心");
+        title.setTitle("我的故事列表");
+    }
+
+    ngOnInit():void {
+        this.getPage();
     }
 
     getPage():void {
-        console.count('加载故事情节中。。。 页码：');
+        console.count('加载我的故事情节中。。。 页码：');
         let imgs = ['app/assets/images/default_avatar.jpg', 'app/assets/images/drawings.png'];
         for (let i = this.storiesPage.pageSize * (this.storiesPage.pageNo - 1); i < this.storiesPage.pageSize * this.storiesPage.pageNo; i++) {
             this.stories.push({

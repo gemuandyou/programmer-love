@@ -75,7 +75,8 @@
 .circle-block > img {
     width: 100%;
 }
-.circle-block > section {
+/*带图片的故事块*/
+.circle-block > .img-section {
     position: absolute;
     bottom: 0;
     cursor: default;
@@ -90,6 +91,28 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+/*不带图片的故事块*/
+.circle-block > .txt-section {
+    cursor: default;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.64);
+    color: #dadada;
+    font-size: 1rem;
+    letter-spacing: 0.1rem;
+    overflow: hidden;
+    padding: 1rem;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.circle-block > .circle-block-belongs {
+    position: absolute;
+    right: 0;
+    background-color: rgba(0, 0, 255, 0.64);
+    color: white;
+    border-radius: 1rem 0 0 1rem;
+    padding: 0.1rem 0.1rem 0.2rem 0.5rem;
 }
 .circle-foot {
     position: fixed;
@@ -112,4 +135,33 @@
 }
 
 /*mine*/
-
+.mine-guide {
+    display: inline-block;
+    width: 13rem;
+    float: left;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.52);
+}
+.mine-guide > ul {
+    list-style: none;
+    padding-left: 0;
+}
+.mine-guide > ul li {
+    padding-left: 40px;
+    line-height: 2rem;
+    cursor: default;
+}
+.mine-guide .live {
+    color: darkorange;
+}
+.mine-guide > ul li:hover {
+    color: white;
+}
+.mine-content {
+    display: inline-block;
+    width: calc(100% - 14rem);
+    float: right;
+    min-height: calc(100% - 3rem);
+    box-shadow: 0 4px 13px rgba(0, 0, 0, 0.52);
+    padding: 1rem;
+    box-sizing: border-box; /*使padding不影响dom大小*/
+}

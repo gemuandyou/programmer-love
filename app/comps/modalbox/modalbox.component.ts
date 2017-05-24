@@ -1,7 +1,7 @@
 /**
  * Created by Gemu on 2017/5/10.
  */
-import {Component, ViewChild, AfterViewInit, Output, EventEmitter} from "@angular/core";
+import {Component, ViewChild, AfterViewInit, Output, Input, EventEmitter} from "@angular/core";
 @Component({
     selector: 'modal-box',
     templateUrl: 'app/comps/modalbox/modalbox.html',
@@ -13,6 +13,7 @@ export class ModalBoxComponent implements AfterViewInit{
     time: number = Math.random();
     @Output() static showEvent: EventEmitter<any> = new EventEmitter();
     @Output() confirmEvent: EventEmitter<any> = new EventEmitter();
+    @Input() identify:string;
     show: boolean;
     title: string;
 

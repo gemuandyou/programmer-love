@@ -1,1 +1,11 @@
-mine
+<div class="mine">
+    <div class="mine-guide">
+        <ul>
+            <li [routerLink]="['add']" routerLinkActive="live" >添加故事</li>
+            <li [routerLink]="['info']" routerLinkActive="live" >我的信息</li>
+        </ul>
+    </div>
+    <div class="mine-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

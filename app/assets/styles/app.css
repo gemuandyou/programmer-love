@@ -69,3 +69,7 @@ app 页面
 .menu > .audio-div > ul > .playing {
     color: rgba(255, 13, 55, 0.35);
 }
+
+body::-webkit-scrollbar-track {
+    background-color: lightgray;
+}
