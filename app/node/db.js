@@ -2,6 +2,7 @@
  * Created by gemu on 1/26/17.
  */
 var fs = require('fs');
+var phantom = require('phantom');
 
 var prePath = 'app/assets/db';
 
@@ -68,5 +69,16 @@ module.exports = {
                 fs.writeFile(filePath, file);
             }
         }
+        phantom.create().then(function(ph) {
+            ph.createPage().then(function(page) {
+                console.log(path);
+                page.open('file:///' + path).then(function(status) {
+                    console.log(status);
+                    page.render('D:/test/test.pdf').then(function() {
+                        ph.exit();
+                    });
+                });
+            });
+        });
     }
 };

@@ -1,4 +1,5 @@
 {
-  "noteData": "<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@h1</span>-Git相关\n\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@h2</span>-重新设置git仓库地址\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"edit-span\">@code</span>-shell-@[git remote set-url origin https://github.com/gemuandyou/node-file-server.git]@\n\n",
-  "noteName": "2017-2-6"
+  "noteData": "<pre><span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@h1</span>-Git相关\n\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@h2</span>-重新设置git仓库地址\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"edit-span\">@code</span>-shell-@[git remote set-url origin https://github.com/gemuandyou/node-file-server.git]@\n\n</pre>",
+  "noteName": "2017-2-6",
+  "tags": "Git"
 }
