@@ -1,4 +1,0 @@
-{
-  "noteData": "<pre><pre><pre><pre><pre>\r\n@code--@[# FastDFS tracker_server can ocur more than once, and tracker_server format is\r\n#  &amp;amp;quot;host:port&amp;amp;quot;, host can be hostname or ip address\r\n# valid only when load_fdfs_parameters_from_tracker is true\r\n@fc-red-&amp;gt;tracker_server=192.168.202.131:22122 \r\n\r\n# if the url / uri including the group name\r\n# set to false when uri like /M00/00/00/xxx\r\n# set to true when uri like ${group_name}/M00/00/00/xxx, such as group1/M00/xxx\r\n# default value is false\r\n@fc-red-&amp;gt;url_have_group_name=true \r\n\r\n# store_path#, based 0, if store_path0 not exists, it's value is base_path\r\n# the paths must be exist\r\n# must same as storage.conf \r\n@fc-red-&gt;store_path0=/home/gemu/fastdfs/storage \r\n#store_path1=/home/gemu/fastdfs1]@ \r\n然后把@fbc-yellow-&amp;gt;fastdfs-5.05 </pre></pre></pre></pre></pre>",
-  "noteName": "2017-3-3"
-}
