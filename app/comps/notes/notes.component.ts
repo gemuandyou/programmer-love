@@ -19,7 +19,7 @@ import {ModalBoxComponent} from "../modalbox/modalbox.component";
 
 @Component({
     templateUrl: 'app/comps/notes/notes.html',
-    styleUrls: ['app/assets/styles/notes.css', 'app/assets/styles/common.css'],
+    styleUrls: ['app/assets/styles/common.css'],
     // changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [NotesService, ModalBoxComponent]
 })
@@ -58,9 +58,61 @@ export class NotesComponent implements OnInit, AfterViewInit {
     modalBoxComps:{} = {}; // 模态框Component对象集合
     exportFilePath:string;
 
-    constructor(title: Title, private noteService: NotesService, private componentFactoryResolver: ComponentFactoryResolver,
+    //设置cookie
+    private setCookie(cname, cvalue, exdays): void {
+        let d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    }
+    //获取cookie
+    private getCookie(cname): string {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for(let i=0; i<ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1);
+            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+    //清除cookie  
+    private clearCookie(name): void {
+        this.setCookie(name, "", -1);
+    }
+
+    // 自定义笔记背景
+    switchNoteBg(isInit: Boolean): void {
+        // 自定义样式（皮肤背景）
+        let cssPath = 'app/assets/styles/notes2.css';
+        if (this.getCookie('noteBg')) {
+            cssPath = 'app/assets/styles/notes.css';
+        }
+        let noteStyles = document.getElementsByClassName('note-bg-style');
+        if (noteStyles && noteStyles[0]) {
+            if (!isInit) {
+                if (cssPath == 'app/assets/styles/notes.css') { // 三元运算符不好使 T.T
+                    cssPath = 'app/assets/styles/notes2.css';
+                    this.clearCookie('noteBg');
+                } else {
+                    cssPath = 'app/assets/styles/notes.css';
+                    this.setCookie('noteBg', 'true', 7);
+                }
+            }
+            noteStyles[0].setAttribute('href', cssPath);
+        } else {
+            let style = document.createElement('link');
+            style.className = 'note-bg-style';
+            style.rel = "stylesheet";
+            style.href = cssPath;
+            document.head.appendChild(style);
+        }
+    }
+
+    constructor(title: Title, private noteService: NotesService, private eleRef: ElementRef, private componentFactoryResolver: ComponentFactoryResolver,
                 private viewContainerRef: ViewContainerRef) {
         title.setTitle("程序员日志");
+        this.switchNoteBg(true);
         ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
             this.modalBoxComps[modalBoxComp.identify] = modalBoxComp;
         });
@@ -74,6 +126,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 this.notes = listNotes.split(','); // 如果changeDetection: ChangeDetectionStrategy.OnPush，这里的变量不能在页面渲染出来
             }
         });
+        this.eleRef.nativeElement.querySelector('.notes').style.visibility = 'visible';
     }
 
     ngAfterViewInit():void {
@@ -150,11 +203,11 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         .replace(/<\/body>/g, '');
                     if (s.indexOf('<pre ') !== -1 && s.toString().lastIndexOf('</pre>') !== -1) {
                         s = s.substring(s.indexOf('<pre ') + 5, s.toString().lastIndexOf('</pre>') + 6);
-                        var tmp = s.substring(s.indexOf('style=') + 6);
-                        var quo = tmp.charAt(0);
+                        let tmp = s.substring(s.indexOf('style=') + 6);
+                        let quo = tmp.charAt(0);
                         tmp = tmp.substring(1);
-                        var style = tmp.substring(0, tmp.indexOf(quo));
-                        var remain = tmp.substring(tmp.indexOf(quo));
+                        let style = tmp.substring(0, tmp.indexOf(quo));
+                        let remain = tmp.substring(tmp.indexOf(quo));
                         s = '<pre style="overflow: auto; border-radius: 0.5rem;padding: 0.5rem;' + style + remain;
                     } else {
                         s = '<pre style="overflow: auto; border-radius: 0.5rem;padding: 0.5rem;">' + s + '</pre>';
@@ -197,8 +250,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
             }
             // 文件
             if (item.kind === 'file' && /image\//.test(item.type)) { // 粘贴图片
-                var blob = item.getAsFile();
-                var reader = new FileReader();
+                let blob = item.getAsFile();
+                let reader = new FileReader();
                 reader.onload = (event) => {
                     let eventTarget:any = event.target;
 
@@ -703,12 +756,12 @@ export class NotesComponent implements OnInit, AfterViewInit {
     /**
      * 保存笔记。将编辑的内容保存
      */
-    saveNote(tags: string):void {
+    saveNote():void {
         this.notesEditorEle = this.notesEditor.nativeElement;
         if (this.notesEditorEle) {
             let notesContent = this.notesEditorEle.innerHTML;
             notesContent = this.editComplication(notesContent);
-            this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote, tags: tags}).subscribe((resp) => {
+            this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote, tags: this.currentNoteTags}).subscribe((resp) => {
                 if (resp.status === 200) {
                     Notify.success('保存成功');
                     if (this.notesEditor.nativeElement.scrollTop > this.notesEditor.nativeElement.scrollHeight - 500) {
@@ -828,7 +881,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
         }
         this.modalBoxComps['setTag'].openModal("填写日志标签，使用分号分隔。");
         this.modalBoxComps['setTag'].confirmEvent.subscribe(() => {
-            this.saveNote(this.tags);
+            this.saveNote();
+            this.getNote(this.currentNote);
         });
     }
 

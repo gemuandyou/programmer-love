@@ -1,5 +1,6 @@
-<div class="notes"z>
+<div class="notes" style="visibility: hidden;">
     <div class="form" [ngClass]="{'formFlex':editorFlex}">
+        <button class="btn" (click)="switchNoteBg(false);">ChangeBg</button>
         <button class="btn" (click)="newNote();">New</button>
         <button class="btn" (click)="exportNote();">Export</button>
         <button class="btn" (click)="setNoteTag();">Tag</button>
@@ -86,6 +87,6 @@
         <input type="text" class="form-input" placeholder="填写导出文件名(包括路径)" [(ngModel)]="exportFilePath" style="width: 100%;">
     </modal-box>
     <modal-box [identify]="'setTag'">
-        <textarea class="form-input" placeholder="多个标签使用分号分隔" [(ngModel)]="tags" style="width: 100%; max-width: 100%;"></textarea>
+        <textarea class="form-input" placeholder="多个标签使用分号分隔" [(ngModel)]="currentNoteTags" style="width: 100%; max-width: 100%;"></textarea>
     </modal-box>
 </div>

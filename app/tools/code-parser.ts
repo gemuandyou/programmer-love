@@ -141,6 +141,24 @@ export class CodeParser {
 
     basisParser(): String {
         let codeTxt = this._codeTxt.toString();
+
+        // 解析注释
+        // 第一种注释 格式：#abc\n
+        let reg = new RegExp('#.*?\\n'); // 非贪婪匹配
+        for (let tmp = reg.exec(codeTxt); tmp != null;) {
+            codeTxt = codeTxt.replace(reg, '@anno-' + tmp.toString().substring(1, tmp.toString().length - 1) + '-onna@');
+            tmp = reg.exec(codeTxt);
+        }
+        let reg1 = new RegExp('@anno-.*?-onna@'); // 非贪婪匹配
+        for (let tmp = reg1.exec(codeTxt); tmp != null; tmp = reg1.exec(codeTxt)) {
+            codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: #969696; font-size: 80%;">#' + tmp.toString().substring(6, tmp.toString().length - 6) + '</span>\n')
+        }
+        // 处理结尾处的#注解
+        let lastInd = codeTxt.lastIndexOf('#');
+        if (lastInd > codeTxt.lastIndexOf('\n')) {
+            codeTxt = codeTxt.substring(0, lastInd) + '<span style="font-weight: bold; color: #969696; font-size: 80%;">' + codeTxt.substring(lastInd) + '</span>';
+        }
+
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;">' +
             '<div style="white-space: normal;"><pre style="overflow: auto; background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
     }
