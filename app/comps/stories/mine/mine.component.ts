@@ -10,7 +10,7 @@ import {Title} from "@angular/platform-browser";
 export class MineComponent {
 
     stories:any[] = []; // 我的故事列表
-    storiesPage:{} = {pageNo: 1, pageSize: 20}; // 我的故事列表分页信息
+    storiesPage:any = {pageNo: 1, pageSize: 20}; // 我的故事列表分页信息
 
     constructor(title: Title) {
         title.setTitle("故事-个人中心");

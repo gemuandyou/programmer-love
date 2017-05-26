@@ -9,7 +9,6 @@ import {CircleComponent} from "./circle/circle.component";
 import {MineComponent} from "./mine/mine.component";
 import {TruncateSectionPipe} from "./circle/truncate-section.pipe";
 import {PinterestDirective} from "./circle/pinterest.directive";
-import {MineModule} from "./mine/mine.module";
 import {MineListComponent} from "./mine/list/list.component";
 import {MineAddComponent} from "./mine/add/add.component";
 import {MineInfoComponent} from "./mine/info/info.component";

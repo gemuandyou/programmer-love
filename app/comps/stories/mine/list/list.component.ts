@@ -1,7 +1,7 @@
 /**
  * Created by Gemu on 2017/5/16.
  */
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {Title} from "@angular/platform-browser";
 @Component({
     templateUrl: 'app/comps/stories/mine/list/list.html',
@@ -10,7 +10,7 @@ import {Title} from "@angular/platform-browser";
 export class MineListComponent implements OnInit {
 
     stories:any[] = []; // 我的故事列表
-    storiesPage:{} = {pageNo: 1, pageSize: 20}; // 我的故事列表分页信息
+    storiesPage:any = {pageNo: 1, pageSize: 20}; // 我的故事列表分页信息
 
     constructor(title: Title) {
         title.setTitle("我的故事列表");

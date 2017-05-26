@@ -145,8 +145,8 @@ export class CodeParser {
             '<div style="white-space: normal;"><pre style="overflow: auto; background-color: ' + bgc + '; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
     }
 
-    basisParser(bgc: string): String {
-        let bgc = bgc ? bgc : '#f1f1f1';
+    basisParser(bgc?: string): String {
+        bgc = bgc ? bgc : '#f1f1f1';
         let codeTxt = this._codeTxt.toString();
 
         // 解析注释

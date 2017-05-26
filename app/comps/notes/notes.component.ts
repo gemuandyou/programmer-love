@@ -375,7 +375,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         let currText = this.notesEditorEle.innerText;
         let sel = window.getSelection();
 
-        if (event.key == 'Backspace' && this.editIsMark == '@') { // 输入“@”后，按了删除键
+        if (event.key == 'Backspace' && this.editMark == '@') { // 输入“@”后，按了删除键
             this.editMark = '';
             this.editIsMark = false;
         }

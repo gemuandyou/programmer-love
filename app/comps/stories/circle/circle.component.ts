@@ -25,11 +25,11 @@ import {Title} from "@angular/platform-browser";
 export class CircleComponent implements OnInit {
 
     // 瀑布流相关
-    visibleCircle:[] = []; // 是否显示故事块，用户瀑布流排版
+    visibleCircle:Array<boolean> = []; // 是否显示故事块，用户瀑布流排版
     columnsMaxHeight:number[] = [0, 0, 0]; // 瀑布流列高统计
 
     stories:any[] = []; // 故事列表
-    storiesPage:{} = {pageNo: 1, pageSize: 20}; // 故事列表分页信息
+    storiesPage:any = {pageNo: 1, pageSize: 20}; // 故事列表分页信息
     beforeScroll: number = 0; // 获取故事列表分页操作时的滚动条位置
     @Output() static circleBlockRenderEv:EventEmitter<any> = new EventEmitter(); // 故事块渲染事件
 
@@ -41,8 +41,8 @@ export class CircleComponent implements OnInit {
 
     ngOnInit():void {
         CircleComponent.circleBlockRenderEv.subscribe((index) => {
-            let eles:NodeListOf<Element> = this.elementRef.nativeElement.querySelectorAll('.circle-block');
-            let ele:Element = eles.item(index);
+            let eles:NodeListOf<HTMLDivElement> = this.elementRef.nativeElement.querySelectorAll('.circle-block');
+            let ele:HTMLDivElement = eles.item(index);
             let handle = setInterval(() => {
                 if (ele.getElementsByTagName('section').length > 0) {
                     clearInterval(handle);
@@ -89,7 +89,7 @@ export class CircleComponent implements OnInit {
     /**
      * 按瀑布流排版插入故事块
      */
-    composePinterest(ele: Element, index: number): void {
+    composePinterest(ele: HTMLDivElement, index: number): void {
         let column = 1;
         if (this.columnsMaxHeight[1] <= this.columnsMaxHeight[0] && this.columnsMaxHeight[1] <= this.columnsMaxHeight[2]) {
             column = 2;
@@ -99,17 +99,17 @@ export class CircleComponent implements OnInit {
         }
         switch (column) {
             case 1: // 瀑布流第一列
-                ele.style.top = this.columnsMaxHeight[0] + 16;
+                ele.style.top = this.columnsMaxHeight[0] + 16 + 'px';
                 ele.style.left = 'calc(15% - 3rem)';
                 this.columnsMaxHeight[0] += ele.clientHeight + 16;
                 break;
             case 2: // 瀑布流第二列
-                ele.style.top = this.columnsMaxHeight[1] + 16;
+                ele.style.top = this.columnsMaxHeight[1] + 16 + 'px';
                 ele.style.left = 'calc(15% - 2rem + ' + ele.clientWidth + 'px)';
                 this.columnsMaxHeight[1] += ele.clientHeight + 16;
                 break;
             case 3: // 瀑布流第三列
-                ele.style.top = this.columnsMaxHeight[2] + 16;
+                ele.style.top = this.columnsMaxHeight[2] + 16 + 'px';
                 ele.style.left = 'calc(15% - 1rem + ' + ele.clientWidth * 2 + 'px)';
                 this.columnsMaxHeight[2] += ele.clientHeight + 16;
                 break;
