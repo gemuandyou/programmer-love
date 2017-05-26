@@ -18,8 +18,8 @@
             <div class="notes-tools-btn">
                 <a class="btn" (click)="editorFlex = !editorFlex"><span *ngIf="editorFlex">+</span><span *ngIf="!editorFlex">-</span></a>
                 <a class="btn" (click)="saveNote();" *ngIf="!editorFlex">Save</a>
-                <a class="btn" (click)="helper = !helper" *ngIf="!editorFlex">Help</a>
-                <a class="btn" (click)="todo = !todo" *ngIf="!editorFlex">TODO</a>
+                <a class="btn" (click)="helper = !helper; todo=false;" *ngIf="!editorFlex">Help</a>
+                <a class="btn" (click)="todo = !todo; helper=false;" *ngIf="!editorFlex">TODO</a>
             </div>
         </div>
         <div class="paste-way">

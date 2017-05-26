@@ -929,7 +929,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             html = htmlTmp.innerHTML;
             html = html.replace('<head>', '<head><base href=".">');
             htmlTmp.remove();
-            this.noteService.exportNote({path: this.exportFilePath, html: '<html>' + html + '</html>', assets: assets})
+            this.noteService.exportNote({path: this.exportFilePath, html: '<!DOCTYPE html>\n<html>' + html + '</html>', assets: assets})
                 .subscribe((resp) => {
                     if (resp.status == 200) {
                         Notify.success('保存成功.位置: ' + resp._body);

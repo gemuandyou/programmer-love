@@ -56,7 +56,6 @@ module.exports = {
         if (!fs.existsSync(basePath)) {
             fs.mkdirSync(basePath);
         }
-        fs.writeFile(path, html);
         for (var index in assets) {
             var assetPath = assets[index];
             assetPath = assetPath.substring(assetPath.indexOf('/app/') + 1);
@@ -69,13 +68,14 @@ module.exports = {
                 fs.writeFile(filePath, file);
             }
         }
-        phantom.create().then(function(ph) {
-            ph.createPage().then(function(page) {
-                console.log(path);
-                page.open('file:///' + path).then(function(status) {
-                    console.log(status);
-                    page.render('D:/test/test.pdf').then(function() {
-                        ph.exit();
+        fs.writeFile(path, html, function() {
+            phantom.create().then(function(ph) {
+                ph.createPage().then(function(page) {
+                    page.open('file:///' + path).then(function(status) {
+                        var pdfName = path.substring(0, path.lastIndexOf('.'));
+                        page.render(pdfName + '.pdf').then(function() {
+                            ph.exit();
+                        });
                     });
                 });
             });
