@@ -53,7 +53,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
         ',', '.', '<', '>', '?', '/'];
     specialWord:String[] = ["@", "#"]; // TODO 2017-01-31 09:43:07 特殊字符需要用\转义
 
-    previewStructures:NoteStructure[]; // 预览
+    previewStructures:NoteStructure[]; // 笔记预览
+    isFullScreen: boolean = false; // 笔记视图是否全屏
 
     modalBoxComps:{} = {}; // 模态框Component对象集合
     exportFilePath:string;
@@ -372,10 +373,21 @@ export class NotesComponent implements OnInit, AfterViewInit {
      */
     changeEdit(event):void {
         let currText = this.notesEditorEle.innerText;
-
         let sel = window.getSelection();
 
-        if (event.key == '@' || event.key == 'Process') {
+        if (event.key == 'Backspace' && this.editIsMark == '@') { // 输入“@”后，按了删除键
+            this.editMark = '';
+            this.editIsMark = false;
+        }
+
+        let rng = sel.getRangeAt(0);
+        let endEle = rng.endContainer;
+        let endTxt = endEle.textContent;
+        let endOffset = rng.endOffset;
+        // 输入为标签开始
+        if (endTxt.charAt(endOffset - 1) == '@'
+            //|| event.key == '@' || event.key == 'Process'
+        ) {
             this.editMark = '@';
             this.editIsMark = true;
             return;
@@ -613,10 +625,10 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 text = newText;
             }
         }
-        if (text[text.length - 1] !== '\\') {
-            text += '<br>';
-        } else {
+        if (text[text.length - 1] === '\\' || text[text.length - 1] === '、') {
             text = text.substr(0, text.length - 1);
+        } else {
+            text += '<br>';
         }
         return text;
     }
@@ -936,6 +948,20 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     }
                 });
         });
+    }
+
+    /**
+     * 笔记试图全屏和取消全屏
+     */
+    fullScreen(): void {
+        if (this.isFullScreen) {
+            this.eleRef.nativeElement.querySelector('.notes').setAttribute('style', 'overflow:auto;');
+            this.eleRef.nativeElement.querySelector('.view').setAttribute('style', 'height:calc(60% - 1rem);width:calc(100% - 10rem - 7rem);');
+        } else {
+            this.eleRef.nativeElement.querySelector('.notes').setAttribute('style', 'overflow:hidden;');
+            this.eleRef.nativeElement.querySelector('.view').setAttribute('style', 'height:calc(100% - 3rem);width:calc(100% - 7rem);');
+        }
+        this.isFullScreen = !this.isFullScreen;
     }
 
 }

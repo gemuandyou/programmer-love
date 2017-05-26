@@ -34,7 +34,13 @@ export class CodeParser {
     };
 
     codeParser(renderParam?: String): String {
-        if (!renderParam) return this.basisParser();
+        let renderParams = renderParam.split(':');
+        let bgc = '#f1f1f1';
+        if (renderParams) {
+            bgc = renderParams[1] ? renderParams[1] : '#f1f1f1';
+            renderParam = renderParams[0];
+        }
+        if (!renderParam) return this.basisParser(bgc);
         let codeTxt = this._codeTxt.toString();
         let keyWords: String[] = [];
         switch (renderParam) {
@@ -136,10 +142,11 @@ export class CodeParser {
         }
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: darkolivegreen; user-select: none;">' + renderParam + '</div>' +
-            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
+            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: ' + bgc + '; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
     }
 
-    basisParser(): String {
+    basisParser(bgc: string): String {
+        let bgc = bgc ? bgc : '#f1f1f1';
         let codeTxt = this._codeTxt.toString();
 
         // 解析注释
@@ -160,6 +167,6 @@ export class CodeParser {
         }
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;">' +
-            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: #f1f1f1; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
+            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: ' + bgc + '; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
     }
 }

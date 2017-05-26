@@ -1,5 +1,5 @@
 <div class="notes" style="visibility: hidden;">
-    <div class="form" [ngClass]="{'formFlex':editorFlex}">
+    <div class="form" [ngClass]="{'formFlex':editorFlex}" *ngIf="!isFullScreen">
         <button class="btn" (click)="switchNoteBg(false);">ChangeBg</button>
         <button class="btn" (click)="newNote();">New</button>
         <button class="btn" (click)="exportNote();">Export</button>
@@ -10,7 +10,7 @@
     </div>
     <div class="view" [ngClass]="{'viewFlex':editorFlex}" #notesView>
     </div>
-    <div class="edit" [ngClass]="{'editFlex':editorFlex}">
+    <div class="edit" [ngClass]="{'editFlex':editorFlex}" *ngIf="!isFullScreen">
         <div class="notes-tools">
             <div class="notes-tags-declare">
                 <span *ngFor="let mark of marks">{{mark.key}}->{{mark.val}}</span>
@@ -77,16 +77,17 @@
     </div>
     <div class="note-preview">
         <button class="btn" (click)="previewNote(); needPreview = !needPreview;">预览</button>
+        <button class="btn" (click)="fullScreen();"><span *ngIf="!isFullScreen">全屏</span><span *ngIf="isFullScreen">取消全屏</span></button>
         <div class="note-preview-content" *ngIf="needPreview">
             <ul>
                 <li *ngFor="let struct of previewStructures" (click)="positionPreview(struct.dom);needPreview = false;">{{struct.name}}</li>
             </ul>
         </div>
     </div>
-    <modal-box [identify]="'export'">
+    <modal-box [identify]="'export'" *ngIf="!isFullScreen">
         <input type="text" class="form-input" placeholder="填写导出文件名(包括路径)" [(ngModel)]="exportFilePath" style="width: 100%;">
     </modal-box>
-    <modal-box [identify]="'setTag'">
+    <modal-box [identify]="'setTag'" *ngIf="!isFullScreen">
         <textarea class="form-input" placeholder="多个标签使用分号分隔" [(ngModel)]="currentNoteTags" style="width: 100%; max-width: 100%;"></textarea>
     </modal-box>
 </div>
