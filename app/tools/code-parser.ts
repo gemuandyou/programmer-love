@@ -34,7 +34,7 @@ export class CodeParser {
     };
 
     codeParser(renderParam?: String): String {
-        let renderParams = renderParam.split(':');
+        let renderParams = renderParam.split('|');
         let bgc = '#f1f1f1';
         if (renderParams) {
             bgc = renderParams[1] ? renderParams[1] : '#f1f1f1';
@@ -132,13 +132,18 @@ export class CodeParser {
         // 第二种注释 // abc
         let reg2 = new RegExp('//.*?\\n'); // 非贪婪匹配
         for (let tmp = reg2.exec(codeTxt); tmp != null;) {
-            codeTxt = codeTxt.replace(reg2, '@anno1-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-1onna@');
+            codeTxt = codeTxt.replace(reg2, '@anno1-' + tmp.toString().substring(2, tmp.toString().length - 1) + '-1onna@');
             tmp = reg2.exec(codeTxt);
         }
         let reg3 = new RegExp('@anno1-.*?-1onna@'); // 非贪婪匹配
         for (let tmp = reg3.exec(codeTxt); tmp != null; tmp = reg3.exec(codeTxt)) {
             codeTxt = codeTxt.replace(reg3, '<span style="font-weight: bold; color: #969696; font-size: 80%;">//' + tmp.toString().substring(7, tmp.toString().length - 7) + '</span>\n')
             tmp = reg3.exec(codeTxt);
+        }
+        // 处理结尾处的#注解
+        let lastInd = codeTxt.lastIndexOf('//');
+        if (lastInd > codeTxt.lastIndexOf('\n')) {
+            codeTxt = codeTxt.substring(0, lastInd) + '<span style="font-weight: bold; color: #969696; font-size: 80%;">' + codeTxt.substring(lastInd) + '</span>';
         }
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: darkolivegreen; user-select: none;">' + renderParam + '</div>' +

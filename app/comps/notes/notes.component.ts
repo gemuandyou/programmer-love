@@ -410,6 +410,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
             let endEle = rng.endContainer;
             let endTxt = endEle.textContent;
             let endOffset = rng.endOffset;
+            endTxt = endTxt.substring(0, endOffset);
             this.editMark = endTxt.substring(endTxt.lastIndexOf("@"), endOffset);
             // 只能在最后写标签
             // if (originalHtml.indexOf('<br>') !== -1 && originalHtml.indexOf('<br>') > originalHtml.lastIndexOf('@')) {
@@ -590,8 +591,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         afterText = '';
                     }
                 } else if (markType === 2) {
-                    handleText = afterText.substring(0, afterText.indexOf(')') + 1);
-                    afterText = afterText.substring(afterText.indexOf(')') + 1);
+                    handleText = afterText.substring(0, afterText.lastIndexOf(')') + 1);
+                    afterText = afterText.substring(afterText.lastIndexOf(')') + 1);
                 } else if (markType === 3) {
                     let attachParamEo = afterText.indexOf('->');
                     attachParam = afterText.substring(0, attachParamEo);
@@ -608,7 +609,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         afterText = afterText.substring(afterText.indexOf(']@') + 2);
                     }
                 } else if (markType === 5) {
-                    let attachParamEo = afterText.indexOf('-');
+                    let attachParamEo = afterText.indexOf('-@[');
                     attachParam = afterText.substring(0, attachParamEo);
                     if (afterText.indexOf(']@') !== -1) {
                         handleText = afterText.substring(afterText.indexOf('@[') + 2, afterText.indexOf(']@'));
@@ -683,7 +684,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                 html += '</ol>';
                 break;
             case 'UL':
-                let ulTxt = text.substring(text.indexOf('(') + 1, text.indexOf(')'));
+                let ulTxt = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
                 liTxts = ulTxt.split('#');
                 html = '<ul style="margin: 0;">';
                 for (let liTxt of liTxts) {
