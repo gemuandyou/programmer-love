@@ -146,8 +146,23 @@ export class CodeParser {
             codeTxt = codeTxt.substring(0, lastInd) + '<span style="font-weight: bold; color: #969696; font-size: 80%;">' + codeTxt.substring(lastInd) + '</span>';
         }
 
-        return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="font-family: fantasy;color: darkolivegreen; user-select: none;">' + renderParam + '</div>' +
-            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: ' + bgc + '; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
+        return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="' +
+            'font-family: fantasy;' +
+            'color: darkolivegreen; ' +
+            'user-select: none;' +
+            '">' + renderParam + '</div>' +
+            '<div style="white-space: normal;">' +
+            '<pre style="' +
+            'overflow: auto; ' +
+            'background-color: ' + bgc + '; ' +
+            'font-family: serif; ' +
+            'margin: 0; ' +
+            'border-radius: 0.5rem;' +
+            'padding: 0.5rem;' +
+            'border-width: 0 0 0 4px;' +
+            'border-color: coral;' +
+            'border-style: solid;"' +
+            '>' + codeTxt + '</pre></div></div>';
     }
 
     basisParser(bgc?: string): String {
@@ -172,6 +187,17 @@ export class CodeParser {
         }
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;">' +
-            '<div style="white-space: normal;"><pre style="overflow: auto; background-color: ' + bgc + '; font-family: serif; margin: 0; border-radius: 0.5rem;padding: 0.5rem;border-width: 0 0 0 4px;border-color: coral;border-style: solid;">' + codeTxt + '</pre></div></div>';
+            '<div style="white-space: normal;">' +
+            '<pre style="' +
+            'overflow: auto; ' +
+            'background-color: ' + bgc + '; ' +
+            'font-family: serif; ' +
+            'margin: 0; ' +
+            'border-radius: 0.5rem;' +
+            'padding: 0.5rem;' +
+            'border-width: 0 0 0 4px;' +
+            'border-color: coral;' +
+            'border-style: solid;"' +
+            '>' + codeTxt + '</pre></div></div>';
     }
 }

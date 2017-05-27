@@ -603,7 +603,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
                         handleText = afterText.substring(attachParamEo + 2);
                         afterText = '';
                     }
-                } else if (markType === 4) { // @pre标签目前不支持手动写
+                } else if (markType === 4) { // TODO @pre标签目前不支持手动写
                     if (afterText.indexOf(']@') !== -1) {
                         handleText = afterText.substring(afterText.indexOf('@['), afterText.indexOf(']@') + 2);
                         afterText = afterText.substring(afterText.indexOf(']@') + 2);
@@ -715,6 +715,19 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     html = new CodeParser(text).basisParser().toString();
                 }
                 break;
+            case 'TIP':
+                html = '<pre style="' +
+                    'white-space: normal;' +
+                    'word-break: break-all;' +
+                    'background-color: lightyellow; ' +
+                    'font-family: serif; ' +
+                    'margin: 0; ' +
+                    'border-radius: 0.5rem;' +
+                    'padding: 0.5rem;' +
+                    'border-width: 1px;' +
+                    'border-color: #bfb4b0;' +
+                    'border-style: solid;">' + text.substring(text.indexOf('@[') + 2, text.lastIndexOf(']@')) + '</pre>'; // 若不存在'@['则从0开始了
+                break;
             case 'HR':
                 let ctx = '';
                 if (text) {
@@ -749,7 +762,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         let paramMarks:String[] = ['@url', '@img']; // 需要参数的标签
         let includeMarks:String[] = ['@ol', '@ul']; // 需要包含内容的标签
         let styleMarks:String[] = ['@fc', '@fbc']; // 需要颜色样式参数的标签
-        let specialParamMarks:String[] = ['@pre']; // 参数中包含特俗符号的标签，所有参数都当做普通字符串处理，用@[和]@括起来
+        let specialParamMarks:String[] = ['@pre', '@tip']; // 1:参数中包含特俗符号的标签，所有参数都当做普通字符串处理。2:提示标签 内容用@[和]@括起来
         let codeMarks:String[] = ['@code']; // 代码标签
         if (paramMarks.indexOf(markName) !== -1) {
             return 1; // 带参数标签

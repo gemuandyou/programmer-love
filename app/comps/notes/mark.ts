@@ -21,7 +21,8 @@ export class Mark {
         {key: '@fbc', val: 'FontBackgroundColor'},
         {key: '@tab', val: 'TAB'},
         {key: '@code', val: 'CODE'},
-        {key: '@hr', val: 'HR'}
+        {key: '@hr', val: 'HR'},
+        {key: '@tip', val: 'TIP'}
     ];
 }
 
