@@ -19,7 +19,7 @@ gulp.task('build-root-js', function () {
 gulp.task('build-css', function () {
     return gulp.src([
         'app/assets/styles/*.css'
-    ]).pipe($.minifyCss()).pipe(gulp.dest('dist/appt'));
+    ]).pipe($.minifyCss()).pipe(gulp.dest('dist/app/assets/styles'));
 });
 
 gulp.task('build-root-css', function () {
