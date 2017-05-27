@@ -16,7 +16,10 @@
                 <span *ngFor="let mark of marks">{{mark.key}}->{{mark.val}}</span>
             </div>
             <div class="notes-tools-btn">
-                <a class="btn" (click)="editorFlex = !editorFlex"><span *ngIf="editorFlex">+</span><span *ngIf="!editorFlex">-</span></a>
+                <a class="btn" (click)="editorFlex = !editorFlex" style="height: 1.5rem;padding: 0 0.3rem;text-align: center;top: 1.5rem;">
+                    <span *ngIf="editorFlex" style="top: 0.3rem;position: relative;"><i class="fa fa-chevron-up" aria-hidden="true"></i></span>
+                    <span *ngIf="!editorFlex" style="top: 0.3rem;position: relative;"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+                </a>
                 <a class="btn" (click)="saveNote();" *ngIf="!editorFlex">Save</a>
                 <a class="btn" (click)="helper = !helper; todo=false;" *ngIf="!editorFlex">Help</a>
                 <a class="btn" (click)="todo = !todo; helper=false;" *ngIf="!editorFlex">TODO</a>

@@ -1,0 +1,4 @@
+{
+  "noteData": "<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@h1</span>-camelot工作日志 <span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@hr</span>- \\\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"\">@h4</span>-问题标记\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"edit-span\">@tab</span>-\\\n供应商平台登录不对接滴滴SSO系统，我们自己的登录。\n餐厅信息和餐品信息目前是在一个同步接口中，需要沟通滴滴是否分开提供。",
+  "noteName": ""
+}
