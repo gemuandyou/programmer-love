@@ -720,7 +720,8 @@ export class NotesComponent implements OnInit, AfterViewInit {
                     'white-space: normal;' +
                     'word-break: break-all;' +
                     'background-color: lightyellow; ' +
-                    'font-family: serif; ' +
+                    'font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;' +
+                    'font-size: 0.8rem;' +
                     'margin: 0; ' +
                     'border-radius: 0.5rem;' +
                     'padding: 0.5rem;' +
