@@ -25,7 +25,7 @@ import {Title} from "@angular/platform-browser";
 export class CircleComponent implements OnInit {
 
     // 瀑布流相关
-    visibleCircle:Array<boolean> = []; // 是否显示故事块，用户瀑布流排版
+    visibleCircle:Array<boolean> = new Array(); // 是否显示故事块，用户瀑布流排版
     columnsMaxHeight:number[] = [0, 0, 0]; // 瀑布流列高统计
 
     stories:any[] = []; // 故事列表
@@ -37,6 +37,15 @@ export class CircleComponent implements OnInit {
 
     constructor(title:Title, private elementRef:ElementRef) {
         title.setTitle("我们的故事");
+
+        window.onresize = () => {
+            this.visibleCircle = new Array(); // 是否显示故事块，用户瀑布流排版
+            this.columnsMaxHeight = [0, 0, 0]; // 瀑布流列高统计
+            this.stories = []; // 故事列表
+            this.storiesPage = {pageNo: 1, pageSize: 20}; // 故事列表分页信息
+            this.beforeScroll = 0; // 获取故事列表分页操作时的滚动条位置
+            this.getPage();
+        };
     }
 
     ngOnInit():void {
