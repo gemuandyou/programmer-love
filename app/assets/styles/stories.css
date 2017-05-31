@@ -162,6 +162,5 @@
     float: right;
     min-height: calc(100% - 3rem);
     box-shadow: 0 4px 13px rgba(0, 0, 0, 0.52);
-    padding: 1rem;
     box-sizing: border-box; /*使padding不影响dom大小*/
 }

@@ -4,13 +4,19 @@
 var http_proxy = require('http-proxy');
 var db = require('./app/node/db');
 var music = require('./app/node/music');
-var proxy = http_proxy.createProxyServer({
+var apiProxy = http_proxy.createProxyServer({
     target: 'http://localhost:8080/myrest/'
+});
+var fileProxy = http_proxy.createProxyServer({
+    target: 'http://localhost:3008/'
 });
 
 var api = function (req, res, next) {
-    if (/\/api\/.*$/.test(req.url)) {
-        proxy.web(req, res);
+    if (/^\/api\/.*$/.test(req.url)) {
+        apiProxy.web(req, res);
+    } else if (/^\/fs\/.*$/.test(req.url)) {
+        req.url = req.url.substring(3);
+        fileProxy.web(req, res);
     } else if (/\/rnote\/.*$/.test(req.url)) {
         var data = db.loadNotes(req.url.substr(6));
         res.writeHead(200, {'Content-Type': 'application/json'});
