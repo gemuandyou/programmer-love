@@ -41,28 +41,40 @@ export class CodeParser {
             renderParam = renderParams[0];
         }
         if (!renderParam) return this.basisParser(bgc);
-        let codeTxt = this._codeTxt.toString();
         let keyWords: String[] = [];
+        this._codeTxt = this._codeTxt.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');
         switch (renderParam) {
             case 'java':
                 keyWords = this.javaKeyWords;
+                this._codeTxt = this._codeTxt.replace(/\</g, '&lt;')
+                    .replace(/&lt;span style/g, '<span style').replace(/&lt;\/span>/g, '</span>');
                 break;
             case 'python':
                 keyWords = this.pythonWords;
+                this._codeTxt = this._codeTxt.replace(/\</g, '&lt;')
+                    .replace(/&lt;span style/g, '<span style').replace(/&lt;\/span>/g, '</span>');
                 break;
             case 'js':
                 keyWords = this.jsWords;
+                this._codeTxt = this._codeTxt.replace(/\</g, '&lt;')
+                    .replace(/&lt;span style/g, '<span style').replace(/&lt;\/span>/g, '</span>');
                 break;
             case 'nodejs':
                 keyWords = this.nodeWords;
+                this._codeTxt = this._codeTxt.replace(/\</g, '&lt;')
+                    .replace(/&lt;span style/g, '<span style').replace(/&lt;\/span>/g, '</span>');
                 break;
             case 'c':
                 keyWords = this.cWords;
+                this._codeTxt = this._codeTxt.replace(/\</g, '&lt;')
+                    .replace(/&lt;span style/g, '<span style').replace(/&lt;\/span>/g, '</span>');
                 break;
             case 'html':
                 keyWords = this.htmlWords;
                 break;
         }
+        let codeTxt = this._codeTxt.toString();
+
         // 解析代码关键字
         for (let keyword of keyWords) {
             switch (renderParam) {
@@ -167,6 +179,8 @@ export class CodeParser {
 
     basisParser(bgc?: string): String {
         bgc = bgc ? bgc : '#f1f1f1';
+        this._codeTxt = this._codeTxt.replace(/\</g, '&lt;')
+            .replace(/&lt;span style/g, '<span style').replace(/&lt;\/span>/g, '</span>');
         let codeTxt = this._codeTxt.toString();
 
         // 解析注释
