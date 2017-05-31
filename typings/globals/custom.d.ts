@@ -13,3 +13,13 @@ interface Element {
     pause():any;
     play():any;
 }
+
+declare var KindEditor:any;
+
+interface KindEditor {
+    ready: any;
+}
+
+declare interface Window {
+    editor: any;
+}

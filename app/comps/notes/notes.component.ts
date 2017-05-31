@@ -819,6 +819,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
 
     newNote():void {
         this.currentNote = '';
+        this.currentNoteTags = '';
         this.notesEditor.nativeElement.innerHTML = '';
         this.notesView.nativeElement.innerHTML = '';
         let notesListEle:HTMLCollectionOf<Element> = document.getElementsByClassName("notes-list");
