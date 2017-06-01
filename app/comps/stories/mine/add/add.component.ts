@@ -3,15 +3,18 @@
  */
 import {Component, AfterViewInit, ViewChild} from "@angular/core";
 import {Title} from "@angular/platform-browser";
+import {StoriesService} from "../../../../service/stories/stories.service";
+import {Notify} from "../../../../tools/notification";
 @Component({
     templateUrl: 'app/comps/stories/mine/add/add.html',
-    styleUrls: ['app/assets/styles/stories.css']
+    styleUrls: ['app/assets/styles/common.css', 'app/assets/styles/stories.css'],
+    providers: [StoriesService]
 })
 export class MineAddComponent implements AfterViewInit {
 
     @ViewChild('editor') editor;
 
-    constructor(title:Title) {
+    constructor(title:Title, private storiesService: StoriesService) {
         title.setTitle("添加故事");
     }
 
@@ -40,6 +43,24 @@ export class MineAddComponent implements AfterViewInit {
             };
             window.editor = K.create(document.getElementById('editor-textarea'), options);
         }, document.getElementById('editor-textarea'));
+    }
+
+    saveStory(): void {
+        let story = {};
+        if (window.editor.edit.doc.getElementsByTagName('img').length > 0) {
+            story.prevImg = window.editor.edit.doc.getElementsByTagName('img')[0].src;
+        }
+        let titles = window.editor.text().split('\n');
+        story.preWords = titles[0];
+        story.author = 'gemu'; //TODO
+        let titles = window.editor.text().split('\n');
+        story.title = titles[0];
+        story.subhead = titles[1];
+        story.date = new Date().getTime();
+        story.paragraph = window.editor.html();
+        this.storiesService.addStory(story).subscribe((resp) => {
+            Notify.success('故事添加成功');
+        });
     }
 
 }

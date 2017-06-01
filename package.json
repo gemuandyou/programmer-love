@@ -29,11 +29,11 @@
     "reflect-metadata": "^0.1.3",
     "rxjs": "5.0.0-beta.12",
     "systemjs": "0.19.27",
-    "zone.js": "^0.6.23"
+    "zone.js": "^0.6.23",
+    "lite-server": "^2.2.2"
   },
   "devDependencies": {
     "concurrently": "^2.2.0",
-    "lite-server": "^2.2.2",
     "typescript": "^2.0.2",
     "typings": "^1.3.2",
     "gulp": "^3.9.1",

@@ -7,13 +7,28 @@ var music = require('./app/node/music');
 var apiProxy = http_proxy.createProxyServer({
     target: 'http://localhost:8080/myrest/'
 });
+var dbServerProxy = http_proxy.createProxyServer({
+    target: 'http://localhost:8080/'
+});
 var fileProxy = http_proxy.createProxyServer({
     target: 'http://localhost:3008/'
+});
+dbServerProxy.on('proxyReq', function (proxyReq, req, res, options) {
+    // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+    proxyReq.setHeader('Content-Type','application/json');
+});
+apiProxy.on('proxyReq', function (proxyReq, req, res, options) {
+    // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
+    proxyReq.setHeader('Content-Type','application/json');
 });
 
 var api = function (req, res, next) {
     if (/^\/api\/.*$/.test(req.url)) {
+        req.url = req.url.substring(4);
         apiProxy.web(req, res);
+    } else if (/^\/dbs\/.*$/.test(req.url)) {
+        req.url = req.url.substring(4);
+        dbServerProxy.web(req, res);
     } else if (/^\/fs\/.*$/.test(req.url)) {
         req.url = req.url.substring(3);
         fileProxy.web(req, res);
