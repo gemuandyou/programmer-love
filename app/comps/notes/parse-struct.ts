@@ -11,20 +11,29 @@ export class ParseStructure {
      */
     parseStructure(dom: HTMLElement): NoteStructure[] {
         let structures: NoteStructure[] = [];
-        // 解析的优先级 TODO 目前只解析一层
-        let tagPriority = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'b'];
-        for (let tag of tagPriority) {
-            let tagDoms: NodeListOf<Element> = dom.getElementsByTagName(tag);
-            for (let i = 0; i < tagDoms.length; i++) {
-                let tagDom: Element = tagDoms.item(i);
+        let tagPriority = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+        //let tagPriority = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span']; // 加粗字体也算结构
+        // 解析的优先级
+        let tagDoms: NodeListOf<Element> = dom.getElementsByTagName("*");
+        for (let i = 0; i < tagDoms.length; i++) {
+            let tagDom:Element = tagDoms.item(i);
+            // 加粗字体也算结构
+            //if (tagDom.nodeName.toLowerCase() === 'span' && tagDom.getAttribute("style") != "font-weight: bold;") {
+            //    continue;
+            //}
+
+            let index = tagPriority.indexOf(tagDom.nodeName.toLowerCase());
+            if (index !== -1) {
                 let structure: NoteStructure = {name: '', dom: null};
                 structure.name = tagDom.textContent;
                 structure.dom = tagDom;
+                structure.tier = index;
                 structures.push(structure);
             }
         }
         return structures;
     }
+
 }
 
 export interface NoteStructure {
@@ -36,6 +45,10 @@ export interface NoteStructure {
      * 预览的节点
      */
     dom: Element;
+    /**
+     * 节点层级
+     */
+    tier: number;
     /**
      * 节点下的直接子节点
      */

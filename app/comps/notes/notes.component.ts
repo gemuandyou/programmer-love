@@ -805,6 +805,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
     getNote(note:String):void {
         this.noteService.getNote(note).subscribe((resp) => {
             if (resp.status === 200) {
+                this.needPreview = false;
                 this.notesView.nativeElement.scrollTop = 0;
                 this.notesEditorEle = this.notesEditor.nativeElement;
                 let noteJson = JSON.parse(resp._body);
@@ -978,6 +979,10 @@ export class NotesComponent implements OnInit, AfterViewInit {
             this.eleRef.nativeElement.querySelector('.view').setAttribute('style', 'height:calc(100% - 3rem);width:calc(100% - 7rem);');
         }
         this.isFullScreen = !this.isFullScreen;
+    }
+
+    getArray(length: number): Array {
+        return new Array(length);
     }
 
 }

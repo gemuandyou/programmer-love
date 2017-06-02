@@ -87,7 +87,10 @@
         <button class="btn" (click)="fullScreen();"><span *ngIf="!isFullScreen">全屏</span><span *ngIf="isFullScreen">取消全屏</span></button>
         <div class="note-preview-content" *ngIf="needPreview">
             <ul>
-                <li *ngFor="let struct of previewStructures" (click)="positionPreview(struct.dom);needPreview = false;">{{struct.name}}</li>
+                <li *ngFor="let struct of previewStructures" (click)="positionPreview(struct.dom);needPreview = false;">
+                    <span retract="{{struct.tier}}"></span>
+                    {{struct.name}}
+                </li>
             </ul>
         </div>
     </div>
