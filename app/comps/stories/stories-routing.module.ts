@@ -6,6 +6,7 @@ import {StoriesComponent} from "./stories.component";
 import {MineListComponent} from "./mine/list/list.component";
 import {MineAddComponent} from "./mine/add/add.component";
 import {MineInfoComponent} from "./mine/info/info.component";
+import {DetailComponent} from "./detail/detail.component";
 /**
  * Created by gemu on 11/26/16.
  */
@@ -16,6 +17,7 @@ const routes:Routes = [
         children: [
             {path: '', pathMatch: 'suffix', redirectTo: 'circle'}, // 不可用
             {path: 'circle', component: CircleComponent},
+            {path: 'detail', component: DetailComponent},
             {
                 path: 'mine', component: MineComponent,
                 children: [

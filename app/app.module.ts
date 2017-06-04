@@ -2,7 +2,7 @@ import {NgModule}      from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent}   from './app.component';
 import {AppRouterModule} from "./app-routing.module";
-import {APP_BASE_HREF} from "@angular/common";
+import {APP_BASE_HREF, HashLocationStrategy, LocationStrategy} from "@angular/common";
 import {CharityModule} from "./comps/charity/charity.module";
 import {HttpModule} from "@angular/http";
 import {NotesModule} from "./comps/notes/notes.module";
@@ -27,7 +27,8 @@ import {StoriesModule} from "./comps/stories/stories.module";
         AppComponent
     ],
     providers: [
-        {provide: APP_BASE_HREF, useValue: '/'}
+        {provide: LocationStrategy, useClass: HashLocationStrategy}
+        // {provide: APP_BASE_HREF, useValue: '/'}, false,
     ],
     bootstrap: [AppComponent]
 })

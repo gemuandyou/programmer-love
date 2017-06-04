@@ -10,7 +10,7 @@ import {StoriesComponent} from "./comps/stories/stories.component";
  * Created by gemu on 11/26/16.
  */
 const routes: Routes = [
-    {path: '', pathMatch: 'full', redirectTo: 'charity'},
+    {path: '', pathMatch: 'full', redirectTo: 'stories'},
     {path: 'charity', component: CharityComponent},
     {path: 'notes', component: NotesComponent},
     {path: 'essay', component: EssayComponent},

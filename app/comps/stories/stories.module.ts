@@ -12,8 +12,11 @@ import {PinterestDirective} from "./circle/pinterest.directive";
 import {MineListComponent} from "./mine/list/list.component";
 import {MineAddComponent} from "./mine/add/add.component";
 import {MineInfoComponent} from "./mine/info/info.component";
+import {DetailComponent} from "./detail/detail.component";
+import { FormsModule } from '@angular/forms';
+
 @NgModule({
-    imports: [CommonModule, StoriesRouterModule],
+    imports: [CommonModule, FormsModule, StoriesRouterModule],
     declarations: [
         StoriesComponent,
         CircleComponent,
@@ -22,7 +25,8 @@ import {MineInfoComponent} from "./mine/info/info.component";
         MineComponent,
         MineListComponent,
         MineAddComponent,
-        MineInfoComponent
+        MineInfoComponent,
+        DetailComponent
     ]
 })
 export class StoriesModule {}

@@ -27,6 +27,8 @@ import {Notify} from "../../../tools/notification";
 })
 export class CircleComponent implements OnInit {
 
+    filterCtx: string = "";
+
     // 瀑布流相关
     visibleCircle:Array<boolean> = new Array(); // 是否显示故事块，用户瀑布流排版
     columnsMaxHeight:number[] = [0, 0, 0]; // 瀑布流列高统计
@@ -56,7 +58,7 @@ export class CircleComponent implements OnInit {
             let eles:NodeListOf<HTMLDivElement> = this.elementRef.nativeElement.querySelectorAll('.circle-block');
             let ele:HTMLDivElement = eles.item(index);
             let handle = setInterval(() => {
-                if (ele.getElementsByTagName('section').length > 0) {
+                if (ele && ele.getElementsByTagName('section').length > 0) {
                     clearInterval(handle);
                     this.composePinterest(ele, index);
                 }
@@ -80,33 +82,32 @@ export class CircleComponent implements OnInit {
 
     getPage():void {
         console.count('加载故事情节中。。。 页码：');
-        this.storiesService.storyPage({pageNo: 1}).subscribe((resp) => {
+        let condi = {pageNo: this.storiesPage.pageNo};
+        if (this.filterCtx) {
+            condi['filter'] = {author: this.filterCtx};
+        }
+        this.storiesService.storyPage(condi).subscribe((resp) => {
             if (resp.status == 200) {
                 let data = JSON.parse(resp._body);
-                this.storiesPage.pageNo = data.pageNo;
-                this.stories = data.entries;
-                for (let i = 0; i < data.entries.length; i++) {
+                this.storiesPage.pageNo = (data.entries && data.entries.length > 0) ? data.pageNo : data.pageNo - 1;
+                this.stories = this.stories.concat(data.entries ? data.entries : []);
+                for (let i = 0; i < this.stories.length; i++) {
                     this.visibleCircle.push(false);
                 }
             } else {
                 Notify.error('获取失败');
             }
         });
-        //let imgs = ['app/assets/images/default_avatar.jpg', 'app/assets/images/drawings.png', ''];
-        //for (let i = this.storiesPage.pageSize * (this.storiesPage.pageNo - 1); i < this.storiesPage.pageSize * this.storiesPage.pageNo; i++) {
-        //    this.stories.push({
-        //        img: imgs[Math.floor(Math.random() * 3)], section: i + '好奇心日报以商业视角观察生' +
-        //        '活并启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户' +
-        //        '提供最好启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为' +
-        //        '用户提供最好启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提供最好启' +
-        //        '发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提供最好' +
-        //        '启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提供最' +
-        //        '好启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提' +
-        //        '供最好启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提供最好的新闻资讯。' +
-        //        '好奇心日报好奇心研究所 栏目中心 长文章 10 个图 Top 15 商业 智能 设计 时尚 娱乐 城市 游戏 全部分类 APP ' +
-        //        '登录 退出关于我们 好奇心微信公众号...', belongs: '戈木'
-        //    });
-        //}
+    }
+
+    change(event):void {
+        if (event.key === 'Enter') {
+            this.stories = [];
+            this.visibleCircle = [];
+            this.storiesPage = {pageNo: 1, pageSize: 20};
+            this.columnsMaxHeight = [0, 0, 0];
+            this.getPage();
+        }
     }
 
     /**

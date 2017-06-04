@@ -1,13 +1,14 @@
 /**
  * Created by Gemu on 2017/4/25.
  */
-import {Component, AfterViewInit, ViewChild} from "@angular/core";
+import {Component, AfterViewInit, ViewChild, OnDestroy} from "@angular/core";
 import {Title} from "@angular/platform-browser";
+import {AppComponent} from "../../app.component";
 @Component({
     templateUrl: 'app/comps/freehand/freehand.html',
     styleUrls: ['app/assets/styles/common.css', 'app/assets/styles/freehand.css']
 })
-export class FreehandComponent implements AfterViewInit {
+export class FreehandComponent implements AfterViewInit, OnDestroy {
 
     imgsPreview: string[] = []; // 图片预览
     isErase: boolean = false; // 画笔是否是橡皮檫
@@ -36,6 +37,10 @@ export class FreehandComponent implements AfterViewInit {
             style.href = 'app/assets/styles/freehand-pc.css';
         }
         document.head.appendChild(style);
+    }
+
+    ngOnDestroy(): void {
+        AppComponent.viewDestroy.emit();
     }
 
     ngAfterViewInit() {

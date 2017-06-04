@@ -1,10 +1,11 @@
 <div class="circle">
     <div class="circle-search">
         <label><i class="fa fa-search" aria-hidden="true"></i></label>
-        <input class="search-input" placeholder="搜索故事主人公、故事情节"/>
+        <input class="search-input" [(ngModel)]="filterCtx" (keyup)="change($event)" placeholder="搜索故事主人公、故事情节。对不起，目前仅支持主人公搜索。"/>
     </div>
     <div class="circle-content" #circleContent>
-        <div class="circle-block" *ngFor="let story of stories; let i = index;" [@visibleAnimation]="visibleCircle[i] ? 'show' : 'hide'">
+        <div class="circle-block" *ngFor="let story of stories; let i = index;" [@visibleAnimation]="visibleCircle[i] ? 'show' : 'hide'"
+             [routerLink]="['/', 'stories', 'detail', {id: story.storyId}]">
             <template pinterest="{{i}}">
                 <span class="circle-block-belongs">{{story.author}}</span>
                 <img *ngIf="story.img" [src]="story.img"/>
@@ -13,5 +14,5 @@
         </div>
     </div>
 </div>
-<div class="circle-foot">
-</div>
+<!--<div class="circle-foot">-->
+<!--</div>-->

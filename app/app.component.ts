@@ -1,4 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
+import {Location} from '@angular/common';
+import {ActivatedRoute} from '@angular/router';
 import {NotesService} from "./service/notes/notes.service";
 @Component({
     selector: 'my-app',
@@ -11,8 +13,26 @@ export class AppComponent implements OnInit {
     musics: Array<any> = [];
     @ViewChild('localTime') localTime;
     timeHandle;
+    whiteList: string[] = ["/charity", "/notes", "/essay", "/medicine", "/freehand"];
+    showMenu: boolean = false;
 
-    constructor(private noteService: NotesService) {
+    @Output() static viewDestroy: EventEmitter<any> = new EventEmitter(); // 视图销毁事件
+
+    constructor(private noteService: NotesService, private location: Location, private route: ActivatedRoute) {
+        this.showMenu = false;
+        for (let white of this.whiteList) {
+            if (location.path().startsWith(white)) {
+                this.showMenu = true;
+            }
+        }
+        AppComponent.viewDestroy.subscribe(() => {
+            this.showMenu = false;
+            for (let white of this.whiteList) {
+                if (location.path().startsWith(white)) {
+                    this.showMenu = true;
+                }
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -51,7 +71,8 @@ export class AppComponent implements OnInit {
         } else {
             this.timeHandle = setInterval(() => {
                 let now = new Date();
-                this.localTime.nativeElement.innerText = now.toLocaleString();
+                if (this.localTime)
+                    this.localTime.nativeElement.innerText = now.toLocaleString();
             }, 1000);
         }
     }

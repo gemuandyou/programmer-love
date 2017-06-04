@@ -24,7 +24,7 @@ export class ParseStructure {
 
             let index = tagPriority.indexOf(tagDom.nodeName.toLowerCase());
             if (index !== -1) {
-                let structure: NoteStructure = {name: '', dom: null};
+                let structure: NoteStructure = {name: '', dom: null, tier: 0};
                 structure.name = tagDom.textContent;
                 structure.dom = tagDom;
                 structure.tier = index;

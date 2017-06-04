@@ -2,9 +2,9 @@
  * Created by gemu on 1/25/17.
  */
 import {
-    Component, ViewChild, AfterViewChecked, AfterContentChecked, NgZone, OnChanges,
+    Component, ViewChild, AfterViewChecked, AfterContentChecked, NgZone, OnChanges, OnDestroy,
     SimpleChanges, DoCheck, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, AfterViewInit, OnInit, EventEmitter,
-    Output, ComponentFactoryResolver, ViewContainerRef, ComponentFactory, ComponentRef
+    Input, Output, ComponentFactoryResolver, ViewContainerRef, ComponentFactory, ComponentRef
 } from "@angular/core";
 import {Title} from "@angular/platform-browser";
 import copyWithin = require("core-js/fn/array/copy-within");
@@ -16,6 +16,7 @@ import {UUID} from "../../tools/uuid";
 import {CodeParser} from "../../tools/code-parser";
 import {PasteFormat} from "../../service/notes/paste-format";
 import {ModalBoxComponent} from "../modalbox/modalbox.component";
+import {AppComponent} from "../../app.component";
 
 @Component({
     templateUrl: 'app/comps/notes/notes.html',
@@ -23,7 +24,7 @@ import {ModalBoxComponent} from "../modalbox/modalbox.component";
     // changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [NotesService, ModalBoxComponent]
 })
-export class NotesComponent implements OnInit, AfterViewInit {
+export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @ViewChild('notesEditor') notesEditor;
     @ViewChild('notesView') notesView;
@@ -53,6 +54,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         ',', '.', '<', '>', '?', '/'];
     specialWord:String[] = ["@", "#"]; // TODO 2017-01-31 09:43:07 特殊字符需要用\转义
 
+    needPreview = false;
     previewStructures:NoteStructure[]; // 笔记预览
     isFullScreen: boolean = false; // 笔记视图是否全屏
 
@@ -128,6 +130,10 @@ export class NotesComponent implements OnInit, AfterViewInit {
             }
         });
         this.eleRef.nativeElement.querySelector('.notes').style.visibility = 'visible';
+    }
+
+    ngOnDestroy(): void {
+        AppComponent.viewDestroy.emit();
     }
 
     ngAfterViewInit():void {
@@ -981,7 +987,7 @@ export class NotesComponent implements OnInit, AfterViewInit {
         this.isFullScreen = !this.isFullScreen;
     }
 
-    getArray(length: number): Array {
+    getArray(length: number): Array<any> {
         return new Array(length);
     }
 

@@ -48,16 +48,15 @@ export class MineAddComponent implements AfterViewInit {
     saveStory(): void {
         let story = {};
         if (window.editor.edit.doc.getElementsByTagName('img').length > 0) {
-            story.prevImg = window.editor.edit.doc.getElementsByTagName('img')[0].src;
+            story['prevImg'] = window.editor.edit.doc.getElementsByTagName('img')[0].src;
         }
         let titles = window.editor.text().split('\n');
-        story.preWords = titles[0];
-        story.author = 'gemu'; //TODO
-        let titles = window.editor.text().split('\n');
-        story.title = titles[0];
-        story.subhead = titles[1];
-        story.date = new Date().getTime();
-        story.paragraph = window.editor.html();
+        story['preWords'] = titles[0];
+        story['author'] = 'gemu'; //TODO
+        story['title'] = titles[0];
+        story['subhead'] = titles[1];
+        story['date'] = new Date().getTime();
+        story['paragraph'] = window.editor.html();
         this.storiesService.addStory(story).subscribe((resp) => {
             Notify.success('故事添加成功');
         });

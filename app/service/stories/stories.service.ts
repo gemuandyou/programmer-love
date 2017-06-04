@@ -39,4 +39,16 @@ export class StoriesService {
     storyPage(params: any): Observable<any> {
         return this.http.post(`dbs/story/getPage`, params);
     }
+
+    /**
+     * 获取故事详情
+     * @param params
+     * <ul>
+     *     <li>id:故事ID</li>
+     * </ul>
+     * @returns {Observable<Response>}
+     */
+    getStory(params: any): Observable<any> {
+        return this.http.post(`dbs/story/get`, params);
+    }
 }

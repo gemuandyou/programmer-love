@@ -1,13 +1,14 @@
 /**
  * Created by Gemu on 2017/5/10.
  */
-import {Component, ViewChild, AfterViewInit, Output, Input, EventEmitter} from "@angular/core";
+import {Component, ViewChild, AfterViewInit, OnDestroy, Output, Input, EventEmitter} from "@angular/core";
+import {AppComponent} from "../../app.component";
 @Component({
     selector: 'modal-box',
     templateUrl: 'app/comps/modalbox/modalbox.html',
     styleUrls: ['app/assets/styles/modalbox.css', 'app/assets/styles/common.css']
 })
-export class ModalBoxComponent implements AfterViewInit{
+export class ModalBoxComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('modalBox') modalBox;
     time: number = Math.random();
@@ -22,6 +23,10 @@ export class ModalBoxComponent implements AfterViewInit{
 
     ngAfterViewInit() {
         ModalBoxComponent.showEvent.emit(this);
+    }
+
+    ngOnDestroy(): void {
+        AppComponent.viewDestroy.emit();
     }
 
     openModal(title: string): void {
