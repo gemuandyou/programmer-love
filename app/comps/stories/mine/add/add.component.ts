@@ -45,7 +45,8 @@ export class MineAddComponent implements AfterViewInit {
         }, document.getElementById('editor-textarea'));
     }
 
-    saveStory(): void {
+    saveStory(ev): void {
+        ev.target.setAttribute('disabled', 'disabled');
         let story = {};
         if (window.editor.edit.doc.getElementsByTagName('img').length > 0) {
             story['prevImg'] = window.editor.edit.doc.getElementsByTagName('img')[0].src;

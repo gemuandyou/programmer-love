@@ -8,7 +8,7 @@
              [routerLink]="['/', 'stories', 'detail', {id: story.storyId}]">
             <template pinterest="{{i}}">
                 <span class="circle-block-belongs">{{story.author}}</span>
-                <img *ngIf="story.img" [src]="story.img"/>
+                <img *ngIf="story.image" [src]="story.image"/>
                 <section [ngClass]="{'img-section': story.img, 'txt-section': !story.img}">{{story.words | truncateSection:!story.image}}</section>
             </template>
         </div>
