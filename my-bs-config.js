@@ -95,6 +95,10 @@ var api = function (req, res, next) {
 };
 
 module.exports = {
+    port: '88',
+    ui: {
+        port: 3001
+    },
     server: {
         middleware: [api]
     }
