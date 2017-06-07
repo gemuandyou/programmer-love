@@ -174,6 +174,9 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
             NotesComponent.reRenderPasteContentEmit.emit();
             document.removeEventListener('keydown', NotesComponent.keyDownEventFn); // BUG 2017-02-22 17:56:57
         }
+        if (event.keyCode == 27) {
+            document.removeEventListener('keydown', NotesComponent.keyDownEventFn);
+        }
     }
 
     /**
