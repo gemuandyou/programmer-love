@@ -1,4 +1,4 @@
 {
-  "noteData": "<pre><pre><pre><pre><pre><pre>abc&lt;em&gt;abc&lt;/em&gt;</pre></pre></pre></pre></pre></pre>",
+  "noteData": "<pre><pre><pre><pre><pre><pre><pre><pre><pre>abc&lt;em&gt;abc&lt;/em&gt;\n<br></pre></pre></pre></pre></pre></pre></pre></pre></pre>",
   "noteName": "2017-3-3"
 }

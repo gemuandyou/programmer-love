@@ -40,7 +40,7 @@ module.exports = {
 
     writeNotes: function(path, content) {
         path = prePath + path;
-        fs.writeFile(path, content);
+        fs.writeFileSync(path, content, {'mode': 777});
     },
 
     writeImg: function(path, base64Data) {
