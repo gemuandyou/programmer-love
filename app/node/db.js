@@ -22,7 +22,7 @@ module.exports = {
 
     listNotes: function() {
         var files = [];
-        fs.readdirSync(prePath).forEach(function (file) {
+        fs.readdirSync(prePath).forEach(function(file) {
             if (file != 'img' && file != 'freehand') {
                 files.push(file);
             }
@@ -30,7 +30,7 @@ module.exports = {
         return files;
     },
 
-    loadNotes: function (path) {
+    loadNotes: function(path) {
         path = prePath + path;
         if (!fs.existsSync(path)) {
             return fs.openSync(path, 'w+');
@@ -40,7 +40,14 @@ module.exports = {
 
     writeNotes: function(path, content) {
         path = prePath + path;
-        fs.writeFileSync(path, content, {'mode': 777});
+        try {
+            fs.writeFileSync(path, content, { 'mode': 755, 'flag': 'r+' });
+        } catch (e) {
+            console.log(e); // operation not permitted
+            fs.unlink(path, () => {
+                fs.writeFileSync(path, content, { 'mode': 755 });
+            });
+        }
     },
 
     writeImg: function(path, base64Data) {
