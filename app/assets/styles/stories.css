@@ -17,14 +17,14 @@
     height: 3rem;
 }
 
-.stories-bar > ul {
+.stories-bar>ul {
     list-style: none;
     padding-left: 0;
     margin: 0;
     height: 3rem;
 }
 
-.stories-bar > ul > li {
+.stories-bar>ul>li {
     display: inline-block;
     padding: 0 0.5rem;
     line-height: 3rem;
@@ -36,11 +36,11 @@
     transition: background-color 0.5s;
 }
 
-.stories-bar > ul > li:hover {
+.stories-bar>ul>li:hover {
     background-color: whitesmoke;
 }
 
-.stories-bar > ul > .live {
+.stories-bar>ul>.live {
     border-bottom: 1px solid #ffffff;
     color: lightgray;
 }
@@ -49,14 +49,16 @@
     /*height: calc(100% - 3rem);*/
 }
 
+
 /*circle*/
+
 .circle-search {
     height: 5rem;
     line-height: 5rem;
     text-align: center;
 }
 
-.circle-search > label {
+.circle-search>label {
     position: relative;
     right: -2rem;
 }
@@ -82,16 +84,18 @@
     box-shadow: 0 0 20px gray;
 }
 
-.circle-block:hover > section {
+.circle-block:hover>section {
     color: #fff;
 }
 
-.circle-block > img {
+.circle-block>img {
     width: 100%;
 }
 
+
 /*带图片的故事块*/
-.circle-block > .img-section {
+
+.circle-block>.img-section {
     position: absolute;
     bottom: 0;
     cursor: default;
@@ -108,8 +112,10 @@
     box-sizing: border-box;
 }
 
+
 /*不带图片的故事块*/
-.circle-block > .txt-section {
+
+.circle-block>.txt-section {
     cursor: default;
     width: 100%;
     background-color: rgba(45, 45, 45, 0.64);
@@ -123,7 +129,7 @@
     box-sizing: border-box;
 }
 
-.circle-block > .circle-block-belongs {
+.circle-block>.circle-block-belongs {
     position: absolute;
     right: 0;
     background-color: rgba(0, 0, 255, 0.64);
@@ -141,7 +147,9 @@
 }
 
 .search-input {
-    line-height: 2rem;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    height: 2rem;
     width: 40%;
     border: 1px solid #ececec;
     border-radius: 1rem;
@@ -154,7 +162,9 @@
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 13px rgba(189, 219, 233, 0.6);
 }
 
+
 /*mine*/
+
 .mine-guide {
     display: inline-block;
     width: 13rem;
@@ -162,12 +172,12 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.52);
 }
 
-.mine-guide > ul {
+.mine-guide>ul {
     list-style: none;
     padding-left: 0;
 }
 
-.mine-guide > ul li {
+.mine-guide>ul li {
     padding-left: 40px;
     line-height: 2rem;
     cursor: default;
@@ -177,7 +187,7 @@
     color: darkorange;
 }
 
-.mine-guide > ul li:hover {
+.mine-guide>ul li:hover {
     color: white;
 }
 
@@ -187,10 +197,13 @@
     float: right;
     min-height: calc(100% - 3rem);
     box-shadow: 0 4px 13px rgba(0, 0, 0, 0.52);
-    box-sizing: border-box; /*使padding不影响dom大小*/
+    box-sizing: border-box;
+    /*使padding不影响dom大小*/
 }
 
+
 /*detail*/
+
 .story-detail-author {
     text-align: right;
     color: #8a8a8a;
