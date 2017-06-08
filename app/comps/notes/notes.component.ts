@@ -822,7 +822,7 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.currentNoteTags = noteJson.tags;
                 noteDate = this.editSimplify(noteDate);
                 this.notesEditorEle.innerHTML = '<pre>' + noteDate + '</pre>';
-                this.parseNote(this.notesEditorEle.innerText);
+                this.parseNote(this.notesEditorEle.innerText ? this.notesEditorEle.innerText : this.notesEditorEle.textContent);
             }
         });
     }
