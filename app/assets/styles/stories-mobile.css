@@ -155,6 +155,8 @@
     border-radius: 1rem;
     padding: 0 1rem 0 2.5rem;
     margin-right: 1.5rem;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
 }
 
 .search-input:focus {
