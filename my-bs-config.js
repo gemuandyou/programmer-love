@@ -52,8 +52,8 @@ var api = function(req, res, next) {
             req.on('end', function() {
                 body = Buffer.concat(body);
                 db.writeNotes(req.url.substr(6), body.toString());
+                res.end();
             });
-            res.end();
         } else if (/\/lnote/.test(req.url)) {
             var data = db.listNotes();
             res.writeHead(200, { 'Content-Type': 'application/json' });
