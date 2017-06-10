@@ -1,0 +1,29 @@
+
+/*detail*/
+.story-detail {
+    background-color: white;
+}
+
+.story-detail-author {
+    text-align: right;
+    color: #8a8a8a;
+    font-family: monospace;
+}
+
+.story-detail-body {
+    padding: 0 5px;
+    color: #5d5d5d;
+}
+
+.story-detail-body p {
+    color: #5d5d5d;
+    word-wrap: break-word;
+}
+
+.story-detail-body img {
+    max-width: calc(100% - 5px);
+}
+
+.story-detail-body video {
+    max-width: calc(100% - 5px);
+}

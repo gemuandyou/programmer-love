@@ -7,7 +7,7 @@ import {StoriesService} from "../../../../service/stories/stories.service";
 import {Notify} from "../../../../tools/notification";
 @Component({
     templateUrl: 'app/comps/stories/mine/add/add.html',
-    styleUrls: ['app/assets/styles/common.css', 'app/assets/styles/stories.css'],
+    styleUrls: ['app/assets/styles/common.css'],
     providers: [StoriesService]
 })
 export class MineAddComponent implements AfterViewInit {
@@ -19,6 +19,35 @@ export class MineAddComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+
+        // 判断浏览器类型，区分移动端和PC端
+        // this.browserInfo = navigator.appVersion;
+        var style = document.createElement('style');
+        let isAndroid = navigator.appVersion.match(/android/gi);
+        let isIPhone = navigator.appVersion.match(/iphone/gi);
+        let isIPad = navigator.appVersion.match(/iPad/gi);
+        let isPc = !isAndroid && !isIPhone && !isIPad;
+        if (!isPc) {
+            style.innerText = '.ke-dialog{width: 90% !important;}.ke-dialog-mask{width: 100% !important;}';
+        }
+        document.head.appendChild(style);
+
+        let items = [
+            'fullscreen', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull',
+            'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+            'superscript', 'lineheight', '/', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor',
+            'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'removeformat', '|',
+            'image', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'link', 'unlink'
+        ];
+        if (!isPc) {
+            items = [
+                'fullscreen', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull',
+                'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'lineheight', '/', 
+                'formatblock', 'fontname', 'fontsize', '|', 'forecolor',
+                'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'removeformat', '/',
+                'image', 'media', 'table', 'hr', 'emoticons'
+            ];
+        }
         KindEditor.ready(function (K) {
             var options = {
                 cssPath: '/app/assets/styles/kindeditor.css',
@@ -33,13 +62,7 @@ export class MineAddComponent implements AfterViewInit {
 
                 },
                 allowFileManager: true,
-                items: [
-                    'fullscreen', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyfull',
-                    'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
-                    'superscript', 'lineheight', '/', 'formatblock', 'fontname', 'fontsize', '|', 'forecolor',
-                    'hilitecolor', 'bold', 'italic', 'underline', 'strikethrough', 'removeformat', '|',
-                    'image', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'link', 'unlink'
-                ]
+                items: items
             };
             window.editor = K.create(document.getElementById('editor-textarea'), options);
         }, document.getElementById('editor-textarea'));

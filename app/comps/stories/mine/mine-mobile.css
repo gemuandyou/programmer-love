@@ -1,0 +1,41 @@
+
+/*mine*/
+
+.mine-guide {
+    display: inline-block;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.52);
+    background-color: #e2e2e2;
+    color: #7b7b7b;
+    text-align: center;
+}
+
+.mine-guide>ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.mine-guide>ul li {
+    display: inline-block;
+    line-height: 2rem;
+    cursor: default;
+}
+
+.mine-guide .live {
+    color: darkorange;
+}
+
+.mine-guide>ul li:hover {
+    color: darkorange;
+}
+
+.mine-content {
+    display: inline-block;
+    width: 100%;
+    color: #5d5d5d;
+    margin-top: 4px;
+    min-height: calc(100% - 3rem);
+    box-shadow: 0 4px 13px rgba(0, 0, 0, 0.52);
+    /*使padding不影响dom大小*/
+    box-sizing: border-box;
+}

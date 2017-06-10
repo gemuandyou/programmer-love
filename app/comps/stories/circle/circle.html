@@ -12,6 +12,16 @@
                 <section [ngClass]="{'img-section': story.img, 'txt-section': !story.img}">{{story.words | truncateSection:!story.image}}</section>
             </template>
         </div>
+        <div *ngIf="!isPc" style="position: relative;
+            display: block;
+            width: calc(100% - 2px);
+            float: left;
+            transition: box-shadow 0.3s;
+            margin-bottom: 16px;
+            text-align: center;
+            color: gray;">
+            <span (click)="getNextPage();">加载更多 {{notifyMsg}}</span>
+        </div>
     </div>
 </div>
 <!--<div class="circle-foot">-->

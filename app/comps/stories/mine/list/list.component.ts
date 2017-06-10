@@ -4,8 +4,7 @@
 import {Component, OnInit} from "@angular/core";
 import {Title} from "@angular/platform-browser";
 @Component({
-    templateUrl: 'app/comps/stories/mine/list/list.html',
-    styleUrls: ['app/assets/styles/stories.css']
+    templateUrl: 'app/comps/stories/mine/list/list.html'
 })
 export class MineListComponent implements OnInit {
 
@@ -14,6 +13,21 @@ export class MineListComponent implements OnInit {
 
     constructor(title: Title) {
         title.setTitle("我的故事列表");
+
+        // 判断浏览器类型，区分移动端和PC端
+        // this.browserInfo = navigator.appVersion;
+        var style = document.createElement('link');
+        style.rel = "stylesheet";
+        let isAndroid = navigator.appVersion.match(/android/gi);
+        let isIPhone = navigator.appVersion.match(/iphone/gi);
+        let isIPad = navigator.appVersion.match(/iPad/gi);
+        let isPc = !isAndroid && !isIPhone && !isIPad;
+        if (!isPc) {
+            style.href = 'app/comps/stories/mine/list/list-mobile.css';
+        } else {
+            style.href = 'app/comps/stories/mine/list/list.css';
+        }
+        document.head.appendChild(style);
     }
 
     ngOnInit():void {

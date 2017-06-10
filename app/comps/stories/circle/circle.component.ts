@@ -1,13 +1,12 @@
 /**
  * Created by Gemu on 2017/5/16.
  */
-import { Component, OnInit, Output, EventEmitter, ElementRef, ViewChild, trigger, state, style, transition, animate } from "@angular/core";
+import { Component, OnInit, AfterViewInit, Output, EventEmitter, ElementRef, ViewChild, trigger, state, style, transition, animate } from "@angular/core";
 import { Title } from "@angular/platform-browser";
 import { StoriesService } from "../../../service/stories/stories.service";
 import { Notify } from "../../../tools/notification";
 @Component({
     templateUrl: 'app/comps/stories/circle/circle.html',
-    // styleUrls: ['app/assets/styles/stories.css'],
     providers: [StoriesService],
     animations: [
         trigger('visibleAnimation', [
@@ -25,9 +24,11 @@ import { Notify } from "../../../tools/notification";
         ])
     ]
 })
-export class CircleComponent implements OnInit {
+export class CircleComponent implements OnInit, AfterViewInit {
 
-    filterCtx: string = "";
+    notifyMsg: string = '';
+
+    filterCtx: string = '';
     isPc: boolean = true;
     isLoadFinished: boolean = true;
 
@@ -54,20 +55,22 @@ export class CircleComponent implements OnInit {
         let isIPad = navigator.appVersion.match(/iPad/gi);
         this.isPc = !isAndroid && !isIPhone && !isIPad;
         if (!this.isPc) {
-            style.href = 'app/assets/styles/stories-mobile.css';
+            style.href = 'app/comps/stories/circle/circle-mobile.css';
         } else {
-            style.href = 'app/assets/styles/stories.css';
+            style.href = 'app/comps/stories/circle/circle.css';
         }
         document.head.appendChild(style);
 
-        window.onresize = () => {
-            this.visibleCircle = new Array(); // 是否显示故事块，用户瀑布流排版
-            this.columnsMaxHeight = [0, 0, 0]; // 瀑布流列高统计
-            this.stories = []; // 故事列表
-            this.storiesPage = { pageNo: 1, pageSize: 20 }; // 故事列表分页信息
-            this.beforeScroll = 0; // 获取故事列表分页操作时的滚动条位置
-            this.getPage();
-        };
+        if (this.isPc) {
+            window.onresize = () => {
+                this.visibleCircle = new Array(); // 是否显示故事块，用户瀑布流排版
+                this.columnsMaxHeight = [0, 0, 0]; // 瀑布流列高统计
+                this.stories = []; // 故事列表
+                this.storiesPage = { pageNo: 1, pageSize: 20 }; // 故事列表分页信息
+                this.beforeScroll = 0; // 获取故事列表分页操作时的滚动条位置
+                this.getPage();
+            };
+        }
     }
 
     ngOnInit(): void {
@@ -86,19 +89,24 @@ export class CircleComponent implements OnInit {
         });
 
         this.getPage();
+    }
+
+    ngAfterViewInit():void {
         // 监听滚动事件，实现翻页
-        let storiesEle = document.querySelector('.stories');
-        storiesEle.addEventListener('mousewheel', (ev) => {
-            if (this.isLoadFinished) {
-                this.isLoadFinished = false;
-                if (storiesEle.scrollTop == this.beforeScroll) return false;
-                if (storiesEle.scrollTop + storiesEle.clientHeight >= storiesEle.scrollHeight) {
-                    this.beforeScroll = storiesEle.scrollTop;
-                    this.storiesPage.pageNo++;
-                    this.getPage();
+        if (this.isPc) {
+            let storiesEle = document.querySelector('.stories');
+            storiesEle.addEventListener('mousewheel', (ev) => {
+                if (this.isLoadFinished) {
+                    if (storiesEle.scrollTop == this.beforeScroll) return false;
+                    if (storiesEle.scrollTop + storiesEle.clientHeight >= storiesEle.scrollHeight) {
+                        this.isLoadFinished = false;
+                        this.beforeScroll = storiesEle.scrollTop;
+                        this.storiesPage.pageNo++;
+                        this.getPage();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     getPage(): void {
@@ -111,7 +119,17 @@ export class CircleComponent implements OnInit {
             if (resp.status == 200) {
                 let data = JSON.parse(resp._body);
                 this.storiesPage.pageNo = (data.entries && data.entries.length > 0) ? data.pageNo : data.pageNo - 1;
-                this.stories = this.stories.concat(data.entries ? data.entries : []);
+                if (!data.entries) {
+                    data.entries = [];
+                }
+                if (data.entries.length == 0) {
+                    this.notifyMsg = '没有更多了';
+                    setTimeout(() => {
+                        this.notifyMsg = '';
+                    }, 3000);
+                    Notify.info('没有更多了');
+                }
+                this.stories = this.stories.concat(data.entries);
                 for (let i = 0; i < this.stories.length; i++) {
                     this.visibleCircle.push(false);
                 }
@@ -120,6 +138,11 @@ export class CircleComponent implements OnInit {
                 Notify.error('获取失败');
             }
         });
+    }
+
+    getNextPage(): void {
+        this.storiesPage.pageNo++;
+        this.getPage();
     }
 
     change(event): void {

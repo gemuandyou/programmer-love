@@ -4,8 +4,7 @@
 import {Component} from "@angular/core";
 import {Title} from "@angular/platform-browser";
 @Component({
-    templateUrl: 'app/comps/stories/mine/info/info.html',
-    styleUrls: ['app/assets/styles/stories.css']
+    templateUrl: 'app/comps/stories/mine/info/info.html'
 })
 export class MineInfoComponent {
 
