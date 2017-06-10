@@ -41,7 +41,9 @@ module.exports = {
     writeNotes: function(path, content) {
         path = prePath + path;
         try {
-            fs.writeFileSync(path, content, { 'mode': 755, 'flag': 'r+' });
+            fs.truncate(path, 0, () => {
+                fs.writeFileSync(path, content, { 'mode': 755, 'flag': 'r+' });
+            });
         } catch (e) {
             console.log(e); // operation not permitted
             fs.unlink(path, () => {
