@@ -42,7 +42,7 @@ export class MineComponent {
         }
         document.head.appendChild(style);
 
-        if (!Cookie.getCookie('OD')) {
+        if (!Cookie.getCookie('OD') || Cookie.getCookie('OD') == 'undefined') {
             // 模态框
             ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
                 this.modalBoxComp = modalBoxComp;
