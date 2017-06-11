@@ -44,30 +44,30 @@ export class MineComponent {
 
         if (!Cookie.getCookie('OD') || Cookie.getCookie('OD') == 'undefined') {
             // 模态框
-            ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
-                this.modalBoxComp = modalBoxComp;
-                this.modalBoxComp.openModal("通关文牒");
-                this.modalBoxComp.confirmEvent.subscribe(() => {
-                    if (!this.username) return;
-                    this.friendService.login({username: this.username, passcode: this.passcode}).subscribe((resp) => {
-                        if (resp.status == 200) {
-                            let odAndFriend = resp._body;
-                            if (odAndFriend) {
-                                odAndFriend = JSON.parse(odAndFriend);
-                                if (!odAndFriend['OD']) {
-                                    return false;
-                                }
-                                Cookie.clearCookie('OD');
-                                Cookie.clearCookie('friend');
-                                Cookie.setCookie('OD', odAndFriend['OD'], 30);
-                                Cookie.setCookie('friend', JSON.stringify(odAndFriend['friend']), 30);
-                                this.loginFlag = false;
-                                this.router.navigate(['stories', 'mine', 'add']);
-                            }
-                        }
-                    });
-                });
-            });
+            // ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
+            //     this.modalBoxComp = modalBoxComp;
+            //     this.modalBoxComp.openModal("通关文牒");
+            //     this.modalBoxComp.confirmEvent.subscribe(() => {
+            //         if (!this.username) return;
+            //         this.friendService.login({username: this.username, passcode: this.passcode}).subscribe((resp) => {
+            //             if (resp.status == 200) {
+            //                 let odAndFriend = resp._body;
+            //                 if (odAndFriend) {
+            //                     odAndFriend = JSON.parse(odAndFriend);
+            //                     if (!odAndFriend['OD']) {
+            //                         return false;
+            //                     }
+            //                     Cookie.clearCookie('OD');
+            //                     Cookie.clearCookie('friend');
+            //                     Cookie.setCookie('OD', odAndFriend['OD'], 30);
+            //                     Cookie.setCookie('friend', JSON.stringify(odAndFriend['friend']), 30);
+            //                     this.loginFlag = false;
+            //                     this.router.navigate(['stories', 'mine', 'add']);
+            //                 }
+            //             }
+            //         });
+            //     });
+            // });
             this.loginFlag = true;
         } else {
             this.loginFlag = false;
