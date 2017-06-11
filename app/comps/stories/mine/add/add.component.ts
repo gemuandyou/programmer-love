@@ -15,6 +15,7 @@ import {Cookie} from "../../../../tools/cookie";
 export class MineAddComponent implements AfterViewInit {
 
     @ViewChild('editor') editor;
+    btnCtx: string = '保存';
 
     constructor(title:Title, private storiesService: StoriesService) {
         title.setTitle("添加故事");
@@ -71,6 +72,7 @@ export class MineAddComponent implements AfterViewInit {
     }
 
     saveStory(ev): void {
+        this.btnCtx = '保存中';
         ev.target.setAttribute('disabled', 'disabled');
         let story = {};
         if (window.editor.edit.doc.getElementsByTagName('img').length > 0) {
@@ -92,6 +94,7 @@ export class MineAddComponent implements AfterViewInit {
         story['paragraph'] = window.editor.html();
         this.storiesService.addStory(story).subscribe((resp) => {
             Notify.success('故事添加成功');
+            this.btnCtx = '已保存';
         });
     }
 
