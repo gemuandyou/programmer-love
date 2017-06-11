@@ -1,6 +1,9 @@
 .mine-content {
     padding: 7px 5px 0 5px;
     position: relative;
+}
+
+.mine-list {
     padding: 0 8%;
 }
 
