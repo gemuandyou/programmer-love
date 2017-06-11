@@ -1,18 +1,32 @@
 /**
  * Created by Gemu on 2017/5/16.
  */
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, AfterViewInit, Output, EventEmitter, ElementRef, ViewChild} from "@angular/core";
 import {Title} from "@angular/platform-browser";
+import { Notify } from "../../../../tools/notification";
+import { StoriesService } from "../../../../service/stories/stories.service";
+import {Cookie} from "../../../../tools/cookie";
+
 @Component({
-    templateUrl: 'app/comps/stories/mine/list/list.html'
+    templateUrl: 'app/comps/stories/mine/list/list.html',
+    providers: [StoriesService]
 })
 export class MineListComponent implements OnInit {
 
-    stories:any[] = []; // 我的故事列表
-    storiesPage:any = {pageNo: 1, pageSize: 20}; // 我的故事列表分页信息
+    notifyMsg: string = '';
 
-    constructor(title: Title) {
-        title.setTitle("我的故事列表");
+    isPc: boolean = true;
+    isLoadFinished: boolean = true;
+
+    stories: any[] = []; // 故事列表
+    storiesPage: any = { pageNo: 1, pageSize: 20 }; // 故事列表分页信息
+    beforeScroll: number = 0; // 获取故事列表分页操作时的滚动条位置
+    @Output() static circleBlockRenderEv: EventEmitter<any> = new EventEmitter(); // 故事块渲染事件
+
+    @ViewChild('circleContent') circleContent;
+
+    constructor(title: Title, private elementRef: ElementRef, private storiesService: StoriesService) {
+        title.setTitle("我们的故事");
 
         // 判断浏览器类型，区分移动端和PC端
         // this.browserInfo = navigator.appVersion;
@@ -21,35 +35,68 @@ export class MineListComponent implements OnInit {
         let isAndroid = navigator.appVersion.match(/android/gi);
         let isIPhone = navigator.appVersion.match(/iphone/gi);
         let isIPad = navigator.appVersion.match(/iPad/gi);
-        let isPc = !isAndroid && !isIPhone && !isIPad;
-        if (!isPc) {
+        this.isPc = !isAndroid && !isIPhone && !isIPad;
+        if (!this.isPc) {
             style.href = 'app/comps/stories/mine/list/list-mobile.css';
         } else {
             style.href = 'app/comps/stories/mine/list/list.css';
         }
         document.head.appendChild(style);
+
+        if (this.isPc) {
+            window.onresize = () => {
+                this.stories = []; // 故事列表
+                this.storiesPage = { pageNo: 1, pageSize: 20 }; // 故事列表分页信息
+                this.beforeScroll = 0; // 获取故事列表分页操作时的滚动条位置
+                this.getPage();
+            };
+        }
     }
 
-    ngOnInit():void {
+    ngOnInit(): void {
         this.getPage();
     }
 
-    getPage():void {
-        console.count('加载我的故事情节中。。。 页码：');
-        let imgs = ['app/assets/images/default_avatar.jpg', 'app/assets/images/drawings.png'];
-        for (let i = this.storiesPage.pageSize * (this.storiesPage.pageNo - 1); i < this.storiesPage.pageSize * this.storiesPage.pageNo; i++) {
-            this.stories.push({
-                img: imgs[Math.floor(Math.random() * 3)], section: i + '好奇心日报以商业视角观察生' +
-                '活并启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户' +
-                '提供最好启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为' +
-                '用户提供最好启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提供最好启' +
-                '发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提供最好' +
-                '启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提供最' +
-                '好启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提' +
-                '供最好启发你的好奇心,囊括商业报道、科技新闻、生活方式等各个领域,a致ss力成为这个时代最好的媒体,为用户提供最好的新闻资讯。' +
-                '好奇心日报好奇心研究所 栏目中心 长文章 10 个图 Top 15 商业 智能 设计 时尚 娱乐 城市 游戏 全部分类 APP ' +
-                '登录 退出关于我们 好奇心微信公众号...', belongs: '戈木'
+    getPage(): void {
+        console.count('加载故事情节中。。。 页码：');
+        let condi = { pageNo: this.storiesPage.pageNo };
+        let friendC = Cookie.getCookie('friend');
+        if (friendC) {
+            let friend = JSON.parse(friendC);
+            condi['filter'] = { author:  friend['userName']};
+            this.storiesService.storyPage(condi).subscribe((resp) => {
+                if (resp.status == 200) {
+                    let data = JSON.parse(resp._body);
+                    this.storiesPage.pageNo = (data.entries && data.entries.length > 0) ? data.pageNo : data.pageNo - 1;
+                    if (!data.entries) {
+                        data.entries = [];
+                    }
+                    if (data.entries.length == 0) {
+                        this.notifyMsg = '没有更多了';
+                        setTimeout(() => {
+                            this.notifyMsg = '';
+                        }, 3000);
+                        Notify.info('没有更多了');
+                    }
+                    this.stories = this.stories.concat(data.entries);
+                    this.isLoadFinished = true;
+                } else {
+                    Notify.error('获取失败');
+                }
             });
+        }
+    }
+
+    getNextPage(): void {
+        this.storiesPage.pageNo++;
+        this.getPage();
+    }
+
+    change(event): void {
+        if (event.key === 'Enter') {
+            this.stories = [];
+            this.storiesPage = { pageNo: 1, pageSize: 20 };
+            this.getPage();
         }
     }
 

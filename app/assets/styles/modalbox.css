@@ -1,5 +1,6 @@
 .modal {
     position: fixed;
+    top: 0;
     height: 100%;
     width: 100%;
     background: #141A1E;
@@ -13,10 +14,10 @@
 }
 
 .modal-dialog {
+    top: 10%;
     opacity: 1;
     width: 80%;
     display: inline-block;
-    top: 10%;
     position: relative;
     box-shadow: 0 0 0.5rem 0.1rem grey;
     background-color: ghostwhite;

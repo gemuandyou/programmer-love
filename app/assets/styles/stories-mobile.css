@@ -40,3 +40,8 @@
     border-bottom: 1px solid darkorange;
     color: darkorange;
 }
+
+.stories-content {
+    top: 1px;
+    position: relative;
+}

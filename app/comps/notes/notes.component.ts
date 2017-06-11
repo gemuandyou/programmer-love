@@ -14,6 +14,7 @@ import {NotesService} from "../../service/notes/notes.service";
 import {Notify} from "../../tools/notification";
 import {UUID} from "../../tools/uuid";
 import {CodeParser} from "../../tools/code-parser";
+import {Cookie} from "../../tools/cookie";
 import {PasteFormat} from "../../service/notes/paste-format";
 import {ModalBoxComponent} from "../modalbox/modalbox.component";
 import {AppComponent} from "../../app.component";
@@ -61,34 +62,11 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
     modalBoxComps:{} = {}; // 模态框Component对象集合
     exportFilePath:string;
 
-    //设置cookie
-    private setCookie(cname, cvalue, exdays): void {
-        let d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        let expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + "; " + expires;
-    }
-    //获取cookie
-    private getCookie(cname): string {
-        let name = cname + "=";
-        let ca = document.cookie.split(';');
-        for(let i=0; i<ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1);
-            if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
-        }
-        return "";
-    }
-    //清除cookie  
-    private clearCookie(name): void {
-        this.setCookie(name, "", -1);
-    }
-
     // 自定义笔记背景
     switchNoteBg(isInit: Boolean): void {
         // 自定义样式（皮肤背景）
         let cssPath = 'app/assets/styles/notes2.css';
-        if (this.getCookie('noteBg')) {
+        if (Cookie.getCookie('noteBg')) {
             cssPath = 'app/assets/styles/notes.css';
         }
         let noteStyles = document.getElementsByClassName('note-bg-style');
@@ -96,10 +74,10 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
             if (!isInit) {
                 if (cssPath == 'app/assets/styles/notes.css') { // 三元运算符不好使 T.T
                     cssPath = 'app/assets/styles/notes2.css';
-                    this.clearCookie('noteBg');
+                    Cookie.clearCookie('noteBg');
                 } else {
                     cssPath = 'app/assets/styles/notes.css';
-                    this.setCookie('noteBg', 'true', 7);
+                    Cookie.setCookie('noteBg', 'true', 7);
                 }
             }
             noteStyles[0].setAttribute('href', cssPath);

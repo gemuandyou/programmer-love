@@ -6,7 +6,7 @@
     <div class="circle-content" #circleContent>
         <div class="circle-block" *ngFor="let story of stories; let i = index;" [@visibleAnimation]="visibleCircle[i] ? 'show' : 'hide'"
              [routerLink]="['/', 'stories', 'detail', {id: story.storyId}]">
-            <template pinterest="{{i}}">
+            <template pinterest="circle-{{i}}">
                 <span class="circle-block-belongs">{{story.author}}</span>
                 <img *ngIf="story.image" [src]="story.image"/>
                 <section [ngClass]="{'img-section': story.img, 'txt-section': !story.img}">{{story.words | truncateSection:!story.image}}</section>

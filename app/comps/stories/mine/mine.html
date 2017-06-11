@@ -9,3 +9,13 @@
         <router-outlet></router-outlet>
     </div>
 </div>
+<modal-box [identify]="'stories-login'">
+    <div>
+        <label style="font-size: 0.8rem;color: black;">老铁你是谁啊？</label>
+        <input type="text" class="form-input" placeholder="填写导出文件名(包括路径)" [(ngModel)]="username" style="width: 100%;padding-left: 5px;">
+    </div>
+    <div>
+        <label style="font-size: 0.8rem;color: black;">老铁你的通行证！</label>
+        <input type="password" class="form-input" placeholder="填写导出文件名(包括路径)" [(ngModel)]="passcode" style="width: 100%;padding-left: 5px;">
+    </div>
+</modal-box>

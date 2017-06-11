@@ -3,15 +3,25 @@
  */
 import {Component} from "@angular/core";
 import {Title} from "@angular/platform-browser";
+import {ModalBoxComponent} from "../../modalbox/modalbox.component";
+import {FriendService} from "../../../service/friend.service";
+import {Cookie} from "../../../tools/cookie";
+
 @Component({
-    templateUrl: 'app/comps/stories/mine/mine.html'
+    templateUrl: 'app/comps/stories/mine/mine.html',
+    styleUrls: ['app/assets/styles/common.css'],
+    providers: [ModalBoxComponent, FriendService]
 })
 export class MineComponent {
 
     stories:any[] = []; // 我的故事列表
     storiesPage:any = {pageNo: 1, pageSize: 20}; // 我的故事列表分页信息
+    modalBoxComp: ModalBoxComponent;
 
-    constructor(title: Title) {
+    username:string;
+    passcode:string;
+
+    constructor(title: Title, private friendService: FriendService) {
         title.setTitle("故事-个人中心");
         
         // 判断浏览器类型，区分移动端和PC端
@@ -28,6 +38,28 @@ export class MineComponent {
             style.href = 'app/comps/stories/mine/mine.css';
         }
         document.head.appendChild(style);
+
+        if (!Cookie.getCookie('OD')) {
+            // 模态框
+            ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
+                this.modalBoxComp = modalBoxComp;
+                this.modalBoxComp.openModal("通关文牒");
+                this.modalBoxComp.confirmEvent.subscribe(() => {
+                    this.friendService.login({username: this.username, passcode: this.passcode}).subscribe((resp) => {
+                        if (resp.status == 200) {
+                            let odAndFriend = resp._body;
+                            if (odAndFriend) {
+                                odAndFriend = JSON.parse(odAndFriend);
+                                Cookie.clearCookie('OD');
+                                Cookie.setCookie('friend', JSON.stringify(odAndFriend['friend']), 30);
+                                Cookie.setCookie('OD', odAndFriend['OD'], 30);
+                                ModalBoxComponent.showEvent.unsubscribe();
+                            }
+                        }
+                    });
+                });
+            });
+        }
     }
 
     getPage():void {

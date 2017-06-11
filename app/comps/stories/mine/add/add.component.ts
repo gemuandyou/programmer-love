@@ -5,6 +5,8 @@ import {Component, AfterViewInit, ViewChild} from "@angular/core";
 import {Title} from "@angular/platform-browser";
 import {StoriesService} from "../../../../service/stories/stories.service";
 import {Notify} from "../../../../tools/notification";
+import {Cookie} from "../../../../tools/cookie";
+
 @Component({
     templateUrl: 'app/comps/stories/mine/add/add.html',
     styleUrls: ['app/assets/styles/common.css'],
@@ -76,7 +78,15 @@ export class MineAddComponent implements AfterViewInit {
         }
         let titles = window.editor.text().split('\n');
         story['preWords'] = titles[0];
-        story['author'] = 'gemu'; //TODO
+
+        let friendC = Cookie.getCookie('friend');
+        if (friendC) {
+            let friend = JSON.parse(friendC);
+            story['author'] = friend['userName'];
+        } else {
+            story['author'] = '葫芦娃'; //TODO
+        }
+
         story['title'] = titles[0];
         story['subhead'] = titles[1];
         story['date'] = new Date().getTime();
