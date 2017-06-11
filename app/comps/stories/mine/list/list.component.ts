@@ -62,7 +62,7 @@ export class MineListComponent implements OnInit {
         let condi = { pageNo: this.storiesPage.pageNo };
         let OD = Cookie.getCookie('OD');
         let friendC = Cookie.getCookie('friend');
-        if (!OD || !friendC) return;
+        if (!OD || !friendC || OD == 'undefined' || friendC == 'undefined') return;
         if (friendC) {
             let friend = JSON.parse(friendC);
             condi['filter'] = { author:  friend['userName']};

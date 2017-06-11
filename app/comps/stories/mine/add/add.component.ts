@@ -80,7 +80,7 @@ export class MineAddComponent implements AfterViewInit {
         story['preWords'] = titles[0];
 
         let friendC = Cookie.getCookie('friend');
-        if (friendC) {
+        if (friendC && friendC != 'undefined') {
             let friend = JSON.parse(friendC);
             story['author'] = friend['userName'];
         } else {
