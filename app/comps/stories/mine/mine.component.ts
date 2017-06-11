@@ -58,6 +58,7 @@ export class MineComponent {
                                     return false;
                                 }
                                 Cookie.clearCookie('OD');
+                                Cookie.clearCookie('friend');
                                 Cookie.setCookie('OD', odAndFriend['OD'], 30);
                                 Cookie.setCookie('friend', JSON.stringify(odAndFriend['friend']), 30);
                                 this.loginFlag = false;
