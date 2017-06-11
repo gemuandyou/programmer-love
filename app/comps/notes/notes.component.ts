@@ -111,7 +111,8 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        AppComponent.viewDestroy.emit();
+	this.saveNote();
+	AppComponent.viewDestroy.emit();
     }
 
     ngAfterViewInit():void {
