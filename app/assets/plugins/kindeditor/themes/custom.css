@@ -488,7 +488,7 @@
 	height: calc(100% - 3rem - 3px) !important;
 	padding: 0;
 	background-color: #585858;
-	color: #d0d0d0;
+	color: #aeaeae;
 }
 .ke-edit-iframe,
 .ke-edit-textarea {
