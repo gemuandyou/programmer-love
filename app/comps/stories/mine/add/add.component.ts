@@ -79,10 +79,9 @@ export class MineAddComponent implements AfterViewInit {
         let titles = window.editor.text().split('\n');
         story['preWords'] = titles[0];
 
-        let friendC = Cookie.getCookie('friend');
-        if (friendC && friendC != 'undefined') {
-            let friend = JSON.parse(friendC);
-            story['author'] = friend['userName'];
+        let friendName = Cookie.getCookie('friend');
+        if (friendName && friendName != 'undefined') {
+            story['author'] = friendName;
         } else {
             story['author'] = '葫芦娃'; //TODO
         }
