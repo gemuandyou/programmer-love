@@ -61,32 +61,31 @@ export class MineListComponent implements OnInit {
         console.count('加载故事情节中。。。 页码：');
         let condi = { pageNo: this.storiesPage.pageNo };
         let OD = Cookie.getCookie('OD');
-        let friendC = Cookie.getCookie('friend');
-        if (!OD || !friendC || OD == 'undefined' || friendC == 'undefined') return;
-        // if (friendC) {
-        //     let friend = JSON.parse(friendC);
-        //     condi['filter'] = { author:  friend['userName']};
-        //     this.storiesService.storyPage(condi).subscribe((resp) => {
-        //         if (resp.status == 200) {
-        //             let data = JSON.parse(resp._body);
-        //             this.storiesPage.pageNo = (data.entries && data.entries.length > 0) ? data.pageNo : data.pageNo - 1;
-        //             if (!data.entries) {
-        //                 data.entries = [];
-        //             }
-        //             if (data.entries.length == 0) {
-        //                 this.notifyMsg = '没有更多了';
-        //                 setTimeout(() => {
-        //                     this.notifyMsg = '';
-        //                 }, 3000);
-        //                 Notify.info('没有更多了');
-        //             }
-        //             this.stories = this.stories.concat(data.entries);
-        //             this.isLoadFinished = true;
-        //         } else {
-        //             Notify.error('获取失败');
-        //         }
-        //     });
-        // }
+        let friendName = Cookie.getCookie('friend');
+        if (!OD || !friendName || OD == 'undefined' || friendName == 'undefined') return;
+        if (friendName) {
+            condi['filter'] = { author:  friendName};
+            this.storiesService.storyPage(condi).subscribe((resp) => {
+                if (resp.status == 200) {
+                    let data = JSON.parse(resp._body);
+                    this.storiesPage.pageNo = (data.entries && data.entries.length > 0) ? data.pageNo : data.pageNo - 1;
+                    if (!data.entries) {
+                        data.entries = [];
+                    }
+                    if (data.entries.length == 0) {
+                        this.notifyMsg = '没有更多了';
+                        setTimeout(() => {
+                            this.notifyMsg = '';
+                        }, 3000);
+                        Notify.info('没有更多了');
+                    }
+                    this.stories = this.stories.concat(data.entries);
+                    this.isLoadFinished = true;
+                } else {
+                    Notify.error('获取失败');
+                }
+            });
+        }
     }
 
     getNextPage(): void {
