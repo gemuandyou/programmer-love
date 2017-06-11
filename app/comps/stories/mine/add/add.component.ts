@@ -93,8 +93,8 @@ export class MineAddComponent implements AfterViewInit {
         story['date'] = new Date().getTime();
         story['paragraph'] = window.editor.html();
         this.storiesService.addStory(story).subscribe((resp) => {
-            Notify.success('故事添加成功');
             this.btnCtx = '已保存';
+            Notify.success('故事添加成功');
         });
     }
 
