@@ -14,6 +14,7 @@
 
 
 ##### 使用说明
+由于typescript中Notification的d.ts定义文件中没有permission，所以会报错。需要在`node_modules/typescript`中查找`declare var Notification`，并在Notification中添加一个`permission: any;`属性。
 ```shell
 npm install
 ```
