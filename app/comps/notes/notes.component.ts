@@ -6,6 +6,7 @@ import {
     SimpleChanges, DoCheck, ChangeDetectionStrategy, ChangeDetectorRef, ElementRef, AfterViewInit, OnInit, EventEmitter,
     Input, Output, ComponentFactoryResolver, ViewContainerRef, ComponentFactory, ComponentRef
 } from "@angular/core";
+import { ActivatedRoute, Params, Router }   from '@angular/router';
 import {Title} from "@angular/platform-browser";
 import copyWithin = require("core-js/fn/array/copy-within");
 import {Mark} from "./mark";
@@ -31,6 +32,8 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('notesView') notesView;
     @ViewChild('clipboard') clipboard;
     @ViewChild('pasteWay') pasteWay;
+
+    isLoading: boolean = false;
 
     pasteContent:{} = {}; // 粘贴的内容。html内容和文本内容
     pasteSel:any; // 粘贴内容时的getSelection
@@ -90,12 +93,19 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    constructor(title: Title, private noteService: NotesService, private eleRef: ElementRef, private componentFactoryResolver: ComponentFactoryResolver,
-                private viewContainerRef: ViewContainerRef) {
+    constructor(title: Title, private noteService: NotesService, private eleRef: ElementRef, 
+        private componentFactoryResolver: ComponentFactoryResolver,private viewContainerRef: ViewContainerRef,
+        private router: Router, private route: ActivatedRoute) {
         title.setTitle("程序员日志");
         this.switchNoteBg(true);
         ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
             this.modalBoxComps[modalBoxComp.identify] = modalBoxComp;
+        });
+        this.route.params.subscribe((params: Params) => {
+            if (params['date']) {
+                this.currentNote = decodeURI(params['date']);
+                this.getNote(this.currentNote);
+            }
         });
     }
 
@@ -773,41 +783,54 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     saveNote():void {
         this.notesEditorEle = this.notesEditor.nativeElement;
-        if (this.notesEditorEle) {
+        if (this.notesEditorEle && this.currentNote) {
             let notesContent = this.notesEditorEle.innerHTML;
             notesContent = this.editComplication(notesContent);
-            this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote, tags: this.currentNoteTags}).subscribe((resp) => {
-                if (resp.status === 200) {
-                    Notify.success('保存成功');
-                    if (this.notesEditor.nativeElement.scrollTop > this.notesEditor.nativeElement.scrollHeight - 500) {
-                        // view模块向下滚动到底
-                        this.notesEditor.nativeElement.scrollTop = this.notesEditor.nativeElement.scrollHeight;
-                        this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.scrollHeight;
+            if (notesContent) {
+                this.noteService.saveNote({noteData: notesContent, noteName: this.currentNote, tags: this.currentNoteTags}).subscribe((resp) => {
+                    if (resp.status === 200 && resp._body == 'true') {
+                        Notify.success('保存成功');
+                        if (this.notesEditor.nativeElement.scrollTop > this.notesEditor.nativeElement.scrollHeight - 500) {
+                            // view模块向下滚动到底
+                            this.notesEditor.nativeElement.scrollTop = this.notesEditor.nativeElement.scrollHeight;
+                            this.notesView.nativeElement.scrollTop = this.notesView.nativeElement.scrollHeight;
+                        }
+                        this.ngOnInit();
                     }
-                    this.ngOnInit();
-                }
-            });
+                });
+            }
         }
     }
 
     getNote(note:String):void {
+        this.isLoading = true;
         this.noteService.getNote(note).subscribe((resp) => {
+            this.isLoading = false;
+            this.clearCache();
             if (resp.status === 200) {
                 this.needPreview = false;
                 this.notesView.nativeElement.scrollTop = 0;
                 this.notesEditorEle = this.notesEditor.nativeElement;
-                let noteJson = JSON.parse(resp._body);
-                let noteDate = noteJson.noteData;
-                this.currentNoteTags = noteJson.tags;
-                noteDate = this.editSimplify(noteDate);
-                this.notesEditorEle.innerHTML = noteDate;
-                this.parseNote(this.notesEditorEle.innerText);
+                try {
+                    let noteJson = JSON.parse(resp._body);
+                    let noteDate = noteJson.noteData;
+                    this.currentNoteTags = noteJson.tags;
+                    noteDate = this.editSimplify(noteDate);
+                    this.notesEditorEle.innerHTML = noteDate;
+                    this.parseNote(this.notesEditorEle.innerText);
+                } catch (e) {}
             }
         });
     }
 
     newNote():void {
         this.currentNote = '';
+        this.clearCache();
+        let now = new Date();
+        this.router.navigate(['/notes', encodeURI(now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate())]);
+    }
+
+    clearCache(): void {
         this.currentNoteTags = '';
         this.notesEditor.nativeElement.innerHTML = '';
         this.notesView.nativeElement.innerHTML = '';
@@ -868,7 +891,8 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         currEle.setAttribute('class', 'active');
         this.currentNote = currEle.textContent;
-        this.getNote(this.currentNote);
+        // this.getNote(this.currentNote);
+        this.router.navigate(['/notes', encodeURI(this.currentNote.toString())]);
     }
 
     /**

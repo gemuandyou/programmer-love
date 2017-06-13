@@ -33,23 +33,35 @@ module.exports = {
     loadNotes: function(path) {
         path = prePath + path;
         if (!fs.existsSync(path)) {
-            return fs.openSync(path, 'w+');
+            // return fs.openSync(path, 'w+');
+            return "";
+        } else {
+            return fs.readFileSync(path);
         }
-        return fs.readFileSync(path);
     },
 
     writeNotes: function(path, content) {
         path = prePath + path;
-        try {
-            fs.truncate(path, 0, () => {
-                fs.writeFileSync(path, content, { 'mode': 755, 'flag': 'r+' });
-            });
-        } catch (e) {
-            console.log(e); // operation not permitted
-            fs.unlink(path, () => {
+        if (content) {
+            if (!fs.existsSync(path)) {
                 fs.writeFileSync(path, content, { 'mode': 755 });
-            });
+                return true;
+            } else {
+                try {
+                    fs.truncate(path, 0, () => {
+                        fs.writeFileSync(path, content, { 'mode': 755, 'flag': 'r+' });
+                        return true;
+                    });
+                } catch (e) {
+                    console.log(e); // operation not permitted
+                    fs.unlink(path, () => {
+                        fs.writeFileSync(path, content, { 'mode': 755 });
+                        return "true";
+                    });
+                }
+            }
         }
+        return "false";
     },
 
     writeImg: function(path, base64Data) {

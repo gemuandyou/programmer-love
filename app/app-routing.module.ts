@@ -13,6 +13,7 @@ const routes: Routes = [
     {path: '', pathMatch: 'full', redirectTo: 'stories'},
     {path: 'charity', component: CharityComponent},
     {path: 'notes', component: NotesComponent},
+    {path: 'notes/:date', component: NotesComponent},
     {path: 'essay', component: EssayComponent},
     {path: 'medicine', component: MedicineComponent},
     {path: 'freehand', component: FreehandComponent},
