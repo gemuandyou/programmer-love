@@ -167,7 +167,7 @@ export class CodeParser {
             '<pre style="' +
             'overflow-x: auto; ' +
             'background-color: ' + bgc + '; ' +
-            'font-family: serif; ' +
+            'font-family: Menlo, Monaco, Consolas, \'Courier New\', monospace; ' +
             'margin: 0; ' +
             'border-radius: 0.5rem;' +
             'padding: 0.5rem;' +
@@ -205,7 +205,7 @@ export class CodeParser {
             '<pre style="' +
             'overflow-x: auto; ' +
             'background-color: ' + bgc + '; ' +
-            'font-family: serif; ' +
+            'font-family: Menlo, Monaco, Consolas, \'Courier New\', monospace; ' +
             'margin: 0; ' +
             'border-radius: 0.5rem;' +
             'padding: 0.5rem;' +

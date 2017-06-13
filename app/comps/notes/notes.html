@@ -5,7 +5,7 @@
         <button class="btn" (click)="exportNote();">Export</button>
         <button class="btn" (click)="setNoteTag();">Tag</button>
         <ul class="notes-list">
-            <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note}}</li>
+            <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note|decodeURI}}</li>
         </ul>
     </div>
     <div class="view" [ngClass]="{'viewFlex':editorFlex}" #notesView>
@@ -42,20 +42,18 @@
         <div class="notes-editor" contenteditable="plaintext-only" #notesEditor (keyup)="changeEdit($event)" [ngClass]="{'editorFlex':editorFlex}"></div>
         <div class="editor-helper" *ngIf="helper">
             <p>
-                使用@tab标签来进行缩进，遇到空行结束缩进。可嵌套使用。
-                标签渲染的内容以空格为截止符，若紧连接标签后需要打印空格，则输入两个空格即可，如：@h1-abc  a。标签目前分为三种。
-                请注意别XSS攻击，跪谢了。
-                @pre标签目前不支持手动写，一般都是粘贴的内容。
-                多个@code标签之间需要换行。
+                使用@tab标签来进行缩进，遇到空行结束缩进。可嵌套使用。 标签渲染的内容以空格为截止符，若紧连接标签后需要打印空格，则输入两个空格即可，如：@h1-abc a。标签目前分为三种。 请注意别XSS攻击，跪谢了。 @pre标签目前不支持手动写，一般都是粘贴的内容。 多个@code标签之间需要换行。
             </p>
             <ol>
                 <li>普通标签。如：@h1-、@i-、@b-等。</li>
-                <li>带有参数的标签。如：@url[]。参数值写在[]中，实例：@url[https://www.abc.com]ALink，会生成
-                    "<a href='https://www.abc.com'>ALink</a>"
+                <li>带有参数的标签。如：@url[]。参数值写在[]中，实例：@url[https://www.abc.com]ALink，会生成 "
+                    <a href='https://www.abc.com'>ALink</a>"
                 </li>
-                <li>带有包含内容的标签。如：@ol()、@ul()。不难看出这个标签会生成
-                    "ol、ul"html标签，其中的"li"内容在@ol或@ul标签的括号
-                    中以#号分割。实例：@ol(#a#b)，会生成"<ol><li>a</li><li>b</li></ol>"
+                <li>带有包含内容的标签。如：@ol()、@ul()。不难看出这个标签会生成 "ol、ul"html标签，其中的"li"内容在@ol或@ul标签的括号 中以#号分割。实例：@ol(#a#b)，会生成"
+                    <ol>
+                        <li>a</li>
+                        <li>b</li>
+                    </ol>"
                 </li>
                 <li>对于展示内容不想换行的，只需在编辑区行未添加"\"或"、"符号即可。
                 </li>
@@ -88,8 +86,7 @@
         <div class="note-preview-content" *ngIf="needPreview">
             <ul>
                 <li *ngFor="let struct of previewStructures" (click)="positionPreview(struct.dom);needPreview = false;">
-                    <span retract="{{struct.tier}}"></span>
-                    {{struct.name}}
+                    <span retract="{{struct.tier}}"></span> {{struct.name}}
                 </li>
             </ul>
         </div>
@@ -101,3 +98,4 @@
         <textarea class="form-input" placeholder="多个标签使用分号分隔" [(ngModel)]="currentNoteTags" style="width: 100%; max-width: 100%;"></textarea>
     </modal-box>
 </div>
+<span *ngIf="isLoading" style="position: fixed;top: 30%;left: 50%;font-size: 5rem;"><i class="fa fa-bicycle" aria-hidden="true"></i></span>

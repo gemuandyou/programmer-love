@@ -6,6 +6,7 @@ import {ActivatedRoute} from '@angular/router';
 import {HashLocationStrategy,LocationStrategy} from '@angular/common';
 import {Title} from "@angular/platform-browser";
 import {StoriesService} from "../../../service/stories/stories.service";
+import {Cookie} from "../../../tools/cookie";
 
 @Component({
     templateUrl: 'app/comps/stories/detail/detail.html',
@@ -14,6 +15,7 @@ import {StoriesService} from "../../../service/stories/stories.service";
 })
 export class DetailComponent implements OnInit {
 
+    yourself: boolean = false;
     story: any = {};
     @ViewChild("body") bodyEle;
 
@@ -37,13 +39,13 @@ export class DetailComponent implements OnInit {
     }
 
     ngOnInit():void {
-        console.log('init')
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.storiesService.getStory(id).subscribe((resp) => {
                 if (resp.status == 200) {
                     this.story = JSON.parse(resp._body);
                     this.bodyEle.nativeElement.innerHTML = this.story.paragraph;
+                    this.yourself = this.story.author == Cookie.getCookie('friend');
                 }
             });
         });

@@ -6,6 +6,7 @@ import {StoriesComponent} from "./stories.component";
 import {MineListComponent} from "./mine/list/list.component";
 import {MineAddComponent} from "./mine/add/add.component";
 import {MineInfoComponent} from "./mine/info/info.component";
+import {MineUpdComponent} from "./mine/upd/upd.component";
 import {DetailComponent} from "./detail/detail.component";
 /**
  * Created by gemu on 11/26/16.
@@ -24,7 +25,8 @@ const routes:Routes = [
                     {path: '', redirectTo: 'list'},
                     {path: 'list', component: MineListComponent},
                     {path: 'add', component: MineAddComponent},
-                    {path: 'info', component: MineInfoComponent}
+                    {path: 'info', component: MineInfoComponent},
+                    {path: 'upd', component: MineUpdComponent}
                 ]
             }
         ]

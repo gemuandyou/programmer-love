@@ -51,7 +51,8 @@ var api = function(req, res, next) {
             });
             req.on('end', function() {
                 body = Buffer.concat(body);
-                db.writeNotes(req.url.substr(6), body.toString());
+                var success = db.writeNotes(req.url.substr(6), body.toString());
+                res.write(success.toString());
                 res.end();
             });
         } else if (/\/lnote/.test(req.url)) {
