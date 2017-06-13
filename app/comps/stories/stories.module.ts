@@ -12,6 +12,7 @@ import {PinterestDirective} from "./circle/pinterest.directive";
 import {MineListComponent} from "./mine/list/list.component";
 import {MineAddComponent} from "./mine/add/add.component";
 import {MineInfoComponent} from "./mine/info/info.component";
+import {MineUpdComponent} from "./mine/upd/upd.component";
 import {DetailComponent} from "./detail/detail.component";
 import { FormsModule } from '@angular/forms';
 import {ModalBoxModule} from "../modalbox/modalbox.module";
@@ -26,6 +27,7 @@ import {ModalBoxModule} from "../modalbox/modalbox.module";
         MineComponent,
         MineListComponent,
         MineAddComponent,
+        MineUpdComponent,
         MineInfoComponent,
         DetailComponent
     ]

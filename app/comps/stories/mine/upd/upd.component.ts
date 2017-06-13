@@ -3,26 +3,27 @@
  */
 import {Component, AfterViewInit, ViewChild} from "@angular/core";
 import {Title} from "@angular/platform-browser";
+import {ActivatedRoute} from '@angular/router';
 import {StoriesService} from "../../../../service/stories/stories.service";
 import {Notify} from "../../../../tools/notification";
 import {Cookie} from "../../../../tools/cookie";
 
 @Component({
-    templateUrl: 'app/comps/stories/mine/add/add.html',
+    templateUrl: 'app/comps/stories/mine/upd/upd.html',
     styleUrls: ['app/assets/styles/common.css'],
     providers: [StoriesService]
 })
-export class MineAddComponent implements AfterViewInit {
+export class MineUpdComponent implements AfterViewInit {
 
     @ViewChild('editor') editor;
     btnCtx: string = '保存';
+    story: any;
 
-    constructor(title:Title, private storiesService: StoriesService) {
-        title.setTitle("添加故事");
+    constructor(title:Title, private storiesService: StoriesService, private route: ActivatedRoute) {
+        title.setTitle("编辑故事");
     }
 
     ngAfterViewInit() {
-
         // 判断浏览器类型，区分移动端和PC端
         // this.browserInfo = navigator.appVersion;
         var style = document.createElement('style');
@@ -62,37 +63,45 @@ export class MineAddComponent implements AfterViewInit {
                 },
                 afterUpload: function(url) {
                     console.log(url);
-
                 },
                 allowFileManager: true,
                 items: items
             };
             window.editor = K.create(document.getElementById('editor-textarea'), options);
         }, document.getElementById('editor-textarea'));
+
+        this.route.params.subscribe(params => {
+            let id = params['id'];
+            this.storiesService.getStory(id).subscribe((resp) => {
+                if (resp.status == 200) {
+                    this.story = JSON.parse(resp._body);
+                    window.editor.html(this.story.paragraph);
+                }
+            });
+        });
     }
 
-    saveStory(ev): void {
+    updateStory(ev): void {
         this.btnCtx = '保存中';
         ev.target.setAttribute('disabled', 'disabled');
-        let story = {};
         if (window.editor.edit.doc.getElementsByTagName('img').length > 0) {
-            story['prevImg'] = window.editor.edit.doc.getElementsByTagName('img')[0].src;
+            this.story['prevImg'] = window.editor.edit.doc.getElementsByTagName('img')[0].src;
         }
         let titles = window.editor.text().split('\n');
-        story['prevWords'] = titles[0];
+        this.story['prevWords'] = titles[0];
 
         let friendName = Cookie.getCookie('friend');
         if (friendName && friendName != 'undefined') {
-            story['author'] = friendName;
+            this.story['author'] = friendName;
         } else {
-            story['author'] = '葫芦娃'; //TODO
+            this.story['author'] = '葫芦娃'; //TODO
         }
 
-        story['title'] = titles[0];
-        story['subhead'] = titles[1];
-        story['date'] = new Date().getTime();
-        story['paragraph'] = window.editor.html();
-        this.storiesService.addStory(story).subscribe((resp) => {
+        this.story['title'] = titles[0];
+        this.story['subhead'] = titles[1];
+        this.story['date'] = new Date().getTime();
+        this.story['paragraph'] = window.editor.html();
+        this.storiesService.updStory(this.story).subscribe((resp) => {
             this.btnCtx = '已保存';
             Notify.success('故事添加成功');
         });
