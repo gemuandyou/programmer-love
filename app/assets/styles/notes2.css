@@ -42,7 +42,8 @@
     width: calc(100% - 10rem - 7rem);
     height: calc(60% - 1rem);
     float: left;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: inherit;
     line-height: 2rem;
 }
 

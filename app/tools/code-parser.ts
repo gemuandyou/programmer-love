@@ -165,7 +165,7 @@ export class CodeParser {
             '">' + renderParam + '</div>' +
             '<div style="white-space: normal;">' +
             '<pre style="' +
-            'overflow: auto; ' +
+            'overflow-x: auto; ' +
             'background-color: ' + bgc + '; ' +
             'font-family: serif; ' +
             'margin: 0; ' +
@@ -203,7 +203,7 @@ export class CodeParser {
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;">' +
             '<div style="white-space: normal;">' +
             '<pre style="' +
-            'overflow: auto; ' +
+            'overflow-x: auto; ' +
             'background-color: ' + bgc + '; ' +
             'font-family: serif; ' +
             'margin: 0; ' +
