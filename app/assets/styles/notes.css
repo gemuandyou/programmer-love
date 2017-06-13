@@ -5,6 +5,10 @@
     background-size: 100% 100%;
 }
 
+.notes img {
+    max-width: 100%;
+}
+
 .form {
     background-color: rgba(164, 166, 191, 0.37);
     width: 10rem;
