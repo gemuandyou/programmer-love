@@ -37,6 +37,7 @@
     position: relative;
     height: calc(100% - 3rem - 8px);
     width: calc(100% + 5px);
+    margin-top: 5px;
     left: -5px;
     box-shadow: 0 4px 13px rgba(0, 0, 0, 0.52);
     /*使padding不影响dom大小*/
