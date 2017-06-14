@@ -36,14 +36,10 @@
     color: #5d5d5d;
     margin-top: 4px;
     height: calc(100% - 6rem - 6px);
-    box-shadow: 0 4px 13px rgba(0, 0, 0, 0.52);
-    /*使padding不影响dom大小*/
-    box-sizing: border-box;
 }
 
 .mine-upd {
     position: relative;
     height: 100%;
-    width: calc(100% + 5px);
-    left: -5px;
+    width: 100%;
 }
