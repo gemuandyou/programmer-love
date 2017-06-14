@@ -65,34 +65,6 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
     modalBoxComps:{} = {}; // 模态框Component对象集合
     exportFilePath:string;
 
-    // 自定义笔记背景
-    switchNoteBg(isInit: Boolean): void {
-        // 自定义样式（皮肤背景）
-        let cssPath = 'app/assets/styles/notes2.css';
-        if (Cookie.getCookie('noteBg')) {
-            cssPath = 'app/assets/styles/notes.css';
-        }
-        let noteStyles = document.getElementsByClassName('note-bg-style');
-        if (noteStyles && noteStyles[0]) {
-            if (!isInit) {
-                if (cssPath == 'app/assets/styles/notes.css') { // 三元运算符不好使 T.T
-                    cssPath = 'app/assets/styles/notes2.css';
-                    Cookie.clearCookie('noteBg');
-                } else {
-                    cssPath = 'app/assets/styles/notes.css';
-                    Cookie.setCookie('noteBg', 'true', 7);
-                }
-            }
-            noteStyles[0].setAttribute('href', cssPath);
-        } else {
-            let style = document.createElement('link');
-            style.className = 'note-bg-style';
-            style.rel = "stylesheet";
-            style.href = cssPath;
-            document.head.appendChild(style);
-        }
-    }
-
     constructor(title: Title, private noteService: NotesService, private eleRef: ElementRef, 
         private componentFactoryResolver: ComponentFactoryResolver,private viewContainerRef: ViewContainerRef,
         private router: Router, private route: ActivatedRoute) {
@@ -100,12 +72,6 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.switchNoteBg(true);
         ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
             this.modalBoxComps[modalBoxComp.identify] = modalBoxComp;
-        });
-        this.route.params.subscribe((params: Params) => {
-            if (params['date']) {
-                this.currentNote = decodeURI(params['date']);
-                this.getNote(this.currentNote);
-            }
         });
     }
 
@@ -116,6 +82,12 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
             if (listNotes) {
                 this.notes = listNotes.split(','); // 如果changeDetection: ChangeDetectionStrategy.OnPush，这里的变量不能在页面渲染出来
             }
+            this.route.params.subscribe((params: Params) => {
+                if (params['date']) {
+                    this.currentNote = decodeURI(params['date']);
+                    this.getNote(this.currentNote);
+                }
+            });
         });
         this.eleRef.nativeElement.querySelector('.notes').style.visibility = 'visible';
     }
@@ -151,6 +123,34 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
             let pasteItems = e.clipboardData.items;
             this.pasteHandle(pasteItems);
         });
+    }
+
+    // 自定义笔记背景
+    switchNoteBg(isInit: Boolean): void {
+        // 自定义样式（皮肤背景）
+        let cssPath = 'app/assets/styles/notes2.css';
+        if (Cookie.getCookie('noteBg')) {
+            cssPath = 'app/assets/styles/notes.css';
+        }
+        let noteStyles = document.getElementsByClassName('note-bg-style');
+        if (noteStyles && noteStyles[0]) {
+            if (!isInit) {
+                if (cssPath == 'app/assets/styles/notes.css') { // 三元运算符不好使 T.T
+                    cssPath = 'app/assets/styles/notes2.css';
+                    Cookie.clearCookie('noteBg');
+                } else {
+                    cssPath = 'app/assets/styles/notes.css';
+                    Cookie.setCookie('noteBg', 'true', 7);
+                }
+            }
+            noteStyles[0].setAttribute('href', cssPath);
+        } else {
+            let style = document.createElement('link');
+            style.className = 'note-bg-style';
+            style.rel = "stylesheet";
+            style.href = cssPath;
+            document.head.appendChild(style);
+        }
     }
 
     static keyDownEventFn(event):void {
