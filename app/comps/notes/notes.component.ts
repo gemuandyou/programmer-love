@@ -73,6 +73,12 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
         ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
             this.modalBoxComps[modalBoxComp.identify] = modalBoxComp;
         });
+        this.route.params.subscribe((params: Params) => {
+            if (params['date']) {
+                this.currentNote = decodeURI(params['date']);
+                this.getNote(this.currentNote);
+            }
+        });
     }
 
     ngOnInit():void {
@@ -82,12 +88,6 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
             if (listNotes) {
                 this.notes = listNotes.split(','); // 如果changeDetection: ChangeDetectionStrategy.OnPush，这里的变量不能在页面渲染出来
             }
-            this.route.params.subscribe((params: Params) => {
-                if (params['date']) {
-                    this.currentNote = decodeURI(params['date']);
-                    this.getNote(this.currentNote);
-                }
-            });
         });
         this.eleRef.nativeElement.querySelector('.notes').style.visibility = 'visible';
     }
