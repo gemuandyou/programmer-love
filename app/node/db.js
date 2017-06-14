@@ -45,12 +45,12 @@ module.exports = {
         if (content) {
             if (!fs.existsSync(path)) {
                 fs.writeFileSync(path, content, { 'mode': 755 });
-                return true;
+                return "true";
             } else {
                 try {
                     fs.truncate(path, 0, () => {
                         fs.writeFileSync(path, content, { 'mode': 755, 'flag': 'r+' });
-                        return true;
+                        return "true";
                     });
                 } catch (e) {
                     console.log(e); // operation not permitted
