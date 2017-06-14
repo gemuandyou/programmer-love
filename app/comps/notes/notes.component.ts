@@ -838,7 +838,11 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
         if (notesListEle.length > 0) {
             let notesEle = notesListEle[0].children;
             for (let i = 0; i < notesEle.length; i++) {
-                notesEle[i].removeAttribute('class');
+                if (notesEle[i].textContent == this.currentNote) {
+                    notesEle[i].setAttribute('class', 'active');
+                } else {
+                    notesEle[i].removeAttribute('class');
+                }
             }
         }
     }
@@ -885,11 +889,6 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     toggleActive(e):void {
         let currEle = e.target;
-        let childrenEle = currEle.parentElement.children;
-        for (let ele of childrenEle) {
-            ele.removeAttribute('class');
-        }
-        currEle.setAttribute('class', 'active');
         this.currentNote = currEle.textContent;
         // this.getNote(this.currentNote);
         this.router.navigate(['/notes', encodeURI(this.currentNote.toString())]);
