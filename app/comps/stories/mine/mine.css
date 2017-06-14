@@ -38,7 +38,6 @@
 
 .mine-upd {
     position: relative;
-    padding-top: 6px;
     height: calc(100% - 3rem - 8px);
     width: calc(100% + 5px);
     left: -5px;
