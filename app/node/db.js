@@ -50,14 +50,14 @@ module.exports = {
                 try {
                     fs.truncate(path, 0, () => {
                         fs.writeFileSync(path, content, { 'mode': 755, 'flag': 'r+' });
-                        return "true";
                     });
+                    return "true";
                 } catch (e) {
                     console.log(e); // operation not permitted
                     fs.unlink(path, () => {
                         fs.writeFileSync(path, content, { 'mode': 755 });
-                        return "true";
                     });
+                    return "true";
                 }
             }
         }
