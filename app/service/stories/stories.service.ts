@@ -76,4 +76,28 @@ export class StoriesService {
         this.createContentTypeHeader(headers);
         return this.http.post(`dbs/story/update`, params, {headers: headers});
     }
+
+    /**
+     * 故事评论
+     * @param params
+     * <ul>
+     *     <li>pageNo 页码</li>
+     * </ul>
+     * * @returns {Observable<Response>}
+     */
+    storyComment(params: any): Observable<any> {
+        return this.http.post(`dbs/story/comment`, params);
+    }
+
+    /**
+     * 分页获取故事评论列表
+     * @param params
+     * <ul>
+     *     <li>pageNo 页码</li>
+     * </ul>
+     * * @returns {Observable<Response>}
+     */
+    storyCommentPage(params: any): Observable<any> {
+        return this.http.post(`dbs/story/getCommentPage`, params);
+    }
 }
