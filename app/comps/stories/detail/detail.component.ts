@@ -122,9 +122,10 @@ export class DetailComponent implements OnInit {
     comment(): void {
         let content = this.commentContentEle.nativeElement.textContent;
         if (content) {
+            let currentFriend = Cookie.getCookie('friend');
             let comment = {
                 storyId: this.story.id, 
-                friendName: Cookie.getCookie('friend'), 
+                friendName: currentFriend ? currentFriend : '葫芦娃', 
                 content: content,
                 date: new Date().getTime()
             };
