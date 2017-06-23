@@ -169,6 +169,16 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * 选择粘贴内容
+     * @param pasteFormat 粘贴格式。具体值参照PasteFormat枚举
+     */
+    choosePasteFormat(pasteFormat: number): void {
+        this.pasteFormat = pasteFormat;
+        NotesComponent.reRenderPasteContentEmit.emit();
+        document.removeEventListener('keydown', NotesComponent.keyDownEventFn);
+    }
+
+    /**
      * 粘贴格式选择
      */
     pasteChooseListener():void {

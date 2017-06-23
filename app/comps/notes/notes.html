@@ -26,11 +26,11 @@
             </div>
         </div>
         <div class="paste-way">
-{{pasteFormat}}
+            {{pasteFormat}}
             <ul #pasteWay>
-                <li [ngClass]="{'active': pasteFormat == 1}" value="1">保留原格式</li>
-                <li [ngClass]="{'active': pasteFormat == 2}" value="2">仅粘贴文本</li>
-                <li [ngClass]="{'active': pasteFormat == 3}" value="3">Java格式</li>
+                <li [ngClass]="{'active': pasteFormat == 1}" value="1" (click)="choosePasteFormat(1);">保留原格式</li>
+                <li [ngClass]="{'active': pasteFormat == 2}" value="2" (click)="choosePasteFormat(2);">仅粘贴文本</li>
+                <li [ngClass]="{'active': pasteFormat == 3}" value="3" (click)="choosePasteFormat(3);">Java格式</li>
             </ul>
             <ul>
                 <li>a</li>
