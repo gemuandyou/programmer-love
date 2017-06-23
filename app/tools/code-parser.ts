@@ -141,7 +141,7 @@ export class CodeParser {
         for (let tmp = reg1.exec(codeTxt); tmp != null; tmp = reg1.exec(codeTxt)) {
             codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: #969696; font-size: 80%;">/*' + tmp.toString().substring(6, tmp.toString().length - 6) + '*/</span>')
         }
-        // 第二种注释 // abc
+        // 第二种注释 格式：// abc
         let reg2 = new RegExp('//.*?\\n'); // 非贪婪匹配
         for (let tmp = reg2.exec(codeTxt); tmp != null;) {
             codeTxt = codeTxt.replace(reg2, '@anno1-' + tmp.toString().substring(2, tmp.toString().length - 1) + '-1onna@');
@@ -152,7 +152,7 @@ export class CodeParser {
             codeTxt = codeTxt.replace(reg3, '<span style="font-weight: bold; color: #969696; font-size: 80%;">//' + tmp.toString().substring(7, tmp.toString().length - 7) + '</span>\n')
             tmp = reg3.exec(codeTxt);
         }
-        // 处理结尾处的#注解
+        // 处理结尾处的 // 注解
         let lastInd = codeTxt.lastIndexOf('//');
         if (lastInd > codeTxt.lastIndexOf('\n')) {
             codeTxt = codeTxt.substring(0, lastInd) + '<span style="font-weight: bold; color: #969696; font-size: 80%;">' + codeTxt.substring(lastInd) + '</span>';
