@@ -2,6 +2,7 @@
 /*detail*/
 .story-detail {
     background-color: white;
+    overflow-x: hidden;
 }
 
 .story-detail-author {
@@ -26,4 +27,50 @@
 
 .story-detail-body video {
     max-width: calc(100% - 5px);
+}
+
+/*评论*/
+.story-comment {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #e2e2e2;
+}
+
+.story-comment-block {
+    border-style: solid;
+    border-color: #c1c1c1;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-width: 2px;
+}
+
+.story-comment-block div {
+    color: #7b7b7b;
+    font-size: 0.8rem;
+}
+
+.story-comment-btn {
+    text-align: center;
+    background-color: #18b7f7;
+    color: white;
+}
+
+.story-comment-form {
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.story-comment-editor {
+    width: 80%;
+    display: inline-block;
+    background-color: #f2f2f2;
+    height: 6rem;
+    font-size: 13px;
+    overflow-y: auto;
+    text-align: left;
+    color: black;
+    border: 1px solid #dcdcdc;
+    padding: 3px;
+    margin-bottom: 1rem;
 }

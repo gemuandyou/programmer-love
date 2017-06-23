@@ -1,6 +1,25 @@
 <div class="story-detail">
-    <div class="story-detail-author">{{story.author}} {{story.date | date:'yyyy-MM-dd hh:mm:ss'}} &nbsp;
+    <div class="story-detail-author">{{story.author}} {{story.date | date:'yyyy-MM-dd HH:mm:ss'}} &nbsp;
         <span *ngIf="yourself" [routerLink]="['/', 'stories', 'mine', 'upd', {id: story.id}]"><a href="javascript:;">编辑</a></span>
     </div>
     <div class="story-detail-body" #body></div>
+    <div class="story-comment">
+        <div *ngFor="let comment of comments; let i = index;" class="story-comment-block">
+            <label style="font-size: 0.8rem;color: #1ea0f1;">{{comment.friendName}}
+                <span style="float: right;">{{comment.date | date:'yyyy-MM-dd HH:mm:ss'}}</span>
+            </label>
+            <div>{{comment.content}}</div>
+        </div>
+        <br>
+        <div class="story-comment-btn" (click)="triggerComment()">评论</div>
+        <div class="story-comment-form" [@visibleAnimation]="isComment ? 'show' : 'hide'">
+            <div>
+                <div class="story-comment-editor" contenteditable="true" #commentContentEle></div>
+                <div>
+                    <span style="width: 50%;float: left;display: inline-block;background-color: #8e3535;" (click)="isComment = false;">取消</span>
+                    <span style="width: 50%;float: left;display: inline-block;background-color: #149ce0;" (click)="comment();">提交</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

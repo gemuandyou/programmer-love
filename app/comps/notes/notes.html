@@ -26,6 +26,7 @@
             </div>
         </div>
         <div class="paste-way">
+{{pasteFormat}}
             <ul #pasteWay>
                 <li [ngClass]="{'active': pasteFormat == 1}" value="1">保留原格式</li>
                 <li [ngClass]="{'active': pasteFormat == 2}" value="2">仅粘贴文本</li>

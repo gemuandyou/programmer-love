@@ -1,5 +1,8 @@
 
 /*detail*/
+.story-detail {
+    overflow-x: hidden;
+}
 
 .story-detail-author {
     text-align: right;
@@ -30,4 +33,50 @@
 
 .story-detail-body > video {
     max-width: calc(100% - 10rem) !important;
+}
+
+/*评论*/
+.story-comment {
+    margin-top: 1rem;
+    padding: 1rem 10rem;
+    background-color: #3a3a3a;
+}
+
+.story-comment-block {
+    border-style: solid;
+    border-color: #c1c1c1;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-width: 2px;
+}
+
+.story-comment-block div {
+    color: #d6d6d6;
+    font-size: 0.8rem;
+}
+
+.story-comment-btn {
+    text-align: center;
+    background-color: #a7a7a7;
+    color: white;
+}
+
+.story-comment-form {
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.story-comment-editor {
+    width: 80%;
+    display: inline-block;
+    background-color: #616161;
+    height: 6rem;
+    font-size: 13px;
+    overflow-y: auto;
+    text-align: left;
+    color: #dedede;
+    box-shadow: 0 0 5px #b3b3b3;
+    padding: 5px;
+    margin-bottom: 1rem;
 }
