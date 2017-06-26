@@ -115,5 +115,6 @@ module.exports = {
     },
     server: {
         middleware: [api]
-    }
+    },
+    notify: false
 };
