@@ -72,7 +72,10 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
         title.setTitle("程序员日志");
         this.switchNoteBg(true);
         ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
-            this.modalBoxComps[modalBoxComp.identify] = modalBoxComp;
+            let modals: string[] = ["export", "setTag"];
+            if (modals.indexOf(modalBoxComp.identify) != -1) {
+                this.modalBoxComps[modalBoxComp.identify] = modalBoxComp;
+            }
         });
         this.route.params.subscribe((params: Params) => {
             if (params['date']) {

@@ -45,6 +45,7 @@ export class MineComponent {
         if (!Cookie.getCookie('OD') || Cookie.getCookie('OD') == 'undefined') {
             // 模态框
             ModalBoxComponent.showEvent.subscribe((modalBoxComp) => {
+                if (modalBoxComp.identify != 'stories-login') return;
                 this.modalBoxComp = modalBoxComp;
                 this.modalBoxComp.openModal("通关文牒");
                 this.modalBoxComp.confirmEvent.subscribe(() => {
