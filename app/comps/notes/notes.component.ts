@@ -852,6 +852,7 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     newNote(): void {
+        if (this.readOnly) return;
         this.currentNote = '';
         this.clearCache();
         let now = new Date();
