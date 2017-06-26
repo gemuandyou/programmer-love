@@ -21,6 +21,13 @@ var fileProxy = http_proxy.createProxyServer({
 dbServerProxy.on('proxyReq', function(proxyReq, req, res, options) {
     // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
     proxyReq.setHeader('Content-Type', 'application/json');
+    req.headers.cookie && req.headers.cookie.split(';').forEach((cookie) => {
+        var parts = cookie.split('=');
+        if ('friend' == parts[0].trim()) {
+            proxyReq.setHeader('User', parts[1]);
+            return;
+        }
+    });
 });
 apiProxy.on('proxyReq', function(proxyReq, req, res, options) {
     // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
