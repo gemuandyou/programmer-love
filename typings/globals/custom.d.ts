@@ -3,10 +3,21 @@
  */
 
 interface Element {
+    requestFullScreen:any;
+    mozRequestFullScreen:any;
+    msRequestFullScreen:any;
     currentTime:any;
     seekable:any;
     pause():any;
     play():any;
+}
+
+interface Window {
+    ActiveXObject:any;
+}
+
+interface Document {
+    mozCancelFullScreen:any;
 }
 
 declare var KindEditor:any;

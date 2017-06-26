@@ -1,6 +1,6 @@
 <router-outlet></router-outlet>
 <div class="menu" #menu *ngIf="showMenu">
-    <div class="audio-div" [ngStyle]="{'display': showMusic ? 'inline-block':'none'}" style="left: 3rem;">
+    <div class="audio-div" [ngStyle]="{'display': showMusic ? 'inline-block':'none'}" style="left: 6rem;">
         <ul>
             <li *ngFor="let music of musics; let i = index;" (click)="playMusic($event, i)">
                 {{music.fileName}}
@@ -8,8 +8,8 @@
             </li>
         </ul>
     </div>
-    <button class="btn" style="position: absolute; left: 0; width: 3rem; cursor: default;"
-            (click)="showMusic = !showMusic">music</button>
+    <!--<button class="btn" style="position: absolute; left: 0; width: 3rem; cursor: default;" (click)="triggerFullScreen();"><span *ngIf="!isFull">full</span><span *ngIf="isFull">unfull</span></button>-->
+    <button class="btn" style="position: absolute; left: 3rem; width: 3rem; cursor: default;" (click)="showMusic = !showMusic">music</button>
     <ul>
         <li routerLink="/charity">Charity</li>
         <li routerLink="/notes">Notes</li>
