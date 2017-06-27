@@ -21,13 +21,21 @@ var fileProxy = http_proxy.createProxyServer({
 dbServerProxy.on('proxyReq', function(proxyReq, req, res, options) {
     // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
     proxyReq.setHeader('Content-Type', 'application/json');
+    // 获取cookie中的用户名
     req.headers.cookie && req.headers.cookie.split(';').forEach((cookie) => {
         var parts = cookie.split('=');
         if ('friend' == parts[0].trim()) {
             proxyReq.setHeader('User', parts[1]);
-            return;
         }
     });
+    if ('/visit' == req.url) {
+        // 获取客户端IP
+        var ip = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+        proxyReq.setHeader('Address', ip);
+    }
 });
 apiProxy.on('proxyReq', function(proxyReq, req, res, options) {
     // incase if content-type is application/x-www-form-urlencoded -> we need to change to application/json
@@ -35,7 +43,6 @@ apiProxy.on('proxyReq', function(proxyReq, req, res, options) {
 });
 
 var api = function(req, res, next) {
-    // logger.info(req.url);
     try {
         if (/^\/api\/.*$/.test(req.url)) {
             req.url = req.url.substring(4);

@@ -100,4 +100,11 @@ export class StoriesService {
     storyCommentPage(params: any): Observable<any> {
         return this.http.post(`dbs/story/getCommentPage`, params);
     }
+
+    /**
+     * 访问记录
+     */
+    visit(): Observable<any> {
+        return this.http.post(`dbs/visit`, {});
+    }
 }

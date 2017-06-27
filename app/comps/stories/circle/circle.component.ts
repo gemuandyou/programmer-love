@@ -71,6 +71,9 @@ export class CircleComponent implements OnInit, AfterViewInit {
                 this.getPage();
             };
         }
+
+        // 访问记录
+        this.storiesService.visit().subscribe();
     }
 
     ngOnInit(): void {
