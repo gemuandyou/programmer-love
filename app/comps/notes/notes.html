@@ -1,5 +1,5 @@
 <div class="notes" style="visibility: hidden;">
-    <div class="form" [ngClass]="{'formFlex':editorFlex}" [ngStyle]="{'height': readOnly ? 'calc(100% - 2rem)':'60%'}" *ngIf="!isFullScreen">
+    <div class="form" [ngClass]="{'formFlex':editorFlex}" [ngStyle]="{'height': readOnly || editorFlex ? 'calc(100% - 3.5rem)':'60%'}" *ngIf="!isFullScreen">
         <button class="btn" (click)="switchNoteBg(false);">ChangeBg</button>
         <button class="btn" (click)="newNote();">New</button>
         <button class="btn" (click)="exportNote();">Export</button>
@@ -8,7 +8,7 @@
             <li *ngFor="let note of notes" (click)="toggleActive($event)">{{note|decodeURI}}</li>
         </ul>
     </div>
-    <div class="view" [ngClass]="{'viewFlex':editorFlex}" #notesView [ngStyle]="{'height': readOnly ? 'calc(100% - 3rem)':'calc(60% - 1rem)'}">
+    <div class="view" [ngClass]="{'viewFlex':editorFlex}" #notesView [ngStyle]="{'height': readOnly || editorFlex ? 'calc(100% - 4.5rem)':'calc(60% - 1rem)'}">
     </div>
     <div class="edit" [ngClass]="{'editFlex':editorFlex}" *ngIf="!isFullScreen && !readOnly">
         <div class="notes-tools">
