@@ -76,8 +76,6 @@ export class CodeParser {
         let codeTxt = this._codeTxt.toString();
 
         // ======================解析注释======================
-        // 全局替换换行 \n => @enter
-        codeTxt = codeTxt.replace(/\n/g, '@enter');
         
         // 第三种注释 格式：#abc\n
         let reg4 = new RegExp('#.*?\\n'); // 非贪婪匹配
@@ -96,6 +94,8 @@ export class CodeParser {
         }
 
         // 第一种注释 格式：/*abc*/
+        // 全局替换换行 \n => @enter
+        codeTxt = codeTxt.replace(/\n/g, '@enter');
         let reg = new RegExp('/\\*[^/$]*\\*/'); // 非贪婪匹配
         for (let tmp = reg.exec(codeTxt); tmp != null;) {
             codeTxt = codeTxt.replace(reg, '@anno-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-onna@');
@@ -105,6 +105,8 @@ export class CodeParser {
         for (let tmp = reg1.exec(codeTxt); tmp != null; tmp = reg1.exec(codeTxt)) {
             codeTxt = codeTxt.replace(reg1, '<span style="font-weight: bold; color: #969696; font-size: 80%;">/*' + tmp.toString().substring(6, tmp.toString().length - 6) + '*/</span>')
         }
+        // 全局替换为换行 @enter => \n
+        codeTxt = codeTxt.replace(/@enter/g, '\n');
         // 第二种注释 格式：// abc
         let reg2 = new RegExp('//.*?\\n'); // 非贪婪匹配
         for (let tmp = reg2.exec(codeTxt); tmp != null;) {
@@ -121,8 +123,6 @@ export class CodeParser {
         if (lastInd > codeTxt.lastIndexOf('\n')) {
             codeTxt = codeTxt.substring(0, lastInd) + '<span style="font-weight: bold; color: #969696; font-size: 80%;">' + codeTxt.substring(lastInd) + '</span>';
         }
-        // 全局替换为换行 @enter => \n
-        codeTxt = codeTxt.replace(/@enter/g, '\n');
 
         // ======================解析代码关键字======================
         for (let keyword of keyWords) {
