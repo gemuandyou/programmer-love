@@ -149,7 +149,7 @@ export class CodeParser {
         }
 
         // 第一种注释 格式：/*abc*/
-        let reg = new RegExp('/\\*.*?\\*/'); // 非贪婪匹配
+        let reg = new RegExp('/\\*[^(\\*/)]*\\*/'); // 非贪婪匹配
         for (let tmp = reg.exec(codeTxt); tmp != null;) {
             codeTxt = codeTxt.replace(reg, '@anno-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-onna@');
             tmp = reg.exec(codeTxt);
