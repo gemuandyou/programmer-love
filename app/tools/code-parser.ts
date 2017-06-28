@@ -157,6 +157,22 @@ export class CodeParser {
         if (lastInd > codeTxt.lastIndexOf('\n')) {
             codeTxt = codeTxt.substring(0, lastInd) + '<span style="font-weight: bold; color: #969696; font-size: 80%;">' + codeTxt.substring(lastInd) + '</span>';
         }
+        
+        // 第三种注释 格式：#abc\n
+        let reg4 = new RegExp('#.*?\\n'); // 非贪婪匹配
+        for (let tmp = reg4.exec(codeTxt); tmp != null;) {
+            codeTxt = codeTxt.replace(reg4, '@anno-' + tmp.toString().substring(1, tmp.toString().length - 1) + '-onna@');
+            tmp = reg4.exec(codeTxt);
+        }
+        let reg5 = new RegExp('@anno-.*?-onna@'); // 非贪婪匹配
+        for (let tmp = reg5.exec(codeTxt); tmp != null; tmp = reg5.exec(codeTxt)) {
+            codeTxt = codeTxt.replace(reg5, '<span style="font-weight: bold; color: #969696; font-size: 80%;">#' + tmp.toString().substring(6, tmp.toString().length - 6) + '</span>\n')
+        }
+        // 处理结尾处的#注解
+        lastInd = codeTxt.lastIndexOf('#');
+        if (lastInd > codeTxt.lastIndexOf('\n')) {
+            codeTxt = codeTxt.substring(0, lastInd) + '<span style="font-weight: bold; color: #969696; font-size: 80%;">' + codeTxt.substring(lastInd) + '</span>';
+        }
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="' +
             'font-family: fantasy;' +
