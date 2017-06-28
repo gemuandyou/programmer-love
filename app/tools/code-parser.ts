@@ -131,6 +131,8 @@ export class CodeParser {
             }
         }
         // 解析注释
+        // 全局替换换行 \n => @enter
+        codeTxt = codeTxt.replace(/\n/g, '@enter');
         
         // 第三种注释 格式：#abc\n
         let reg4 = new RegExp('#.*?\\n'); // 非贪婪匹配
@@ -149,7 +151,7 @@ export class CodeParser {
         }
 
         // 第一种注释 格式：/*abc*/
-        let reg = new RegExp('/\\*[^(/)]*\\*/'); // 非贪婪匹配
+        let reg = new RegExp('/\\*[^/$]*\\*/'); // 非贪婪匹配
         for (let tmp = reg.exec(codeTxt); tmp != null;) {
             codeTxt = codeTxt.replace(reg, '@anno-' + tmp.toString().substring(2, tmp.toString().length - 2) + '-onna@');
             tmp = reg.exec(codeTxt);
@@ -174,6 +176,8 @@ export class CodeParser {
         if (lastInd > codeTxt.lastIndexOf('\n')) {
             codeTxt = codeTxt.substring(0, lastInd) + '<span style="font-weight: bold; color: #969696; font-size: 80%;">' + codeTxt.substring(lastInd) + '</span>';
         }
+        // 全局替换为换行 @enter => \n
+        codeTxt = codeTxt.replace(/@enter/g, '\n');
 
         return '<div style="font-family: Monaco,\'Lucida Console\',monospace;"><div style="' +
             'font-family: fantasy;' +
