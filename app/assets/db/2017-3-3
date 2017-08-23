@@ -1,4 +1,4 @@
 {
-  "noteData": "<pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre>&lt;em&gt;abc&lt;/em&gt;\n\n<br></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre>",
+  "noteData": "<pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre><pre>&lt;em&gt;abc&lt;/em&gt;\n<span style=\"font-style: italic; color: #00c0ff;\" contenteditable=\"false\" class=\"edit-span\">@code</span>-java-@[/**\r\n     * 请求处理之前调用。这时还没有调用Controller中的方法\r\n     * @param httpServletRequest\r\n     * @param httpServletResponse\r\n     * @param o\r\n     * @return\r\n     * @throws Exception\r\n     */]@\n\n</pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre></pre>",
   "noteName": "2017-3-3"
 }
