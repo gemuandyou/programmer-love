@@ -10,7 +10,7 @@
     </div>
     <div class="view" [ngClass]="{'viewFlex':editorFlex}" #notesView
          [ngStyle]="{'height': readOnly || editorFlex ? 'calc(100% - 4.5rem)':'calc(60% - 1rem)',
-         'width': isPc ? 'calc(100% - 10rem - 7rem)' : (isFullScreen ? 'calc(100% - 1rem)' : 'calc(100% - 10rem - 1rem'), 'padding': isPc ? ': 0.5rem 3.5rem' : ': 0.5rem'}">
+         'width': isPc ? 'calc(100% - 10rem - 7rem)' : (isFullScreen ? 'calc(100% - 1rem)' : 'calc(100% - 10rem - 1rem'), 'padding': isPc ? '0.5rem 3.5rem' : '0.5rem'}">
     </div>
     <div class="edit" [ngClass]="{'editFlex':editorFlex}" *ngIf="!isFullScreen && !readOnly">
         <div class="notes-tools">
