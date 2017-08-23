@@ -65,8 +65,6 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     modalBoxComps: {} = {}; // 模态框Component对象集合
     exportFilePath: string;
-    
-    isPc: boolean = true; // 默认PC端
 
     constructor(title: Title, private noteService: NotesService, private eleRef: ElementRef,
         private componentFactoryResolver: ComponentFactoryResolver, private viewContainerRef: ViewContainerRef,
@@ -89,11 +87,6 @@ export class NotesComponent implements OnInit, AfterViewInit, OnDestroy {
         if (Cookie.getCookie('friend') == 'gemu') {
             this.readOnly = false;
         }
-        // 判断浏览器是否是移动端还是PC端
-        let isAndroid = navigator.appVersion.match(/android/gi);
-        let isIPhone = navigator.appVersion.match(/iphone/gi);
-        let isIPad = navigator.appVersion.match(/iPad/gi);
-        this.isPc = !isAndroid && !isIPhone && !isIPad;
     }
 
     ngOnInit(): void {
